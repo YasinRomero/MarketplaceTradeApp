@@ -7,7 +7,11 @@ import { MarketplaceSection } from "@/components/sections/Marketplace/Marketplac
 
 export default function MarketplaceScreen() {
 	return (
-		<ScrollView style={styles.screen} contentContainerStyle={styles.contentContainer}>
+		<ScrollView
+			style={styles.screen}
+			contentContainerStyle={styles.contentContainer}
+			stickyHeaderIndices={[0]}
+		>
 			<Header />
 			<MarketplaceSection />
 			<MarketplaceProductsSection />

@@ -8,6 +8,8 @@ import { Message } from "@/components/common/Message";
 import { SelectLabel } from "@/components/common/SelectLabel";
 import { Tab } from "@/components/common/Tab";
 import { Info, News, Sell, SwapCalls, SwapHoriz, Tune } from "@/components/icons";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 import { colors, radius, spacing, typography } from "@/theme";
 
 type ProductMode = "sell" | "exchange" | "donate";
@@ -44,7 +46,7 @@ export function ProductInformationCard({
 	initialSubcategory = subcategories[0],
 	initialMode = "sell",
 	initialPrice = "450.00",
-	initialDescription = "Laptop en buen estado, ideal para clases y trabajo diario.",
+	initialDescription = "Completa los datos esenciales de tu publicación",
 	attributes = defaultAttributes,
 }: ProductInformationCardProps) {
 	const { width } = useWindowDimensions();
@@ -62,7 +64,6 @@ export function ProductInformationCard({
 	return (
 		<View style={[styles.card, style]}>
 			<HeaderSections
-				size="xl"
 				icon={<News size={20} color={colors.text.secondary} />}
 				title="Información del producto"
 				description="Completa los datos principales para publicar tu producto."
@@ -115,18 +116,25 @@ export function ProductInformationCard({
 				</View>
 
 				<View style={styles.flexField}>
-					<InputWithLabel
-						label="Precio"
-						value={price}
-						onChangeText={setPrice}
-						keyboardType="decimal-pad"
-						inputStyle={styles.priceInput}
-					/>
-					<Message
-						icon={<Info size={16} color={colors.text.secondary} />}
-						message="Indica un precio referencial en soles."
-						style={styles.priceMessage}
-					/>
+					<Label style={styles.priceLabel}>Precio / valor referencial</Label>
+					<View style={styles.priceCard}>
+						<View style={styles.priceInputContainer}>
+							<Input
+								value={price}
+								onChangeText={setPrice}
+								keyboardType="decimal-pad"
+								style={styles.priceInput}
+							/>
+							<Text style={styles.currencyPrefix}>S/</Text>
+							<Text style={styles.currencySuffix}>PEN</Text>
+						</View>
+
+						<Message
+							icon={<Info size={16} color={colors.text.secondary} />}
+							message="Sirve como precio final de venta o base de equivalencia para propuestas de intercambio."
+							style={styles.priceMessage}
+						/>
+					</View>
 				</View>
 			</View>
 
@@ -194,13 +202,64 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.semibold,
 		color: colors.text.primary,
 	},
+	priceLabel: {
+		marginBottom: spacing.xs,
+	},
 	modeTabs: {
 		maxWidth: "100%",
 	},
+	priceCard: {
+		width: "100%",
+		padding: 14,
+		gap: 8,
+		backgroundColor: colors.background.subtle,
+		borderWidth: 2,
+		borderColor: colors.border.default,
+		borderRadius: 12,
+		shadowColor: "#000000",
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.05,
+		shadowRadius: 2,
+		elevation: 1,
+	},
+	priceInputContainer: {
+		width: "100%",
+		height: 48,
+		position: "relative",
+	},
 	priceInput: {
+		width: "100%",
+		height: 48,
+		minHeight: 48,
+		paddingVertical: 8,
+		paddingLeft: 40,
+		paddingRight: 64,
 		fontSize: 24,
 		lineHeight: 30,
 		fontWeight: typography.weight.bold,
+		backgroundColor: colors.background.surface,
+		borderColor: colors.border.default,
+		borderRadius: 8,
+	},
+	currencyPrefix: {
+		position: "absolute",
+		left: 12,
+		top: 10,
+		fontFamily: typography.family,
+		fontSize: typography.size.lg,
+		lineHeight: 28,
+		fontWeight: typography.weight.bold,
+		color: colors.text.primary,
+	},
+	currencySuffix: {
+		position: "absolute",
+		right: 12,
+		top: 16,
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: 16,
+		fontWeight: typography.weight.semibold,
+		color: colors.text.secondary,
 	},
 	priceMessage: {
 		padding: 0,

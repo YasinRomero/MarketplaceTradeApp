@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 import { Add, ChatBubble, NotificationsUnread, School } from "@/components/icons";
 import { ButtonGhost, ButtonIcon, ButtonRounded } from "@/components/ui/Button";
@@ -48,25 +48,29 @@ export function Header({
 	onProfilePress,
 }: HeaderProps) {
 	const router = useRouter();
+	const { width } = useWindowDimensions();
+	const isMobile = width < 768;
 	const isLogged = variant === "logged";
 	const goToMarketplace = onCategoriesPress ?? (() => router.push("/marketplace"));
 	const goToPublishProduct = onPublishPress ?? (() => router.push("/publishproduct"));
+	const goToLogin = onLoginPress ?? (() => router.push("/auth"));
+	const goToHome = onLogoPress ?? (() => router.push("/"));
 	const resolvedNotificationIcon = notificationIcon ?? (
 		<NotificationsUnread size={24} color={colors.text.primary} />
 	);
 	const resolvedChatIcon = chatIcon ?? <ChatBubble size={24} color={colors.text.primary} />;
 
 	return (
-		<View style={styles.header}>
-			<View style={styles.maxWidth}>
-				<View style={styles.left}>
-					<Pressable onPress={onLogoPress} style={styles.logo}>
+		<View style={[styles.header, isMobile && styles.mobileHeader]}>
+			<View style={[styles.maxWidth, isMobile && styles.mobileMaxWidth]}>
+				<View style={[styles.left, isMobile && styles.mobileLeft]}>
+					<Pressable onPress={goToHome} style={styles.logo}>
 						<View style={styles.logoIcon}>{logoIcon}</View>
 
-						<Text style={styles.logoText}>CampusTrade</Text>
+						<Text style={styles.logoText}>Intido</Text>
 					</Pressable>
 
-					<View style={styles.navigation}>
+					<View style={[styles.navigation, isMobile && styles.mobileNavigation]}>
 						<ButtonGhost onPress={goToMarketplace}>Marketplace</ButtonGhost>
 
 						<ButtonGhost onPress={onHowItWorksPress}>Cómo funciona</ButtonGhost>
@@ -76,15 +80,21 @@ export function Header({
 				</View>
 
 				{!isLogged ? (
-					<View style={styles.actions}>
-						<ButtonGhost onPress={onLoginPress}>Iniciar sesión</ButtonGhost>
+					<View style={[styles.actions, isMobile && styles.mobileActions]}>
+						<ButtonGhost onPress={goToLogin} style={isMobile && styles.mobileActionButton}>
+							Iniciar sesión
+						</ButtonGhost>
 
-						<ButtonRounded icon={addIcon} onPress={goToPublishProduct}>
+						<ButtonRounded
+							icon={addIcon}
+							onPress={goToPublishProduct}
+							style={isMobile && styles.mobileActionButton}
+						>
 							Publicar producto
 						</ButtonRounded>
 					</View>
 				) : (
-					<View style={styles.loggedActions}>
+					<View style={[styles.loggedActions, isMobile && styles.mobileLoggedActions]}>
 						<ButtonIcon
 							icon={resolvedNotificationIcon}
 							accessibilityLabel="Notificaciones"
@@ -101,7 +111,10 @@ export function Header({
 
 						<View style={styles.divider} />
 
-						<Pressable onPress={onProfilePress} style={styles.profile}>
+						<Pressable
+							onPress={onProfilePress}
+							style={[styles.profile, isMobile && styles.mobileProfile]}
+						>
 							<View style={styles.avatar}>
 								<Text style={styles.avatarText}>{userInitials}</Text>
 							</View>
@@ -117,7 +130,11 @@ export function Header({
 							</View>
 						</Pressable>
 
-						<ButtonRounded icon={addIcon} onPress={goToPublishProduct}>
+						<ButtonRounded
+							icon={addIcon}
+							onPress={goToPublishProduct}
+							style={isMobile && styles.mobileLoggedPublishButton}
+						>
 							Publicar producto
 						</ButtonRounded>
 					</View>
@@ -143,6 +160,12 @@ const styles = StyleSheet.create({
 		borderBottomColor: colors.border.default,
 	},
 
+	mobileHeader: {
+		paddingHorizontal: spacing.lg,
+		paddingTop: spacing.lg,
+		paddingBottom: spacing.lg,
+	},
+
 	maxWidth: {
 		width: "100%",
 		maxWidth: 1232,
@@ -154,6 +177,12 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 
+	mobileMaxWidth: {
+		flexDirection: "column",
+		alignItems: "stretch",
+		gap: spacing.sm,
+	},
+
 	left: {
 		flex: 1,
 
@@ -161,6 +190,12 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 
 		gap: spacing["2xl"],
+	},
+
+	mobileLeft: {
+		width: "100%",
+		flex: 0,
+		justifyContent: "space-between",
 	},
 
 	logo: {
@@ -196,6 +231,10 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 
+	mobileNavigation: {
+		display: "none",
+	},
+
 	actions: {
 		flexDirection: "row",
 		alignItems: "center",
@@ -203,11 +242,26 @@ const styles = StyleSheet.create({
 		gap: spacing.sm,
 	},
 
+	mobileActions: {
+		width: "100%",
+		justifyContent: "space-between",
+	},
+
+	mobileActionButton: {
+		flex: 1,
+	},
+
 	loggedActions: {
 		flexDirection: "row",
 		alignItems: "center",
 
 		gap: spacing.sm,
+	},
+
+	mobileLoggedActions: {
+		width: "100%",
+		flexWrap: "wrap",
+		justifyContent: "flex-end",
 	},
 
 	divider: {
@@ -226,6 +280,15 @@ const styles = StyleSheet.create({
 		paddingHorizontal: spacing.sm,
 		gap: spacing.md - 2,
 		borderRadius: radius.md,
+	},
+
+	mobileProfile: {
+		flex: 1,
+		minWidth: 0,
+	},
+
+	mobileLoggedPublishButton: {
+		width: "100%",
 	},
 
 	avatar: {

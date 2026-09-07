@@ -27,7 +27,7 @@ export function PublishProductSection({
 	const isMobile = width < 900;
 
 	return (
-		<View style={[styles.section, style]}>
+		<View style={[styles.section, isMobile && styles.mobileSection, style]}>
 			<View style={[styles.layout, isMobile && styles.mobileLayout]}>
 				<View style={styles.leftColumn}>
 					<ProductInformationCard />
@@ -53,6 +53,9 @@ const styles = StyleSheet.create({
 	section: {
 		width: "100%",
 		padding: spacing["2xl"],
+	},
+	mobileSection: {
+		padding: spacing.lg,
 	},
 	layout: {
 		width: "100%",

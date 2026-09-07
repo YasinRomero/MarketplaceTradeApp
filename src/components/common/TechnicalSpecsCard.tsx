@@ -27,12 +27,11 @@ const defaultSpecs: TechnicalSpec[] = [
 
 export function TechnicalSpecsCard({ specs = defaultSpecs, style }: TechnicalSpecsCardProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 640;
+	const isMobile = width < 768;
 
 	return (
-		<View style={[styles.card, style]}>
+		<View style={[styles.card, isMobile && styles.mobileCard, style]}>
 			<HeaderSections
-				size="xl"
 				icon={<Tune size={20} color={colors.text.secondary} />}
 				title="Especificaciones técnicas y atributos"
 			/>
@@ -41,7 +40,7 @@ export function TechnicalSpecsCard({ specs = defaultSpecs, style }: TechnicalSpe
 				{specs.map((spec, index) => (
 					<View key={`${spec.label}-${index}`} style={[styles.item, isMobile && styles.mobileItem]}>
 						<Text style={styles.label}>{spec.label}</Text>
-						<Text numberOfLines={1} style={styles.value}>
+						<Text style={[styles.value, isMobile && styles.mobileValue]}>
 							{spec.value}
 						</Text>
 					</View>
@@ -61,6 +60,9 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.lg,
 	},
+	mobileCard: {
+		padding: spacing.lg,
+	},
 	grid: {
 		width: "100%",
 		flexDirection: "row",
@@ -69,6 +71,8 @@ const styles = StyleSheet.create({
 	},
 	mobileGrid: {
 		flexDirection: "column",
+		flexWrap: "nowrap",
+		alignItems: "stretch",
 	},
 	item: {
 		flexBasis: "45%",
@@ -85,6 +89,14 @@ const styles = StyleSheet.create({
 	},
 	mobileItem: {
 		width: "100%",
+		alignSelf: "stretch",
+		flexBasis: "auto",
+		flexGrow: 0,
+		flexShrink: 1,
+		flexDirection: "column",
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
+		gap: spacing.xs,
 	},
 	label: {
 		flex: 1,
@@ -102,5 +114,9 @@ const styles = StyleSheet.create({
 		lineHeight: typography.lineHeight.lg,
 		fontWeight: typography.weight.semibold,
 		color: colors.text.primary,
+	},
+	mobileValue: {
+		width: "100%",
+		flexShrink: 1,
 	},
 });

@@ -37,10 +37,9 @@ export function EvidencesCard({ evidences = defaultEvidences, style }: Evidences
 	return (
 		<View style={[styles.card, style]}>
 			<HeaderSections
-				size="xl"
 				icon={<Verified size={20} color={colors.text.secondary} />}
 				title="Evidencias del producto"
-				description="Revisa las evidencias visuales que acompañarán tu publicación."
+				description="Archivos capturados en vivo con confirmación de tenencia física para respaldo institucional y garantía entre estudiantes."
 			/>
 
 			<View style={[styles.evidences, isMobile && styles.mobileEvidences]}>
@@ -59,7 +58,7 @@ export function EvidencesCard({ evidences = defaultEvidences, style }: Evidences
 
 			<Message
 				icon={<ShieldLock size={16} color={colors.text.secondary} />}
-				message="Tus evidencias se mostrarán únicamente como parte de la publicación del producto."
+				message="Estas evidencias quedarán asociadas de forma inmutable a la entrega y contrato de compra/intercambio."
 			/>
 		</View>
 	);

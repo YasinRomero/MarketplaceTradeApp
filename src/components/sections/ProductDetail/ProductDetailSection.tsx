@@ -51,7 +51,7 @@ export function ProductDetailSection({
 	const product = productDetails[productId ?? "thinkpad"] ?? productDetails.thinkpad;
 
 	return (
-		<View style={[styles.section, style]}>
+		<View style={[styles.section, isMobile && styles.mobileSection, style]}>
 			<View style={styles.content}>
 				<DetailsProductBreadcrumb
 					items={[
@@ -77,8 +77,8 @@ export function ProductDetailSection({
 							price={product.price}
 							priceDescription="Equivalente o compensación acordada para intercambio justo."
 							reviews={[
-								{ message: "Identidad institucional verificada" },
-								{ message: "Historial de intercambios comprobado" },
+								{ message: "Entrega presencial coordinada dentro del campus universitario" },
+								{ message: "Revisión física del artículo antes de confirmar el pago o permuta" },
 							]}
 							securityMessage="Tus datos y la conversación están protegidos por CampusTrade."
 							onPrimaryAction={onPrimaryAction}
@@ -91,7 +91,7 @@ export function ProductDetailSection({
 							rating="4.9 estrellas"
 							responseTime="Responde en < 1 hora"
 							location="Campus universitario"
-							authorMessage="Perfil verificado por la comunidad universitaria. Comunícate dentro de la plataforma para coordinar la entrega."
+							authorMessage="Comunidad académica segura: Solo estudiantes con credencial activa coordinan entregas en recintos autorizados."
 						/>
 					</View>
 				</View>
@@ -103,8 +103,13 @@ export function ProductDetailSection({
 const styles = StyleSheet.create({
 	section: {
 		width: "100%",
+		paddingTop: spacing.xl,
 		paddingHorizontal: spacing["2xl"],
 		paddingBottom: spacing["2xl"],
+	},
+	mobileSection: {
+		paddingTop: spacing.lg,
+		paddingHorizontal: spacing.lg,
 	},
 	content: {
 		width: "100%",

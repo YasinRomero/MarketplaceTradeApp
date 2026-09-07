@@ -31,10 +31,10 @@ export interface CameraActionsCardProps {
 }
 
 const defaultGalleryItems: CameraGalleryItem[] = [
-	{ label: "Foto 1: Frontal", checked: true, primary: true },
-	{ label: "Foto 2: Posterior", checked: true },
-	{ label: "Foto 3: Detalle", checked: true },
-	{ label: "Foto 4: Pantalla" },
+	{ label: "Foto de evidencia", checked: true, primary: true },
+	{ label: "Foto de evidencia", checked: true },
+	{ label: "Foto de evidencia", checked: true },
+	{ label: "Foto de evidencia" },
 ];
 
 export function CameraActionsCard({
@@ -49,14 +49,17 @@ export function CameraActionsCard({
 	const [selectedItems, setSelectedItems] = useState(() =>
 		galleryItems.map((item) => item.checked ?? false),
 	);
+	const [publishItems, setPublishItems] = useState(() =>
+		galleryItems.map((item) => item.primary ?? false),
+	);
+	const selectedCount = selectedItems.filter(Boolean).length;
 
 	return (
 		<View style={[styles.card, style]}>
 			<HeaderSections
-				size="xl"
 				icon={<PhotoCamera size={20} color={colors.text.secondary} />}
 				title="Fotos y videos del producto"
-				description="Agrega evidencias visuales para que otros usuarios conozcan mejor tu producto."
+				description="Captura obligatoria en vivo desde la cámara web o móvil para validar tenencia física."
 			/>
 
 			<View style={[styles.content, isMobile && styles.mobileContent]}>
@@ -68,7 +71,7 @@ export function CameraActionsCard({
 				/>
 
 				<View style={styles.galleryPanel}>
-					<HeaderSections size="compact" title="Galería seleccionada" />
+					<HeaderSections size="compact" title={`Archivos Capturas (${selectedCount})`} />
 					<View style={styles.galleryGrid}>
 						{galleryItems.map((item, index) => (
 							<GaleryCardSelect
@@ -76,9 +79,14 @@ export function CameraActionsCard({
 								image={item.image}
 								label={item.label}
 								checked={selectedItems[index] ?? false}
-								secondaryChecked={item.primary ?? false}
+								secondaryChecked={publishItems[index] ?? false}
 								onChange={(checked) =>
 									setSelectedItems((current) =>
+										current.map((value, itemIndex) => (itemIndex === index ? checked : value)),
+									)
+								}
+								onSecondaryChange={(checked) =>
+									setPublishItems((current) =>
 										current.map((value, itemIndex) => (itemIndex === index ? checked : value)),
 									)
 								}
@@ -88,16 +96,11 @@ export function CameraActionsCard({
 
 					<Message
 						icon={<ShieldLock size={16} color={colors.text.secondary} />}
-						message="Tus evidencias se usarán únicamente para mostrar el estado del producto."
+						message="Por autenticidad de la comunidad, no se permite la carga de archivos locales ni fotos de galería externa."
 						style={styles.galleryMessage}
 					/>
 				</View>
 			</View>
-
-			<Message
-				icon={<ShieldLock size={16} color={colors.text.secondary} />}
-				message="Por seguridad, los archivos no se almacenan hasta que confirmes la publicación."
-			/>
 		</View>
 	);
 }

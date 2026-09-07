@@ -21,13 +21,12 @@ const defaultAcademicContext =
 export function DescriptionAcademicContextCard({
 	description = defaultDescription,
 	academicContext = defaultAcademicContext,
-	contextTitle = "Contexto académico",
+	contextTitle = "Incluye en la entrega",
 	style,
 }: DescriptionAcademicContextCardProps) {
 	return (
 		<View style={[styles.card, style]}>
 			<HeaderSections
-				size="xl"
 				icon={<News size={20} color={colors.text.secondary} />}
 				title="Descripción y contexto académico"
 			/>
@@ -43,7 +42,7 @@ export function DescriptionAcademicContextCard({
 						</View>
 					}
 					title={contextTitle}
-					message="Relacionar el producto con tu contexto académico ayuda a que otros estudiantes encuentren una opción útil para sus necesidades."
+					message="Caja original con serial coincidente, cable trenzado USB-C original sin uso, cargador de 20W Apple, Apple Pencil de 2da generación impecable y funda magnética abatible."
 					style={styles.contextMessage}
 					messageStyle={styles.messageText}
 				/>

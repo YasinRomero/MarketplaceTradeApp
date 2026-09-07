@@ -83,7 +83,7 @@ export function MediaViewerCard({
 					style={[styles.stage, isMobile && styles.mobileStage]}
 				>
 					{selectedImage ? (
-						<Image contentFit="contain" source={selectedImage} style={styles.mainImage} />
+						<Image contentFit="cover" source={selectedImage} style={styles.mainImage} />
 					) : (
 						<Text style={styles.emptyText}>No hay imágenes disponibles</Text>
 					)}
@@ -117,20 +117,30 @@ const styles = StyleSheet.create({
 	content: {
 		width: "100%",
 		minHeight: 460,
+		position: "relative",
 		flexDirection: "row",
+		alignItems: "stretch",
 		gap: spacing.lg,
 	},
 	mobileContent: {
 		minHeight: 0,
 		flexDirection: "column",
+		alignItems: "stretch",
 	},
 	thumbnails: {
 		width: 80,
 		maxHeight: 480,
+		position: "absolute",
+		top: 0,
+		left: 0,
+		zIndex: 1,
 	},
 	mobileThumbnails: {
 		width: "100%",
 		maxHeight: 80,
+		position: "relative",
+		top: "auto",
+		left: "auto",
 	},
 	thumbnailsContent: {
 		gap: spacing.md,
@@ -161,6 +171,11 @@ const styles = StyleSheet.create({
 	},
 	stage: {
 		flex: 1,
+		flexBasis: 0,
+		flexGrow: 1,
+		flexShrink: 1,
+		minWidth: 0,
+		marginLeft: 104,
 		minHeight: 460,
 		position: "relative",
 		alignItems: "center",
@@ -172,11 +187,15 @@ const styles = StyleSheet.create({
 		overflow: "hidden",
 	},
 	mobileStage: {
+		width: "100%",
+		flexBasis: "auto",
+		marginLeft: 0,
 		minHeight: 320,
 	},
 	mainImage: {
 		width: "100%",
 		height: "100%",
+		borderRadius: radius.md,
 	},
 	emptyText: {
 		fontFamily: typography.family,

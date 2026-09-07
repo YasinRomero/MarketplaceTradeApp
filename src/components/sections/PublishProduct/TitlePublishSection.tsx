@@ -1,7 +1,7 @@
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 import { HeaderSections } from "@/components/common/HeaderSections";
-import { Domain } from "@/components/icons";
+import { Distance } from "@/components/icons";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { colors, primitives, spacing, typography } from "@/theme";
 
@@ -10,8 +10,10 @@ export function TitlePublishSection() {
 	const isMobile = width < 768;
 
 	return (
-		<View style={styles.section}>
-			<Breadcrumb items={[{ label: "Inicio" }, { label: "Publicar producto" }]} />
+		<View style={[styles.section, isMobile && styles.mobileSection]}>
+			<View style={styles.breadcrumb}>
+				<Breadcrumb items={[{ label: "Inicio" }, { label: "Publicar producto" }]} />
+			</View>
 
 			<View style={[styles.content, isMobile && styles.mobileContent]}>
 				<HeaderSections
@@ -19,12 +21,12 @@ export function TitlePublishSection() {
 					title="Publicar producto"
 					description="Comparte o publica directamente con estudiantes y docentes de tu comunidad universitaria."
 					style={[styles.header, isMobile && styles.mobileHeader]}
-					titleStyle={styles.title}
+					titleStyle={[styles.title, isMobile && styles.mobileTitle]}
 					descriptionStyle={styles.description}
 				/>
 
-				<View style={styles.locationCard}>
-					<Domain size={18} color={colors.action.primary} />
+				<View style={[styles.locationCard, isMobile && styles.mobileLocationCard]}>
+					<Distance size={18} color={colors.action.primary} />
 					<View>
 						<Text style={styles.locationLabel}>Sede asignada</Text>
 						<Text style={styles.locationValue}>Sede</Text>
@@ -38,20 +40,34 @@ export function TitlePublishSection() {
 const styles = StyleSheet.create({
 	section: {
 		width: "100%",
+		paddingTop: spacing.xl,
 		paddingHorizontal: spacing["2xl"],
 		paddingBottom: spacing.xl,
-		gap: 6,
+		gap: spacing.lg,
 		backgroundColor: colors.background.surface,
 		borderBottomWidth: 1,
 		borderBottomColor: colors.border.default,
 	},
 
+	mobileSection: {
+		paddingTop: spacing.lg,
+		paddingHorizontal: spacing.lg,
+	},
+
 	content: {
 		width: "100%",
+		maxWidth: 1232,
+		alignSelf: "center",
 		flexDirection: "row",
 		alignItems: "flex-end",
 		justifyContent: "space-between",
 		gap: spacing.xl,
+	},
+
+	breadcrumb: {
+		width: "100%",
+		maxWidth: 1232,
+		alignSelf: "center",
 	},
 
 	mobileContent: {
@@ -75,6 +91,12 @@ const styles = StyleSheet.create({
 		letterSpacing: -0.75,
 	},
 
+	mobileTitle: {
+		fontSize: typography.size.authTitle,
+		lineHeight: typography.lineHeight["3xl"],
+		letterSpacing: -0.5,
+	},
+
 	description: {
 		fontSize: typography.size.sm,
 		lineHeight: typography.lineHeight.lg,
@@ -92,6 +114,10 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: spacing.md,
+	},
+
+	mobileLocationCard: {
+		width: "100%",
 	},
 
 	locationLabel: {

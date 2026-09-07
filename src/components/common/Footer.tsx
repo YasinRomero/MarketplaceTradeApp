@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useRouter } from "expo-router";
 import {
   Pressable,
   StyleSheet,
@@ -7,7 +8,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 
-import { School } from "@/components/icons";
+import { Login, School } from "@/components/icons";
 import { colors } from "@/theme/colors";
 import { radius, spacing } from "@/theme/spacing";
 import { typography } from "@/theme/typography";
@@ -45,7 +46,7 @@ function FooterLink({
   onPress?: FooterAction;
 }) {
   return (
-    <Pressable
+            <Pressable
       accessibilityRole="link"
       onPress={onPress}
       style={styles.linkButton}
@@ -65,6 +66,8 @@ export function Footer({
   onHelpPress,
   onSocialPress,
 }: FooterProps) {
+  const router = useRouter();
+  const goToAuth = onLoginPress ?? (() => router.push("/auth"));
   const { width } = useWindowDimensions();
   const isCompact = width < 768;
   const isNarrow = width < 480;
@@ -83,7 +86,7 @@ export function Footer({
             <View style={styles.logoIcon}>
               <School color={colors.action.primaryForeground} size={24} />
             </View>
-            <Text style={styles.logoText}>CampusTrade</Text>
+            <Text style={styles.logoText}>Intido</Text>
           </View>
 
           <Text style={styles.description}>
@@ -140,14 +143,14 @@ export function Footer({
           </Text>
           <Pressable
             accessibilityRole="button"
-            onPress={onLoginPress}
+            onPress={goToAuth}
             style={({ pressed }) => [
               styles.loginButton,
               pressed && styles.loginButtonPressed,
             ]}
           >
-            <School color={colors.action.primaryForeground} size={16} />
-            <Text style={styles.loginLabel}>Iniciar sesión</Text>
+              <Login color={colors.action.primaryForeground} size={16} />
+              <Text style={styles.loginLabel}>Unirse</Text>
           </Pressable>
         </View>
       </View>
@@ -203,7 +206,12 @@ const styles = StyleSheet.create({
   information: { flex: 1, gap: spacing.lg },
   section: { flex: 1, gap: spacing.lg },
   loginSection: { flex: 1, gap: spacing.lg },
-  columnCompact: { width: "100%", flex: 0 },
+  columnCompact: {
+    width: "100%",
+    flexGrow: 0,
+    flexShrink: 0,
+    flexBasis: "auto",
+  },
   logo: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
   logoIcon: {
     width: 36,

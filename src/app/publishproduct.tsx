@@ -6,7 +6,11 @@ import { ScrollView, StyleSheet } from "react-native";
 
 export default function HomeScreen() {
 	return (
-		<ScrollView style={styles.screen} contentContainerStyle={styles.contentContainer}>
+		<ScrollView
+			style={styles.screen}
+			contentContainerStyle={styles.contentContainer}
+			stickyHeaderIndices={[0]}
+		>
 			<Header />
 			<TitlePublishSection />
 			<PublishProductSection />

@@ -72,7 +72,9 @@ export function CardProduct({
 
         <View style={styles.actions}>
           <View style={styles.priceBlock}>
-            <Text style={styles.priceLabel}>{priceLabel}</Text>
+					<Text numberOfLines={1} style={styles.priceLabel}>
+						{priceLabel}
+					</Text>
             <Text style={styles.price}>{price}</Text>
           </View>
 
@@ -162,11 +164,12 @@ const styles = StyleSheet.create({
     color: primitives.neutral[900],
   },
 
-  actions: {
-    minHeight: 60,
-    paddingTop: spacing.lg,
-    flexDirection: "row",
-    alignItems: "flex-end",
+	actions: {
+		minHeight: 60,
+		paddingTop: spacing.lg,
+		flexDirection: "row",
+		flexWrap: "nowrap",
+		alignItems: "flex-end",
     justifyContent: "space-between",
     gap: spacing.lg,
 
@@ -174,9 +177,11 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border.default,
   },
 
-  priceBlock: {
-    flex: 1,
-    gap: 0,
+	priceBlock: {
+		flex: 1,
+		minWidth: 150,
+		flexShrink: 0,
+		gap: 0,
   },
 
   priceLabel: {
@@ -188,10 +193,10 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
   },
 
-  price: {
-    fontFamily: typography.family,
-    fontSize: typography.size.md,
-    lineHeight: typography.lineHeight["2xl"],
+	price: {
+		fontFamily: typography.family,
+		fontSize: typography.size.lg,
+		lineHeight: typography.lineHeight["3xl"],
     fontWeight: typography.weight.bold,
     color: primitives.neutral[900],
   },

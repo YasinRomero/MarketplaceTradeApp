@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from "react-native";
@@ -40,20 +41,30 @@ export function MarketplaceFilters({
   onClearFilters,
   style,
 }: MarketplaceFiltersProps) {
+	const { width } = useWindowDimensions();
+	const isMobile = width < 768;
+	const mobileWidth = Math.max(width - spacing.lg * 2, 280);
   const arrowIcon = (
     <KeyboardArrowDown size={24} color={colors.text.secondary} />
   );
 
   return (
-    <View style={[styles.container, style]}>
-      <View style={styles.displayFilters}>
+		<View
+			style={[
+				styles.container,
+				isMobile && styles.mobileContainer,
+				isMobile && { width: mobileWidth, maxWidth: mobileWidth },
+				style,
+			]}
+		>
+      <View style={[styles.displayFilters, isMobile && styles.mobileDisplayFilters]}>
         <View style={styles.resultSummary}>
           <Text style={styles.resultCount}>{resultCount}</Text>
           <Text style={styles.resultLabel}>{resultLabel}</Text>
         </View>
 
         {activeFilters.length > 0 && (
-          <View style={styles.chips}>
+          <View style={[styles.chips, isMobile && styles.mobileChips]}>
             {activeFilters.map((filter) => (
               <View key={filter.id} style={styles.chip}>
                 <Text numberOfLines={1} style={styles.chipText}>
@@ -74,8 +85,8 @@ export function MarketplaceFilters({
         )}
       </View>
 
-      <View style={styles.displayActions}>
-        <View style={styles.sortRow}>
+      <View style={[styles.displayActions, isMobile && styles.mobileDisplayActions]}>
+        <View style={[styles.sortRow, isMobile && styles.mobileSortRow]}>
           <Text style={styles.sortLabel}>Ordenar por:</Text>
           <InputSelect
             value={sortValue}
@@ -84,12 +95,14 @@ export function MarketplaceFilters({
             size="compact"
             disabled={!onSortPress}
             onPress={onSortPress}
-            containerStyle={styles.sortSelect}
+            containerStyle={[styles.sortSelect, isMobile && styles.mobileSortSelect]}
             textStyle={styles.selectText}
           />
         </View>
 
-        <Button onPress={onClearFilters}>Limpiar filtros</Button>
+        <Button onPress={onClearFilters} style={isMobile && styles.mobileClearButton}>
+          Limpiar filtros
+        </Button>
       </View>
     </View>
   );
@@ -113,9 +126,20 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
   },
 
+  mobileContainer: {
+    minHeight: 0,
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: spacing.lg,
+  },
+
   displayFilters: {
     width: 354,
     gap: 10,
+  },
+
+  mobileDisplayFilters: {
+    width: "100%",
   },
 
   resultSummary: {
@@ -144,6 +168,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
+  },
+
+  mobileChips: {
+    flexWrap: "wrap",
   },
 
   chip: {
@@ -184,11 +212,20 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 
+  mobileDisplayActions: {
+    width: "100%",
+    alignItems: "stretch",
+  },
+
   sortRow: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
+  },
+
+  mobileSortRow: {
+    alignItems: "center",
   },
 
   sortLabel: {
@@ -201,6 +238,15 @@ const styles = StyleSheet.create({
 
   sortSelect: {
     width: 172,
+  },
+
+  mobileSortSelect: {
+    flex: 1,
+    width: undefined,
+  },
+
+  mobileClearButton: {
+    width: "100%",
   },
 
   selectText: {

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
 	Pressable,
 	StyleProp,
@@ -13,7 +13,7 @@ import {
 import { CardProduct } from "@/components/common/CardProduct";
 import { InputWithLabel } from "@/components/common/InputWithLabel";
 import { ChevronBackward, ChevronForward } from "@/components/icons";
-import { Button, ButtonGhost, ButtonOutline } from "@/components/ui/Button";
+import { Button, ButtonGhost, ButtonIcon, ButtonOutline } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { colors, radius, spacing, typography } from "@/theme";
 
@@ -51,6 +51,13 @@ const products: ProductItem[] = [
 		description: "Textos de arquitectura, algoritmos y desarrollo de software.",
 		price: "S/. 120.00",
 	},
+	{
+		id: "jacket",
+		category: "Ropa · Campus",
+		title: "Casaca vintage",
+		description: "Casaca cómoda y versátil para los días fríos en el campus.",
+		price: "S/. 85.00",
+	},
 ];
 
 const subcategories = [
@@ -69,6 +76,8 @@ export function MarketplaceProductsSection({ style }: MarketplaceProductsSection
 	const router = useRouter();
 	const { width } = useWindowDimensions();
 	const isMobile = width < 768;
+	const isTablet = width < 1100;
+	const isWideDesktop = width >= 1800;
 	const [selectedCategory, setSelectedCategory] = useState("Tecnología");
 	const [checkedFilters, setCheckedFilters] = useState<Record<string, boolean>>({
 		Venta: true,
@@ -141,19 +150,19 @@ export function MarketplaceProductsSection({ style }: MarketplaceProductsSection
 								accessibilityLabel="Precio máximo"
 								containerStyle={styles.priceInput}
 							/>
-							<Button
+							<ButtonIcon
+								accessibilityLabel="Aplicar rango de precio"
 								icon={<ChevronForward size={18} color={colors.text.inverse} />}
 								onPress={() => setPage(1)}
+								variant="primary"
 								style={styles.applyButton}
-							>
-								Aplicar
-							</Button>
+							/>
 						</View>
 					</View>
 				</View>
 
 				<View style={styles.productsList}>
-					<View style={styles.productsGrid}>
+					<View style={[styles.productsGrid, isMobile && styles.mobileProductsGrid]}>
 						{products.map((product) => (
 							<CardProduct
 								key={product.id}
@@ -165,9 +174,14 @@ export function MarketplaceProductsSection({ style }: MarketplaceProductsSection
 								secondaryBadge="Universidad"
 								actionLabel="Ver producto"
 								onActionPress={() =>
-									router.push({ pathname: "/product-d", params: { id: product.id } })
+									router.push({ pathname: "/productdetails", params: { id: product.id } })
 								}
-								style={styles.productCard}
+								style={[
+									styles.productCard,
+									isTablet && styles.tabletProductCard,
+									isWideDesktop && styles.wideProductCard,
+									isMobile && styles.mobileProductCard,
+								]}
 							/>
 						))}
 					</View>
@@ -275,7 +289,7 @@ const styles = StyleSheet.create({
 	},
 	layout: {
 		width: "100%",
-		maxWidth: 1232,
+		maxWidth: 1800,
 		alignSelf: "center",
 		flexDirection: "row",
 		alignItems: "flex-start",
@@ -384,9 +398,23 @@ const styles = StyleSheet.create({
 		alignContent: "flex-start",
 		gap: spacing.lg,
 	},
+	mobileProductsGrid: {
+		flexDirection: "column",
+	},
 	productCard: {
 		width: "31.8%",
+		minWidth: 320,
 		minHeight: 525,
+	},
+	wideProductCard: {
+		width: "23.5%",
+	},
+	tabletProductCard: {
+		width: "48%",
+	},
+	mobileProductCard: {
+		width: "100%",
+		minWidth: 0,
 	},
 	pagination: {
 		width: "100%",

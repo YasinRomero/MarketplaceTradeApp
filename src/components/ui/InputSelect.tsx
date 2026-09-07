@@ -125,6 +125,7 @@ const variantStyles = StyleSheet.create({
 
     borderRadius: 8,
   },
+
 });
 
 const styles = StyleSheet.create({

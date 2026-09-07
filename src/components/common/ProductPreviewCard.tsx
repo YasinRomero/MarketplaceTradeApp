@@ -59,7 +59,7 @@ export function ProductPreviewCard({
 
 			<Message
 				icon={<Verified size={16} color={colors.text.secondary} />}
-				message="Revisa que la información sea correcta antes de publicar."
+				message="Publicación vinculada automáticamente a tu perfil verificado. Tu sede universitaria se toma directo de tu cuenta."
 			/>
 
 			<View style={styles.actions}>
