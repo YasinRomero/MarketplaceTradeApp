@@ -15,10 +15,12 @@ import { colors, spacing, typography } from "@/theme";
 export interface SelectLabelProps {
   label: string;
   value: string;
+  options?: readonly string[];
   alert?: string;
   visibleAlert?: boolean;
   rightIcon?: ReactNode;
   onPress?: () => void;
+  onChange?: (value: string) => void;
   disabled?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
@@ -30,10 +32,12 @@ export interface SelectLabelProps {
 export function SelectLabel({
   label,
   value,
+  options,
   alert,
   visibleAlert,
   rightIcon = <KeyboardArrowDown size={24} color={colors.text.secondary} />,
   onPress,
+  onChange,
   disabled = false,
   containerStyle,
   labelStyle,
@@ -47,13 +51,15 @@ export function SelectLabel({
     <View style={[styles.container, containerStyle]}>
       <Text style={[styles.label, labelStyle]}>{label}</Text>
 
-      <InputSelect
-        value={value}
+        <InputSelect
+          value={value}
+          options={options}
         rightIcon={rightIcon}
         iconPosition="right"
         variant="outline"
         disabled={disabled}
-        onPress={onPress}
+          onPress={onPress}
+          onChange={onChange}
         containerStyle={[styles.select, selectStyle]}
         textStyle={[styles.selectText, textStyle]}
       />

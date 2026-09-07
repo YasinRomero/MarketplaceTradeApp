@@ -38,6 +38,39 @@ const defaultAttributes: ProductAttribute[] = [
 	{ label: "Estado", value: "Usado" },
 	{ label: "Año", value: "2022" },
 ];
+const INVALID_SYMBOLS_MESSAGE = "Inválido, no se pueden colocar símbolos.";
+const INVALID_NUMBER_MESSAGE = "Inválido, solo se pueden colocar números.";
+
+const hasInvalidTextCharacters = (value: string) =>
+	/[^\p{L}\p{N}\s+\-()[\]]/u.test(value);
+
+const hasInvalidNumberCharacters = (value: string) => !/^\d*(\.\d*)?$/.test(value);
+
+const sanitizePrice = (value: string) => {
+	const sanitized = value.replace(/[^\d.]/g, "");
+	const [integerPart = "", ...decimalParts] = sanitized.split(".");
+	const decimalPart = decimalParts.join("").slice(0, 2);
+
+	return decimalParts.length > 0
+		? `${integerPart || "0"}.${decimalPart}`
+		: integerPart;
+};
+
+const formatPrice = (value: string) => {
+	if (!value) return value;
+
+	const [integerPart = "0", decimalPart = ""] = value.split(".");
+	return `${integerPart || "0"}.${decimalPart.padEnd(2, "0").slice(0, 2)}`;
+};
+
+const getAttributeError = (label: string, value: string) => {
+	const isYear = label.toLowerCase() === "año" || label.toLowerCase() === "ano";
+	const hasError = isYear
+		? hasInvalidNumberCharacters(value)
+		: hasInvalidTextCharacters(value);
+
+	return hasError ? (isYear ? INVALID_NUMBER_MESSAGE : INVALID_SYMBOLS_MESSAGE) : undefined;
+};
 
 export function ProductInformationCard({
 	style,
@@ -51,18 +84,24 @@ export function ProductInformationCard({
 }: ProductInformationCardProps) {
 	const { width } = useWindowDimensions();
 	const isMobile = width < 640;
+	const isNarrowMobile = width < 360;
 	const [title, setTitle] = useState(initialTitle);
 	const [category, setCategory] = useState(initialCategory);
 	const [subcategory, setSubcategory] = useState(initialSubcategory);
 	const [mode, setMode] = useState<ProductMode>(initialMode);
-	const [price, setPrice] = useState(initialPrice);
+	const [price, setPrice] = useState(() => sanitizePrice(initialPrice));
 	const [description, setDescription] = useState(initialDescription);
+	const [attributeValues, setAttributeValues] = useState<Record<string, string>>(
+		() => Object.fromEntries(attributes.map((attribute) => [attribute.label, attribute.value])),
+	);
+	const titleHasError = hasInvalidTextCharacters(title);
 
-	const nextValue = (values: string[], current: string) =>
-		values[(values.indexOf(current) + 1) % values.length];
+	const updateAttribute = (label: string, value: string) => {
+		setAttributeValues((current) => ({ ...current, [label]: value }));
+	};
 
 	return (
-		<View style={[styles.card, style]}>
+		<View style={[styles.card, isMobile && styles.mobileCard, style]}>
 			<HeaderSections
 				icon={<News size={20} color={colors.text.secondary} />}
 				title="Información del producto"
@@ -74,54 +113,52 @@ export function ProductInformationCard({
 				value={title}
 				onChangeText={setTitle}
 				placeholder="Ej. Laptop Lenovo ThinkPad"
-				alert="Usa un título claro que facilite las búsquedas."
+				alert={titleHasError ? INVALID_SYMBOLS_MESSAGE : undefined}
+				visibleAlert={titleHasError}
+				alertStyle={styles.errorText}
 			/>
 
 			<View style={[styles.row, isMobile && styles.mobileRow]}>
 				<SelectLabel
 					label="Categoría"
 					value={category}
-					onPress={() => setCategory(nextValue(categories, category))}
-					containerStyle={styles.flexField}
+					options={categories}
+					onChange={setCategory}
+					containerStyle={[styles.flexField, isMobile && styles.mobileFlexField]}
 				/>
 				<SelectLabel
 					label="Subcategoría"
 					value={subcategory}
-					onPress={() => setSubcategory(nextValue(subcategories, subcategory))}
-					containerStyle={styles.flexField}
+					options={subcategories}
+					onChange={setSubcategory}
+					containerStyle={[styles.flexField, isMobile && styles.mobileFlexField]}
 				/>
 			</View>
 
 			<View style={[styles.row, styles.modeRow, isMobile && styles.mobileRow]}>
-				<View style={styles.flexField}>
+				<View style={[styles.flexField, isMobile && styles.mobileFlexField]}>
 					<Text style={styles.label}>Modalidad</Text>
 					<Tab
 						tabs={[
 							{ id: "sell", label: "Vender", icon: <Sell size={16} color={colors.text.inverse} /> },
-							{
-								id: "exchange",
-								label: "Intercambiar",
-								icon: <SwapHoriz size={16} color={colors.text.secondary} />,
-							},
-							{
-								id: "donate",
-								label: "Donar",
-								icon: <SwapCalls size={16} color={colors.text.secondary} />,
-							},
+							{ id: "exchange", label: "Intercambiar", icon: <SwapHoriz size={16} color={colors.text.secondary} /> },
+							{ id: "donate", label: "Donar", icon: <SwapCalls size={16} color={colors.text.secondary} /> },
 						]}
 						selectedId={mode}
 						onChange={(value) => setMode(value as ProductMode)}
-						style={styles.modeTabs}
+						stacked={isMobile}
+						style={[styles.modeTabs, isMobile && styles.mobileModeTabs]}
 					/>
 				</View>
 
-				<View style={styles.flexField}>
+				<View style={[styles.flexField, isMobile && styles.mobileFlexField]}>
 					<Label style={styles.priceLabel}>Precio / valor referencial</Label>
 					<View style={styles.priceCard}>
 						<View style={styles.priceInputContainer}>
 							<Input
 								value={price}
-								onChangeText={setPrice}
+								onChangeText={(value) => setPrice(sanitizePrice(value))}
+								onBlur={() => setPrice(formatPrice(price))}
 								keyboardType="decimal-pad"
 								style={styles.priceInput}
 							/>
@@ -152,16 +189,28 @@ export function ProductInformationCard({
 					icon={<Tune size={12} color={colors.text.secondary} />}
 					title="Características"
 				/>
-				<View style={styles.attributes}>
-					{attributes.map((attribute) => (
-						<InputWithLabel
-							key={attribute.label}
-							size="compact"
-							label={attribute.label}
-							defaultValue={attribute.value}
-							containerStyle={styles.attribute}
-						/>
-					))}
+				<View style={[styles.attributes, isNarrowMobile && styles.narrowMobileAttributes]}>
+					{attributes.map((attribute) => {
+						const attributeValue = attributeValues[attribute.label] ?? "";
+						const attributeError = getAttributeError(attribute.label, attributeValue);
+
+						return (
+							<InputWithLabel
+								key={attribute.label}
+								size="compact"
+								label={attribute.label}
+								value={attributeValue}
+								onChangeText={(value) => updateAttribute(attribute.label, value)}
+								alert={attributeError}
+								visibleAlert={Boolean(attributeError)}
+								alertStyle={styles.errorText}
+								containerStyle={[
+									styles.attribute,
+									isNarrowMobile && styles.narrowMobileAttribute,
+								]}
+							/>
+						);
+					})}
 				</View>
 			</View>
 		</View>
@@ -178,6 +227,10 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
 	},
+	mobileCard: {
+		padding: spacing.lg,
+		gap: spacing.lg,
+	},
 	row: {
 		width: "100%",
 		flexDirection: "row",
@@ -185,10 +238,17 @@ const styles = StyleSheet.create({
 	},
 	mobileRow: {
 		flexDirection: "column",
+		gap: spacing.lg,
 	},
 	flexField: {
 		flex: 1,
 		minWidth: 0,
+	},
+	mobileFlexField: {
+		flexGrow: 0,
+		flexShrink: 1,
+		flexBasis: "auto",
+		width: "100%",
 	},
 	modeRow: {
 		alignItems: "flex-start",
@@ -206,6 +266,10 @@ const styles = StyleSheet.create({
 		marginBottom: spacing.xs,
 	},
 	modeTabs: {
+		maxWidth: "100%",
+	},
+	mobileModeTabs: {
+		width: "100%",
 		maxWidth: "100%",
 	},
 	priceCard: {
@@ -267,6 +331,13 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		borderWidth: 0,
 	},
+	errorText: {
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.lg,
+		fontWeight: typography.weight.regular,
+		color: colors.card.red.foreground,
+	},
 	descriptionInput: {
 		height: 108,
 	},
@@ -279,6 +350,14 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		flexWrap: "wrap",
 		gap: spacing.md,
+	},
+	narrowMobileAttributes: {
+		flexDirection: "column",
+	},
+	narrowMobileAttribute: {
+		flexBasis: "auto",
+		flexGrow: 0,
+		width: "100%",
 	},
 	attribute: {
 		flexBasis: "22%",

@@ -39,9 +39,6 @@ export function MarketplaceSection({
 		{ id: "exchange", label: "Venta" },
 	]);
 
-	const nextValue = (values: string[], current: string) =>
-		values[(values.indexOf(current) + 1) % values.length];
-
 	const removeFilter = (id: string) => {
 		setActiveFilters((filters) => filters.filter((filter) => filter.id !== id));
 	};
@@ -64,9 +61,11 @@ export function MarketplaceSection({
 						onSearchChange={setSearch}
 						onSearchPress={() => onSearch?.(search)}
 						institution={institution}
-						onInstitutionPress={() => setInstitution(nextValue(institutions, institution))}
+						institutionOptions={institutions}
+						onInstitutionChange={setInstitution}
 						exchangeType={exchangeType}
-						onExchangePress={() => setExchangeType(nextValue(exchangeTypes, exchangeType))}
+						exchangeTypeOptions={exchangeTypes}
+						onExchangeChange={setExchangeType}
 					/>
 				</ScrollView>
 
@@ -83,7 +82,8 @@ export function MarketplaceSection({
 							onRemove: () => removeFilter(filter.id),
 						}))}
 						sortValue={sortValue}
-						onSortPress={() => setSortValue(nextValue(sortOptions, sortValue))}
+						sortOptions={sortOptions}
+						onSortChange={setSortValue}
 						onClearFilters={() => setActiveFilters([])}
 					/>
 				</ScrollView>

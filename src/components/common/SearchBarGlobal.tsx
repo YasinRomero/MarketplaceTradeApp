@@ -10,6 +10,8 @@ import { colors, radius, spacing, typography } from "@/theme";
 export interface SearchBarGlobalProps {
 	location?: string;
 	exchangeType?: string;
+	locationOptions?: readonly string[];
+	exchangeTypeOptions?: readonly string[];
 	searchValue?: string;
 	searchPlaceholder?: string;
 	locationIcon?: ReactNode;
@@ -25,6 +27,8 @@ export interface SearchBarGlobalProps {
 export function SearchBarGlobal({
 	location = "Ubicación",
 	exchangeType = "Intercambio",
+	locationOptions = ["Ubicación", "Sede central", "Sede norte", "Sede sur"],
+	exchangeTypeOptions = ["Intercambio", "Venta", "Intercambio", "Donación"],
 	searchValue,
 	searchPlaceholder = "¿Qué estás buscando?",
 	locationIcon = <Distance size={24} color={colors.text.secondary} />,
@@ -45,6 +49,7 @@ export function SearchBarGlobal({
 		<View style={[styles.container, isMobile && styles.containerMobile, style]}>
 			<InputSelect
 				value={location}
+				options={locationOptions}
 				leftIcon={locationIcon}
 				rightIcon={arrowIcon}
 				iconPosition="both"
@@ -68,6 +73,7 @@ export function SearchBarGlobal({
 
 			<InputSelect
 				value={exchangeType}
+				options={exchangeTypeOptions}
 				leftIcon={exchangeIcon}
 				rightIcon={arrowIcon}
 				iconPosition="both"

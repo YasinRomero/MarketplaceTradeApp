@@ -12,11 +12,15 @@ export interface MarketplaceSearchBarProps {
 	searchPlaceholder?: string;
 	institution?: string;
 	exchangeType?: string;
+	institutionOptions?: readonly string[];
+	exchangeTypeOptions?: readonly string[];
 	institutionIcon?: ReactNode;
 	exchangeIcon?: ReactNode;
 	onSearchChange?: (value: string) => void;
 	onInstitutionPress?: () => void;
 	onExchangePress?: () => void;
+	onInstitutionChange?: (value: string) => void;
+	onExchangeChange?: (value: string) => void;
 	onSearchPress?: () => void;
 	disabled?: boolean;
 	style?: StyleProp<ViewStyle>;
@@ -27,11 +31,15 @@ export function MarketplaceSearchBar({
 	searchPlaceholder = "¿Qué estás buscando?",
 	institution = "Selecciona una universidad",
 	exchangeType = "Tipo de intercambio",
+	institutionOptions = ["Selecciona una universidad", "Universidad Nacional", "Universidad Católica"],
+	exchangeTypeOptions = ["Tipo de intercambio", "Venta", "Intercambio", "Donación"],
 	institutionIcon = <Domain size={24} color={colors.text.secondary} />,
 	exchangeIcon = <SwapHoriz size={24} color={colors.text.secondary} />,
 	onSearchChange,
 	onInstitutionPress,
 	onExchangePress,
+	onInstitutionChange,
+	onExchangeChange,
 	onSearchPress,
 	disabled = false,
 	style,
@@ -67,12 +75,14 @@ export function MarketplaceSearchBar({
 
 			<InputSelect
 				value={institution}
+				options={institutionOptions}
 				leftIcon={institutionIcon}
 				rightIcon={arrowIcon}
 				iconPosition="both"
 				variant="plain"
 				disabled={disabled}
 				onPress={onInstitutionPress}
+				onChange={onInstitutionChange}
 				containerStyle={[styles.institutionSelect, isMobile && styles.mobileSelect]}
 				textStyle={styles.selectText}
 			/>
@@ -81,12 +91,14 @@ export function MarketplaceSearchBar({
 
 			<InputSelect
 				value={exchangeType}
+				options={exchangeTypeOptions}
 				leftIcon={exchangeIcon}
 				rightIcon={arrowIcon}
 				iconPosition="both"
 				variant="plain"
 				disabled={disabled}
 				onPress={onExchangePress}
+				onChange={onExchangeChange}
 				containerStyle={[styles.exchangeSelect, isMobile && styles.mobileSelect]}
 				textStyle={styles.selectText}
 			/>

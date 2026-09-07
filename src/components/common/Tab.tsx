@@ -16,6 +16,7 @@ export interface TabProps {
 	tabs: TabItem[];
 	selectedId?: string;
 	variant?: TabVariant;
+	stacked?: boolean;
 	onChange?: (id: string) => void;
 	disabled?: boolean;
 	style?: StyleProp<ViewStyle>;
@@ -25,6 +26,7 @@ export function Tab({
 	tabs,
 	selectedId,
 	variant = "normal",
+	stacked = false,
 	onChange,
 	disabled = false,
 	style,
@@ -38,7 +40,7 @@ export function Tab({
 	};
 
 	return (
-		<View style={[styles.container, variantStyles[variant], style]}>
+		<View style={[styles.container, variantStyles[variant], stacked && styles.stacked, style]}>
 			{tabs.map((tab) => {
 				const isSelected = tab.id === selectedId;
 				const onPress = () => onChange?.(tab.id);
@@ -62,7 +64,7 @@ export function Tab({
 						icon={getIcon(tab.icon, isSelected)}
 						disabled={disabled}
 						onPress={onPress}
-						style={[styles.normalTab, styles.flexibleTab]}
+						style={[styles.normalTab, styles.flexibleTab, stacked && styles.stackedTab]}
 					>
 						{tab.label ?? tab.id}
 					</Button>
@@ -72,7 +74,7 @@ export function Tab({
 						icon={getIcon(tab.icon, isSelected)}
 						disabled={disabled}
 						onPress={onPress}
-						style={styles.normalTab}
+						style={[styles.normalTab, stacked && styles.stackedTab]}
 					>
 						{tab.label ?? tab.id}
 					</ButtonGhost>
@@ -113,5 +115,16 @@ const styles = StyleSheet.create({
 	flexibleTab: {
 		flex: 1,
 		minWidth: 0,
+	},
+	stacked: {
+		height: "auto",
+		alignSelf: "stretch",
+		flexDirection: "column",
+	},
+	stackedTab: {
+		width: "100%",
+		flexGrow: 0,
+		flexShrink: 0,
+		flexBasis: "auto",
 	},
 });
