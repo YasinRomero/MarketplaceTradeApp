@@ -1,4 +1,5 @@
 import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { useRouter } from "expo-router";
 
 import { CardProduct } from "@/components/common/CardProduct";
 import { LandingParagraph } from "@/components/common/LandingParagraph";
@@ -7,6 +8,7 @@ import { ButtonOutline } from "@/components/ui/Button";
 import { colors, spacing } from "@/theme";
 
 export function PublishProductsSection() {
+	const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
 
@@ -32,6 +34,7 @@ export function PublishProductsSection() {
             description="Ideal para clases, proyectos y trabajo remoto. Incluye cargador original."
             price="S/. 2,450.00"
             actionLabel="Ver producto"
+            onActionPress={() => router.push({ pathname: "/product-d", params: { id: "thinkpad" } })}
             style={styles.card}
           />
           <CardProduct
@@ -45,6 +48,7 @@ export function PublishProductsSection() {
             description="Casaca cómoda y versátil, perfecta para los días fríos en el campus."
             price="S/. 85.00"
             actionLabel="Ver oferta"
+            onActionPress={() => router.push({ pathname: "/product-d", params: { id: "jacket" } })}
             style={styles.card}
           />
           <CardProduct
@@ -58,6 +62,7 @@ export function PublishProductsSection() {
             description="Balón oficial con poco uso, listo para tus entrenamientos y partidos."
             price="S/. 60.00"
             actionLabel="Intercambiar"
+            onActionPress={() => router.push({ pathname: "/product-d", params: { id: "basketball" } })}
             style={styles.card}
           />
         </View>
@@ -66,6 +71,7 @@ export function PublishProductsSection() {
           <ButtonOutline
             icon={<SwapHoriz size={16} color={colors.text.primary} />}
             iconPosition="right"
+            onPress={() => router.push("/marketplace")}
           >
             Ver más productos
           </ButtonOutline>

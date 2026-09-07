@@ -67,10 +67,17 @@ export function Footer({
 }: FooterProps) {
   const { width } = useWindowDimensions();
   const isCompact = width < 768;
+  const isNarrow = width < 480;
 
   return (
     <View style={styles.footer}>
-      <View style={[styles.container, isCompact && styles.containerCompact]}>
+      <View
+        style={[
+          styles.container,
+          isCompact && styles.containerCompact,
+          isNarrow && styles.containerNarrow,
+        ]}
+      >
         <View style={[styles.information, isCompact && styles.columnCompact]}>
           <View style={styles.logo}>
             <View style={styles.logoIcon}>
@@ -186,6 +193,12 @@ const styles = StyleSheet.create({
   containerCompact: {
     flexDirection: "column",
     gap: spacing["3xl"],
+  },
+  containerNarrow: {
+    gap: spacing["2xl"],
+    paddingTop: spacing["2xl"],
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing["3xl"],
   },
   information: { flex: 1, gap: spacing.lg },
   section: { flex: 1, gap: spacing.lg },

@@ -1,272 +1,269 @@
 import { ReactNode } from "react";
+import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import {
-  Add,
-  ChatBubble,
-  NotificationsUnread,
-  School,
-} from "@/components/icons";
+import { Add, ChatBubble, NotificationsUnread, School } from "@/components/icons";
 import { ButtonGhost, ButtonIcon, ButtonRounded } from "@/components/ui/Button";
 import { colors, radius, spacing, typography } from "@/theme";
 
 export type HeaderVariant = "default" | "logged";
 
 export interface HeaderProps {
-  variant?: HeaderVariant;
-  logoIcon?: ReactNode;
-  notificationIcon?: ReactNode;
-  chatIcon?: ReactNode;
-  addIcon?: ReactNode;
-  userName?: string;
-  userEmail?: string;
-  userInitials?: string;
-  onLogoPress?: () => void;
-  onCategoriesPress?: () => void;
-  onHowItWorksPress?: () => void;
-  onHelpPress?: () => void;
-  onLoginPress?: () => void;
-  onPublishPress?: () => void;
-  onNotificationsPress?: () => void;
-  onChatPress?: () => void;
-  onProfilePress?: () => void;
+	variant?: HeaderVariant;
+	logoIcon?: ReactNode;
+	notificationIcon?: ReactNode;
+	chatIcon?: ReactNode;
+	addIcon?: ReactNode;
+	userName?: string;
+	userEmail?: string;
+	userInitials?: string;
+	onLogoPress?: () => void;
+	onCategoriesPress?: () => void;
+	onHowItWorksPress?: () => void;
+	onHelpPress?: () => void;
+	onLoginPress?: () => void;
+	onPublishPress?: () => void;
+	onNotificationsPress?: () => void;
+	onChatPress?: () => void;
+	onProfilePress?: () => void;
 }
 
 export function Header({
-  variant = "default",
-  logoIcon = <School size={24} color={colors.action.primaryForeground} />,
-  notificationIcon,
-  chatIcon,
-  addIcon = <Add size={16} color={colors.action.primaryForeground} />,
-  userName = "",
-  userEmail = "",
-  userInitials = "",
-  onLogoPress,
-  onCategoriesPress,
-  onHowItWorksPress,
-  onHelpPress,
-  onLoginPress,
-  onPublishPress,
-  onNotificationsPress,
-  onChatPress,
-  onProfilePress,
+	variant = "default",
+	logoIcon = <School size={24} color={colors.action.primaryForeground} />,
+	notificationIcon,
+	chatIcon,
+	addIcon = <Add size={16} color={colors.action.primaryForeground} />,
+	userName = "",
+	userEmail = "",
+	userInitials = "",
+	onLogoPress,
+	onCategoriesPress,
+	onHowItWorksPress,
+	onHelpPress,
+	onLoginPress,
+	onPublishPress,
+	onNotificationsPress,
+	onChatPress,
+	onProfilePress,
 }: HeaderProps) {
-  const isLogged = variant === "logged";
-  const resolvedNotificationIcon = notificationIcon ?? (
-    <NotificationsUnread size={24} color={colors.text.primary} />
-  );
-  const resolvedChatIcon = chatIcon ?? (
-    <ChatBubble size={24} color={colors.text.primary} />
-  );
+	const router = useRouter();
+	const isLogged = variant === "logged";
+	const goToMarketplace = onCategoriesPress ?? (() => router.push("/marketplace"));
+	const goToPublishProduct = onPublishPress ?? (() => router.push("/publishproduct"));
+	const resolvedNotificationIcon = notificationIcon ?? (
+		<NotificationsUnread size={24} color={colors.text.primary} />
+	);
+	const resolvedChatIcon = chatIcon ?? <ChatBubble size={24} color={colors.text.primary} />;
 
-  return (
-    <View style={styles.header}>
-      <View style={styles.maxWidth}>
-        <View style={styles.left}>
-          <Pressable onPress={onLogoPress} style={styles.logo}>
-            <View style={styles.logoIcon}>{logoIcon}</View>
+	return (
+		<View style={styles.header}>
+			<View style={styles.maxWidth}>
+				<View style={styles.left}>
+					<Pressable onPress={onLogoPress} style={styles.logo}>
+						<View style={styles.logoIcon}>{logoIcon}</View>
 
-            <Text style={styles.logoText}>CampusTrade</Text>
-          </Pressable>
+						<Text style={styles.logoText}>CampusTrade</Text>
+					</Pressable>
 
-          <View style={styles.navigation}>
-            <ButtonGhost onPress={onCategoriesPress}>Categorías</ButtonGhost>
+					<View style={styles.navigation}>
+						<ButtonGhost onPress={goToMarketplace}>Marketplace</ButtonGhost>
 
-            <ButtonGhost onPress={onHowItWorksPress}>Cómo funciona</ButtonGhost>
+						<ButtonGhost onPress={onHowItWorksPress}>Cómo funciona</ButtonGhost>
 
-            <ButtonGhost onPress={onHelpPress}>Ayuda</ButtonGhost>
-          </View>
-        </View>
+						<ButtonGhost onPress={onHelpPress}>Ayuda</ButtonGhost>
+					</View>
+				</View>
 
-        {!isLogged ? (
-          <View style={styles.actions}>
-            <ButtonGhost onPress={onLoginPress}>Iniciar sesión</ButtonGhost>
+				{!isLogged ? (
+					<View style={styles.actions}>
+						<ButtonGhost onPress={onLoginPress}>Iniciar sesión</ButtonGhost>
 
-            <ButtonRounded icon={addIcon} onPress={onPublishPress}>
-              Publicar producto
-            </ButtonRounded>
-          </View>
-        ) : (
-          <View style={styles.loggedActions}>
-            <ButtonIcon
-              icon={resolvedNotificationIcon}
-              accessibilityLabel="Notificaciones"
-              variant="ghost"
-              onPress={onNotificationsPress}
-            />
+						<ButtonRounded icon={addIcon} onPress={goToPublishProduct}>
+							Publicar producto
+						</ButtonRounded>
+					</View>
+				) : (
+					<View style={styles.loggedActions}>
+						<ButtonIcon
+							icon={resolvedNotificationIcon}
+							accessibilityLabel="Notificaciones"
+							variant="ghost"
+							onPress={onNotificationsPress}
+						/>
 
-            <ButtonIcon
-              icon={resolvedChatIcon}
-              accessibilityLabel="Mensajes"
-              variant="ghost"
-              onPress={onChatPress}
-            />
+						<ButtonIcon
+							icon={resolvedChatIcon}
+							accessibilityLabel="Mensajes"
+							variant="ghost"
+							onPress={onChatPress}
+						/>
 
-            <View style={styles.divider} />
+						<View style={styles.divider} />
 
-            <Pressable onPress={onProfilePress} style={styles.profile}>
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>{userInitials}</Text>
-              </View>
+						<Pressable onPress={onProfilePress} style={styles.profile}>
+							<View style={styles.avatar}>
+								<Text style={styles.avatarText}>{userInitials}</Text>
+							</View>
 
-              <View style={styles.profileInfo}>
-                <Text numberOfLines={1} style={styles.profileName}>
-                  {userName}
-                </Text>
+							<View style={styles.profileInfo}>
+								<Text numberOfLines={1} style={styles.profileName}>
+									{userName}
+								</Text>
 
-                <Text numberOfLines={1} style={styles.profileEmail}>
-                  {userEmail}
-                </Text>
-              </View>
-            </Pressable>
+								<Text numberOfLines={1} style={styles.profileEmail}>
+									{userEmail}
+								</Text>
+							</View>
+						</Pressable>
 
-            <ButtonRounded icon={addIcon} onPress={onPublishPress}>
-              Publicar producto
-            </ButtonRounded>
-          </View>
-        )}
-      </View>
-    </View>
-  );
+						<ButtonRounded icon={addIcon} onPress={goToPublishProduct}>
+							Publicar producto
+						</ButtonRounded>
+					</View>
+				)}
+			</View>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  header: {
-    width: "100%",
-    minHeight: 73,
+	header: {
+		width: "100%",
+		minHeight: 73,
 
-    justifyContent: "center",
+		justifyContent: "center",
 
-    paddingVertical: spacing.md + 2,
-    paddingHorizontal: spacing.xl,
+		paddingVertical: spacing.md + 2,
+		paddingHorizontal: spacing.xl,
 
-    backgroundColor: colors.background.surface,
+		backgroundColor: colors.background.surface,
 
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border.default,
-  },
+		borderBottomWidth: 1,
+		borderBottomColor: colors.border.default,
+	},
 
-  maxWidth: {
-    width: "100%",
-    maxWidth: 1232,
+	maxWidth: {
+		width: "100%",
+		maxWidth: 1232,
 
-    alignSelf: "center",
+		alignSelf: "center",
 
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+	},
 
-  left: {
-    flex: 1,
+	left: {
+		flex: 1,
 
-    flexDirection: "row",
-    alignItems: "center",
+		flexDirection: "row",
+		alignItems: "center",
 
-    gap: spacing["2xl"],
-  },
+		gap: spacing["2xl"],
+	},
 
-  logo: {
-    flexDirection: "row",
-    alignItems: "center",
+	logo: {
+		flexDirection: "row",
+		alignItems: "center",
 
-    gap: spacing.md - 2,
-  },
+		gap: spacing.md - 2,
+	},
 
-  logoIcon: {
-    width: 36,
-    height: 36,
+	logoIcon: {
+		width: 36,
+		height: 36,
 
-    alignItems: "center",
-    justifyContent: "center",
+		alignItems: "center",
+		justifyContent: "center",
 
-    backgroundColor: colors.action.primary,
+		backgroundColor: colors.action.primary,
 
-    borderRadius: radius.lg,
-  },
+		borderRadius: radius.lg,
+	},
 
-  logoText: {
-    fontFamily: typography.family,
-    fontSize: typography.size.md,
-    lineHeight: typography.lineHeight.xl,
-    fontWeight: typography.weight.bold,
+	logoText: {
+		fontFamily: typography.family,
+		fontSize: typography.size.md,
+		lineHeight: typography.lineHeight.xl,
+		fontWeight: typography.weight.bold,
 
-    color: colors.text.primary,
-  },
+		color: colors.text.primary,
+	},
 
-  navigation: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+	navigation: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
 
-  actions: {
-    flexDirection: "row",
-    alignItems: "center",
+	actions: {
+		flexDirection: "row",
+		alignItems: "center",
 
-    gap: spacing.sm,
-  },
+		gap: spacing.sm,
+	},
 
-  loggedActions: {
-    flexDirection: "row",
-    alignItems: "center",
+	loggedActions: {
+		flexDirection: "row",
+		alignItems: "center",
 
-    gap: spacing.sm,
-  },
+		gap: spacing.sm,
+	},
 
-  divider: {
-    width: 1,
-    height: 20,
-    marginHorizontal: spacing.xs,
-    backgroundColor: colors.border.default,
-  },
+	divider: {
+		width: 1,
+		height: 20,
+		marginHorizontal: spacing.xs,
+		backgroundColor: colors.border.default,
+	},
 
-  profile: {
-    minWidth: 233,
-    height: 44,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.sm,
-    gap: spacing.md - 2,
-    borderRadius: radius.md,
-  },
+	profile: {
+		minWidth: 233,
+		height: 44,
+		flexDirection: "row",
+		alignItems: "center",
+		paddingVertical: spacing.xs,
+		paddingHorizontal: spacing.sm,
+		gap: spacing.md - 2,
+		borderRadius: radius.md,
+	},
 
-  avatar: {
-    width: 36,
-    height: 36,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.background.subtle,
-    borderWidth: 1,
-    borderColor: colors.border.default,
-    borderRadius: radius.full,
-  },
+	avatar: {
+		width: 36,
+		height: 36,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: colors.background.subtle,
+		borderWidth: 1,
+		borderColor: colors.border.default,
+		borderRadius: radius.full,
+	},
 
-  avatarText: {
-    fontFamily: typography.family,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.md - 2,
-    fontWeight: typography.weight.bold,
-    color: colors.text.primary,
-  },
+	avatarText: {
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.md - 2,
+		fontWeight: typography.weight.bold,
+		color: colors.text.primary,
+	},
 
-  profileInfo: {
-    flex: 1,
-  },
+	profileInfo: {
+		flex: 1,
+	},
 
-  profileName: {
-    fontFamily: typography.family,
-    fontSize: typography.size.sm,
-    lineHeight: typography.lineHeight.md,
-    fontWeight: typography.weight.bold,
-    color: colors.text.primary,
-  },
+	profileName: {
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		lineHeight: typography.lineHeight.md,
+		fontWeight: typography.weight.bold,
+		color: colors.text.primary,
+	},
 
-  profileEmail: {
-    fontFamily: typography.family,
-    fontSize: typography.size.xs,
-    lineHeight: typography.lineHeight.sm,
-    fontWeight: typography.weight.regular,
-    color: colors.text.secondary,
-  },
+	profileEmail: {
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
+		fontWeight: typography.weight.regular,
+		color: colors.text.secondary,
+	},
 });
