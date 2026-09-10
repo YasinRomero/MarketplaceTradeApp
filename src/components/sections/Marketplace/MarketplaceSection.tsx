@@ -19,8 +19,8 @@ export interface MarketplaceSectionProps {
 	style?: StyleProp<ViewStyle>;
 }
 
-const institutions = ["Selecciona una universidad", "Universidad Nacional", "Universidad Privada"];
-const exchangeTypes = ["Tipo de intercambio", "Venta", "Permuta", "Donación"];
+const institutions = ["Selecciona una sede", "Lima Norte", "Lima Centro"];
+const exchangeTypes = ["Tipo de intercambio", "Venta", "Intercambio"];
 const sortOptions = ["Relevancia", "Más recientes", "Menor precio"];
 
 export function MarketplaceSection({

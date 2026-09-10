@@ -74,7 +74,7 @@ export function Tab({
 						icon={getIcon(tab.icon, isSelected)}
 						disabled={disabled}
 						onPress={onPress}
-						style={[styles.normalTab, stacked && styles.stackedTab]}
+						style={[styles.normalTab, styles.flexibleTab, stacked && styles.stackedTab]}
 					>
 						{tab.label ?? tab.id}
 					</ButtonGhost>

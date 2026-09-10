@@ -7,7 +7,7 @@ import { InputWithLabel } from "@/components/common/InputWithLabel";
 import { Message } from "@/components/common/Message";
 import { SelectLabel } from "@/components/common/SelectLabel";
 import { Tab } from "@/components/common/Tab";
-import { Info, News, Sell, SwapCalls, SwapHoriz, Tune } from "@/components/icons";
+import { Info, News, Sell, SwapHoriz, Tune } from "@/components/icons";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { colors, radius, spacing, typography } from "@/theme";
@@ -141,8 +141,7 @@ export function ProductInformationCard({
 					<Tab
 						tabs={[
 							{ id: "sell", label: "Vender", icon: <Sell size={16} color={colors.text.inverse} /> },
-							{ id: "exchange", label: "Intercambiar", icon: <SwapHoriz size={16} color={colors.text.secondary} /> },
-							{ id: "donate", label: "Donar", icon: <SwapCalls size={16} color={colors.text.secondary} /> },
+							{ id: "exchange", label: "Intercambiar", icon: <SwapHoriz size={16} color={colors.text.secondary} /> }
 						]}
 						selectedId={mode}
 						onChange={(value) => setMode(value as ProductMode)}

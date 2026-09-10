@@ -29,9 +29,9 @@ export interface MarketplaceSearchBarProps {
 export function MarketplaceSearchBar({
 	searchValue,
 	searchPlaceholder = "¿Qué estás buscando?",
-	institution = "Selecciona una universidad",
+	institution = "Selecciona una sede",
 	exchangeType = "Tipo de intercambio",
-	institutionOptions = ["Selecciona una universidad", "Universidad Nacional", "Universidad Católica"],
+	institutionOptions = ["Lima Norte"],
 	exchangeTypeOptions = ["Tipo de intercambio", "Venta", "Intercambio", "Donación"],
 	institutionIcon = <Domain size={24} color={colors.text.secondary} />,
 	exchangeIcon = <SwapHoriz size={24} color={colors.text.secondary} />,

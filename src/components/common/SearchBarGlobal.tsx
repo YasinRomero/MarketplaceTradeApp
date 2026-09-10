@@ -28,7 +28,7 @@ export function SearchBarGlobal({
 	location = "Ubicación",
 	exchangeType = "Intercambio",
 	locationOptions = ["Ubicación", "Sede central", "Sede norte", "Sede sur"],
-	exchangeTypeOptions = ["Intercambio", "Venta", "Intercambio", "Donación"],
+	exchangeTypeOptions = ["Intercambio", "Venta"],
 	searchValue,
 	searchPlaceholder = "¿Qué estás buscando?",
 	locationIcon = <Distance size={24} color={colors.text.secondary} />,
