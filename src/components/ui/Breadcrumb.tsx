@@ -1,6 +1,7 @@
-import { colors } from "@/theme/colors";
+import { colors, typography } from "@/theme";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ChevronForward } from "../icons";
 
 interface BreadcrumbItem {
 	label: string;
@@ -23,7 +24,11 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
 							<Text style={[styles.text, isLast && styles.activeText]}>{item.label}</Text>
 						</Pressable>
 
-						{!isLast && <Text style={styles.separator}>›</Text>}
+						{!isLast && (
+							<Text style={styles.separator}>
+								<ChevronForward />
+							</Text>
+						)}
 					</React.Fragment>
 				);
 			})}
@@ -39,24 +44,22 @@ const styles = StyleSheet.create({
 	},
 
 	text: {
-		fontFamily: "Plus Jakarta Sans",
-		fontSize: 12,
-		lineHeight: 16,
-		fontWeight: "400",
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
+		fontWeight: typography.weight.regular,
 		letterSpacing: 0.12,
-
 		color: colors.text.secondary,
 	},
 
 	activeText: {
-		fontWeight: "600",
+		fontWeight: typography.weight.semibold,
 		color: colors.text.primary,
 	},
 
 	separator: {
-		fontFamily: "Plus Jakarta Sans",
-		fontSize: 12,
-
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
 		color: colors.text.secondary,
 	},
 });

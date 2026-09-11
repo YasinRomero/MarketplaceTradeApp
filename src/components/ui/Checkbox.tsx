@@ -1,6 +1,5 @@
+import { colors, radius, typography } from "@/theme";
 import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
 
 interface CheckboxProps {
 	label: string;
@@ -27,17 +26,11 @@ export function Checkbox({
 		<Pressable
 			disabled={disabled}
 			onPress={() => onChange?.(!checked)}
-			accessibilityRole="checkbox"
-			accessibilityState={{
-				checked,
-				disabled,
-			}}
 			style={[styles.container, disabled && styles.disabled, style]}
 		>
 			<View
 				style={[
 					styles.checkbox,
-
 					checked ? (inverse ? styles.checkedInverse : styles.checked) : styles.unchecked,
 				]}
 			>
@@ -48,9 +41,7 @@ export function Checkbox({
 				style={[
 					styles.label,
 					bold ? styles.labelMedium : styles.labelRegular,
-
 					inverse && checked && styles.labelInverse,
-
 					labelStyle,
 				]}
 			>
@@ -64,23 +55,19 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
 		alignItems: "center",
-
 		gap: 5,
 	},
 
 	checkbox: {
 		width: 16,
 		height: 16,
-
 		alignItems: "center",
 		justifyContent: "center",
-
-		borderRadius: 4,
+		borderRadius: radius.xs,
 	},
 
 	unchecked: {
 		backgroundColor: "transparent",
-
 		borderWidth: 1,
 		borderColor: colors.border.default,
 	},
@@ -95,28 +82,24 @@ const styles = StyleSheet.create({
 
 	check: {
 		color: colors.text.inverse,
-
-		fontSize: 12,
-		lineHeight: 14,
-
-		fontWeight: "700",
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
+		fontWeight: typography.weight.bold,
 	},
 
 	label: {
-		fontFamily: "Plus Jakarta Sans",
-
-		fontSize: 12,
-		lineHeight: 15,
-
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
 		color: colors.text.primary,
 	},
 
 	labelMedium: {
-		fontWeight: "500",
+		fontWeight: typography.weight.medium,
 	},
 
 	labelRegular: {
-		fontWeight: "400",
+		fontWeight: typography.weight.regular,
 	},
 
 	labelInverse: {

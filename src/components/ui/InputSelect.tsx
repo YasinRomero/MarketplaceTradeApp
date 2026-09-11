@@ -1,3 +1,4 @@
+import { colors, radius, typography } from "@/theme";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import {
 	Modal,
@@ -12,31 +13,17 @@ import {
 	ViewStyle,
 } from "react-native";
 
-import { colors } from "@/theme/colors";
-
-type InputSelectSize = "normal" | "compact";
-
-type InputSelectVariant = "outline" | "filled" | "plain";
-
-type IconPosition = "left" | "right" | "both" | "none";
-
 interface InputSelectProps {
 	value: string;
 	options?: readonly string[];
-
 	leftIcon?: ReactNode;
 	rightIcon?: ReactNode;
-
-	iconPosition?: IconPosition;
-
-	size?: InputSelectSize;
-	variant?: InputSelectVariant;
-
+	iconPosition?: "left" | "right" | "both" | "none";
+	size?: "normal" | "compact";
+	variant?: "outline" | "filled" | "plain";
 	onPress?: () => void;
 	onChange?: (value: string) => void;
-
 	disabled?: boolean;
-
 	containerStyle?: StyleProp<ViewStyle>;
 	textStyle?: StyleProp<TextStyle>;
 }
@@ -44,20 +31,14 @@ interface InputSelectProps {
 export function InputSelect({
 	value,
 	options = [],
-
 	leftIcon,
 	rightIcon,
-
 	iconPosition = "none",
-
 	size = "normal",
 	variant = "filled",
-
 	onPress,
 	onChange,
-
 	disabled = false,
-
 	containerStyle,
 	textStyle,
 }: InputSelectProps) {
@@ -84,13 +65,8 @@ export function InputSelect({
 		alignSelf: flattenedContainerStyle?.alignSelf,
 	};
 	const showLeftIcon = iconPosition === "left" || iconPosition === "both";
-
 	const showRightIcon = iconPosition === "right" || iconPosition === "both";
 	const hasOptions = options.length > 0;
-
-	useEffect(() => {
-		setSelectedValue(value);
-	}, [value]);
 
 	useEffect(() => {
 		if (!isOpen || isMobile) return;
@@ -128,7 +104,6 @@ export function InputSelect({
 			{options.map((option) => (
 				<Pressable
 					key={option}
-					accessibilityRole="menuitem"
 					onPress={() => handleSelect(option)}
 					style={({ pressed }) => [
 						styles.menuItem,
@@ -151,8 +126,6 @@ export function InputSelect({
 					if (hasOptions) setIsOpen((current) => !current);
 				}}
 				disabled={disabled}
-				accessibilityRole="button"
-				accessibilityState={{ disabled, expanded: isOpen }}
 				style={[
 					styles.base,
 					sizeStyles[size],
@@ -208,14 +181,12 @@ export function InputSelect({
 const sizeStyles = StyleSheet.create({
 	normal: {
 		minHeight: 44,
-
 		paddingVertical: 10,
 		paddingHorizontal: 16,
 	},
 
 	compact: {
 		minHeight: 32,
-
 		paddingVertical: 4,
 		paddingHorizontal: 12,
 	},
@@ -224,23 +195,19 @@ const sizeStyles = StyleSheet.create({
 const variantStyles = StyleSheet.create({
 	filled: {
 		backgroundColor: colors.background.subtle,
-
-		borderRadius: 8,
+		borderRadius: radius.md,
 	},
 
 	outline: {
 		backgroundColor: "transparent",
-
 		borderWidth: 1,
 		borderColor: colors.border.default,
-
-		borderRadius: 8,
+		borderRadius: radius.md,
 	},
 
 	plain: {
 		backgroundColor: "transparent",
-
-		borderRadius: 8,
+		borderRadius: radius.md,
 	},
 });
 
@@ -248,52 +215,48 @@ const styles = StyleSheet.create({
 	wrapper: {
 		width: "100%",
 	},
+
 	base: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-
 		gap: 8,
 	},
 
 	valueContainer: {
 		flex: 1,
-
 		flexDirection: "row",
 		alignItems: "center",
-
 		gap: 8,
 	},
 
 	icon: {
 		width: 24,
 		height: 24,
-
 		alignItems: "center",
 		justifyContent: "center",
 	},
 
 	text: {
 		flex: 1,
-
-		fontFamily: "Plus Jakarta Sans",
-		fontWeight: "400",
-
-		fontSize: 12,
-		lineHeight: 15,
-
+		fontFamily: typography.family,
+		fontWeight: typography.weight.regular,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
 		color: colors.text.primary,
 	},
 
 	disabled: {
 		opacity: 0.5,
 	},
+
 	backdrop: {
 		flex: 1,
 		justifyContent: "center",
 		padding: 16,
 		backgroundColor: "rgba(15, 23, 42, 0.22)",
 	},
+
 	menu: {
 		width: "100%",
 		maxWidth: 360,
@@ -302,35 +265,41 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.background.surface,
 		borderWidth: 1,
 		borderColor: colors.border.default,
-		borderRadius: 8,
+		borderRadius: radius.md,
 		shadowColor: "#000000",
 		shadowOffset: { width: 0, height: 4 },
 		shadowOpacity: 0.14,
 		shadowRadius: 10,
 		elevation: 5,
 	},
+
 	desktopMenu: {
 		position: "absolute",
 		zIndex: 1000,
 	},
+
 	desktopOverlay: {
 		flex: 1,
 	},
+
 	menuItem: {
 		minHeight: 44,
 		justifyContent: "center",
 		paddingHorizontal: 16,
 	},
+
 	selectedMenuItem: {
 		backgroundColor: colors.background.subtle,
 	},
+
 	pressedMenuItem: {
 		opacity: 0.7,
 	},
+
 	menuText: {
-		fontFamily: "Plus Jakarta Sans",
-		fontSize: 14,
-		lineHeight: 18,
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		lineHeight: typography.lineHeight.md,
 		color: colors.text.primary,
 	},
 });

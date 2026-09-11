@@ -1,12 +1,9 @@
+import { colors, typography } from "@/theme";
 import { StyleProp, StyleSheet, Text, TextProps, TextStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
-
-type LabelSize = "default" | "compact";
 
 interface LabelProps extends TextProps {
 	children: string;
-	size?: LabelSize;
+	size?: "default" | "compact";
 	style?: StyleProp<TextStyle>;
 }
 
@@ -20,20 +17,20 @@ export function Label({ children, size = "default", style, ...props }: LabelProp
 
 const sizeStyles = StyleSheet.create({
 	default: {
-		fontSize: 14,
-		lineHeight: 20,
+		fontSize: typography.size.sm,
+		lineHeight: typography.lineHeight.lg,
 	},
 
 	compact: {
-		fontSize: 12,
-		lineHeight: 16,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
 	},
 });
 
 const styles = StyleSheet.create({
 	base: {
-		fontFamily: "Plus Jakarta Sans",
-		fontWeight: "600",
+		fontFamily: typography.family,
+		fontWeight: typography.weight.semibold,
 		color: colors.text.primary,
 	},
 });
