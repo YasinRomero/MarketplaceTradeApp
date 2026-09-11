@@ -1,1 +1,11 @@
 /package-lock.json
+
+.vscode/
+node_modules/
+
+.expo/
+web-build/
+
+dist/
+build/
+assets/

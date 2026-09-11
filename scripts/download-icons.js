@@ -77,7 +77,7 @@ function downloadIcon(name) {
 		file.on("finish", () => {
 			file.close();
 
-			console.log(`✅ ${name}`);
+			console.log(`${name}`);
 		});
 	});
 }
