@@ -1,11 +1,7 @@
-import { StyleProp, StyleSheet, TextInput, TextInputProps, TextStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
+import { colors, typography } from "@/theme";
+import { StyleSheet, TextInput } from "react-native";
 import { sharedInputStyles } from "./input.styles";
-
-interface InputProps extends TextInputProps {
-	style?: StyleProp<TextStyle>;
-}
+import { InputProps } from "./input.types";
 
 export function Input({ style, ...props }: InputProps) {
 	return (
@@ -20,16 +16,12 @@ export function Input({ style, ...props }: InputProps) {
 const styles = StyleSheet.create({
 	input: {
 		minHeight: 41,
-
 		padding: 12,
-
 		borderColor: colors.border.default,
-
-		fontFamily: "Plus Jakarta Sans",
-		fontSize: 12,
-		lineHeight: 15,
-		fontWeight: "400",
-
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
+		fontWeight: typography.weight.regular,
 		color: colors.text.primary,
 	},
 });

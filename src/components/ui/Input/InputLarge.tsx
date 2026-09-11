@@ -1,11 +1,7 @@
-import { StyleProp, StyleSheet, TextInput, TextInputProps, TextStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
+import { colors, typography } from "@/theme";
+import { StyleSheet, TextInput } from "react-native";
 import { sharedInputStyles } from "./input.styles";
-
-interface InputLargeProps extends TextInputProps {
-	style?: StyleProp<TextStyle>;
-}
+import { InputLargeProps } from "./input.types";
 
 export function InputLarge({ style, ...props }: InputLargeProps) {
 	return (
@@ -20,17 +16,13 @@ export function InputLarge({ style, ...props }: InputLargeProps) {
 const styles = StyleSheet.create({
 	input: {
 		minHeight: 48,
-
 		paddingVertical: 14,
 		paddingHorizontal: 16,
-
 		borderColor: colors.border.default,
-
-		fontFamily: "Plus Jakarta Sans",
-		fontSize: 14,
-		lineHeight: 18,
-		fontWeight: "400",
-
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		lineHeight: typography.lineHeight.md,
+		fontWeight: typography.weight.regular,
 		color: colors.text.primary,
 	},
 });

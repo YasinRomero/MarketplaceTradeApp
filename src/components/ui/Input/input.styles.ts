@@ -1,13 +1,14 @@
+import { radius, typography } from "@/theme";
 import { StyleSheet } from "react-native";
 
 export const sharedInputStyles = StyleSheet.create({
 	base: {
 		borderWidth: 1,
-		borderRadius: 8,
+		borderRadius: radius.md,
 	},
 
 	text: {
-		fontFamily: "Plus Jakarta Sans",
-		fontWeight: "400",
+		fontFamily: typography.family,
+		fontWeight: typography.weight.regular,
 	},
 });

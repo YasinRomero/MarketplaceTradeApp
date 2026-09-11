@@ -1,23 +1,11 @@
-import { ReactNode } from "react";
-import { StyleProp, StyleSheet, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
-
-type InputIconVariant = "plain" | "normal";
-
-interface InputIconProps extends Omit<TextInputProps, "style"> {
-	icon: ReactNode;
-	variant?: InputIconVariant;
-
-	containerStyle?: StyleProp<ViewStyle>;
-	inputStyle?: StyleProp<TextStyle>;
-}
+import { colors, radius, typography } from "@/theme";
+import { StyleSheet, TextInput, TextStyle, View, ViewStyle } from "react-native";
+import { InputIconProps, InputIconVariant } from "./input.types";
 
 export function InputIcon({ icon, variant = "plain", containerStyle, inputStyle, ...props }: InputIconProps) {
 	return (
 		<View style={[styles.container, variantStyles[variant].container, containerStyle]}>
 			<View style={styles.icon}>{icon}</View>
-
 			<TextInput
 				{...props}
 				placeholderTextColor={colors.text.secondary}
@@ -30,35 +18,28 @@ export function InputIcon({ icon, variant = "plain", containerStyle, inputStyle,
 const styles = StyleSheet.create({
 	container: {
 		minHeight: 24,
-
 		flexDirection: "row",
 		alignItems: "center",
-
 		paddingHorizontal: 12,
 		gap: 8,
-
-		borderRadius: 8,
+		borderRadius: radius.md,
 	},
 
 	icon: {
 		width: 24,
 		height: 24,
-
 		alignItems: "center",
 		justifyContent: "center",
 	},
 
 	input: {
 		flex: 1,
-
 		paddingVertical: 0,
 		paddingHorizontal: 0,
-
-		fontFamily: "Plus Jakarta Sans",
-		fontSize: 14,
-		lineHeight: 18,
-		fontWeight: "400",
-
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		lineHeight: typography.lineHeight.md,
+		fontWeight: typography.weight.regular,
 		color: colors.text.primary,
 	},
 });
