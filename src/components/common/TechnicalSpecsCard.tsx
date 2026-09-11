@@ -40,9 +40,7 @@ export function TechnicalSpecsCard({ specs = defaultSpecs, style }: TechnicalSpe
 				{specs.map((spec, index) => (
 					<View key={`${spec.label}-${index}`} style={[styles.item, isMobile && styles.mobileItem]}>
 						<Text style={styles.label}>{spec.label}</Text>
-						<Text style={[styles.value, isMobile && styles.mobileValue]}>
-							{spec.value}
-						</Text>
+						<Text style={[styles.value, isMobile && styles.mobileValue]}>{spec.value}</Text>
 					</View>
 				))}
 			</View>

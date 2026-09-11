@@ -26,11 +26,7 @@ export function DetailsProductBreadcrumb({ items, style }: DetailsProductBreadcr
 
 				return (
 					<View key={`${item.label}-${index}`} style={styles.item}>
-						<Pressable
-							accessibilityRole="link"
-							disabled={isLast || !item.onPress}
-							onPress={item.onPress}
-						>
+						<Pressable accessibilityRole="link" disabled={isLast || !item.onPress} onPress={item.onPress}>
 							<Text style={[styles.label, isLast && styles.activeLabel]}>{item.label}</Text>
 						</Pressable>
 

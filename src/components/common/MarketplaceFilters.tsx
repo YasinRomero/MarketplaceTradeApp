@@ -1,13 +1,5 @@
 import { ReactNode } from "react";
-import {
-	Pressable,
-	StyleProp,
-	StyleSheet,
-	Text,
-	useWindowDimensions,
-	View,
-	ViewStyle,
-} from "react-native";
+import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { Close, KeyboardArrowDown } from "@/components/icons";
 import { Button } from "@/components/ui/Button";

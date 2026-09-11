@@ -65,7 +65,11 @@ export function InputSelect({
 	const isMobile = width < 768;
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedValue, setSelectedValue] = useState(value);
-	const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0, width: 0 });
+	const [menuPosition, setMenuPosition] = useState({
+		left: 0,
+		top: 0,
+		width: 0,
+	});
 	const selectRef = useRef<View>(null);
 	const menuRef = useRef<View>(null);
 	const flattenedContainerStyle = StyleSheet.flatten(containerStyle);
@@ -169,12 +173,7 @@ export function InputSelect({
 			</Pressable>
 
 			{hasOptions && isMobile && (
-				<Modal
-					visible={isOpen}
-					transparent
-					animationType="fade"
-					onRequestClose={() => setIsOpen(false)}
-				>
+				<Modal visible={isOpen} transparent animationType="fade" onRequestClose={() => setIsOpen(false)}>
 					<Pressable style={styles.backdrop} onPress={() => setIsOpen(false)}>
 						{optionsMenu}
 					</Pressable>
@@ -182,12 +181,7 @@ export function InputSelect({
 			)}
 
 			{hasOptions && !isMobile && (
-				<Modal
-					visible={isOpen}
-					transparent
-					animationType="none"
-					onRequestClose={() => setIsOpen(false)}
-				>
+				<Modal visible={isOpen} transparent animationType="none" onRequestClose={() => setIsOpen(false)}>
 					<View pointerEvents="box-none" style={styles.desktopOverlay}>
 						{menuPosition.width > 0 && (
 							<View

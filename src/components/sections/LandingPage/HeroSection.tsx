@@ -28,8 +28,8 @@ export function HeroSection({ searchBarProps }: HeroSectionProps) {
 					<Text style={styles.highlightTitle}>con quien quierass</Text>
 				</Text>
 				<Text style={styles.description}>
-					Desde tecnología y ropa hasta hobbies y más. El punto de encuentro estudiantil para darle
-					vuelta a lo que tienes sin gastar de más.
+					Desde tecnología y ropa hasta hobbies y más. El punto de encuentro estudiantil para darle vuelta a
+					lo que tienes sin gastar de más.
 				</Text>
 
 				<SearchBarGlobal {...searchBarProps} />

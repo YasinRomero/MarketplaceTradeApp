@@ -12,11 +12,7 @@ export default function HomeScreen() {
 	const router = useRouter();
 
 	return (
-		<ScrollView
-			style={styles.screen}
-			contentContainerStyle={styles.contentContainer}
-			stickyHeaderIndices={[0]}
-		>
+		<ScrollView style={styles.screen} contentContainerStyle={styles.contentContainer} stickyHeaderIndices={[0]}>
 			<Header />
 			<HeroSection searchBarProps={{ onSearchPress: () => router.push("/marketplace") }} />
 			<CategorySection onCategoryPress={() => router.push("/marketplace")} />

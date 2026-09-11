@@ -1,11 +1,4 @@
-import {
-	ImageSourcePropType,
-	StyleProp,
-	StyleSheet,
-	useWindowDimensions,
-	View,
-	ViewStyle,
-} from "react-native";
+import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { CardProduct } from "@/components/common/CardProduct";
 import { HeaderSections } from "@/components/common/HeaderSections";

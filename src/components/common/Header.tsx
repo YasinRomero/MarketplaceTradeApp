@@ -55,9 +55,7 @@ export function Header({
 	const goToPublishProduct = onPublishPress ?? (() => router.push("/publishproduct"));
 	const goToLogin = onLoginPress ?? (() => router.push("/auth"));
 	const goToHome = onLogoPress ?? (() => router.push("/"));
-	const resolvedNotificationIcon = notificationIcon ?? (
-		<NotificationsUnread size={24} color={colors.text.primary} />
-	);
+	const resolvedNotificationIcon = notificationIcon ?? <NotificationsUnread size={24} color={colors.text.primary} />;
 	const resolvedChatIcon = chatIcon ?? <ChatBubble size={24} color={colors.text.primary} />;
 
 	return (
@@ -111,10 +109,7 @@ export function Header({
 
 						<View style={styles.divider} />
 
-						<Pressable
-							onPress={onProfilePress}
-							style={[styles.profile, isMobile && styles.mobileProfile]}
-						>
+						<Pressable onPress={onProfilePress} style={[styles.profile, isMobile && styles.mobileProfile]}>
 							<View style={styles.avatar}>
 								<Text style={styles.avatarText}>{userInitials}</Text>
 							</View>

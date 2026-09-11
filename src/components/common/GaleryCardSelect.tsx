@@ -36,13 +36,7 @@ export function GaleryCardSelect({
 			</View>
 
 			<View style={styles.options}>
-				<Checkbox
-					label={label}
-					checked={checked}
-					inverse={inverse}
-					disabled={disabled}
-					onChange={onChange}
-				/>
+				<Checkbox label={label} checked={checked} inverse={inverse} disabled={disabled} onChange={onChange} />
 				<Checkbox
 					label={secondaryLabel}
 					checked={secondaryChecked}

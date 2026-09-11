@@ -1,14 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-	Pressable,
-	StyleProp,
-	StyleSheet,
-	Text,
-	useWindowDimensions,
-	View,
-	ViewStyle,
-} from "react-native";
+import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { CardProduct } from "@/components/common/CardProduct";
 import { InputWithLabel } from "@/components/common/InputWithLabel";
@@ -174,7 +166,10 @@ export function MarketplaceProductsSection({ style }: MarketplaceProductsSection
 								secondaryBadge="Universidad"
 								actionLabel="Ver producto"
 								onActionPress={() =>
-									router.push({ pathname: "/productdetails", params: { id: product.id } })
+									router.push({
+										pathname: "/productdetails",
+										params: { id: product.id },
+									})
 								}
 								style={[
 									styles.productCard,

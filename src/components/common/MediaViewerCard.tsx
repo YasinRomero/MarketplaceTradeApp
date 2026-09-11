@@ -34,9 +34,7 @@ export function MediaViewerCard({
 }: MediaViewerCardProps) {
 	const { width } = useWindowDimensions();
 	const isMobile = width < 600;
-	const [selectedIndex, setSelectedIndex] = useState(() =>
-		getSafeIndex(initialIndex, images.length),
-	);
+	const [selectedIndex, setSelectedIndex] = useState(() => getSafeIndex(initialIndex, images.length));
 	const selectedImage = images[selectedIndex];
 
 	const selectImage = (index: number) => {

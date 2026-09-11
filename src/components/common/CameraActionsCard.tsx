@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-	ImageSourcePropType,
-	StyleProp,
-	StyleSheet,
-	useWindowDimensions,
-	View,
-	ViewStyle,
-} from "react-native";
+import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { CameraDisplay } from "@/components/common/CameraDisplay";
 import { GaleryCardSelect } from "@/components/common/GaleryCardSelect";
@@ -46,12 +39,8 @@ export function CameraActionsCard({
 }: CameraActionsCardProps) {
 	const { width } = useWindowDimensions();
 	const isMobile = width < 900;
-	const [selectedItems, setSelectedItems] = useState(() =>
-		galleryItems.map((item) => item.checked ?? false),
-	);
-	const [publishItems, setPublishItems] = useState(() =>
-		galleryItems.map((item) => item.primary ?? false),
-	);
+	const [selectedItems, setSelectedItems] = useState(() => galleryItems.map((item) => item.checked ?? false));
+	const [publishItems, setPublishItems] = useState(() => galleryItems.map((item) => item.primary ?? false));
 	const selectedCount = selectedItems.filter(Boolean).length;
 
 	return (

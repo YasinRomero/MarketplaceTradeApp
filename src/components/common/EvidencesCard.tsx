@@ -1,13 +1,5 @@
 import { Image } from "expo-image";
-import {
-	ImageSourcePropType,
-	StyleProp,
-	StyleSheet,
-	Text,
-	useWindowDimensions,
-	View,
-	ViewStyle,
-} from "react-native";
+import { ImageSourcePropType, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";

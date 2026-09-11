@@ -1,13 +1,5 @@
 import { ReactNode } from "react";
-import {
-	StyleProp,
-	StyleSheet,
-	TextInput,
-	TextInputProps,
-	TextStyle,
-	View,
-	ViewStyle,
-} from "react-native";
+import { StyleProp, StyleSheet, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
 
 import { colors } from "@/theme/colors";
 
@@ -21,13 +13,7 @@ interface InputIconProps extends Omit<TextInputProps, "style"> {
 	inputStyle?: StyleProp<TextStyle>;
 }
 
-export function InputIcon({
-	icon,
-	variant = "plain",
-	containerStyle,
-	inputStyle,
-	...props
-}: InputIconProps) {
+export function InputIcon({ icon, variant = "plain", containerStyle, inputStyle, ...props }: InputIconProps) {
 	return (
 		<View style={[styles.container, variantStyles[variant].container, containerStyle]}>
 			<View style={styles.icon}>{icon}</View>

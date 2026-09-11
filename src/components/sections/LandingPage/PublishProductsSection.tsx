@@ -16,10 +16,7 @@ export function PublishProductsSection() {
 		<View style={styles.section}>
 			<View style={styles.container}>
 				<View style={styles.titleSection}>
-					<LandingParagraph
-						subtitle="VERIFICADOS Y RECIENTES"
-						title="Publicaciones Recientes en el Campus"
-					/>
+					<LandingParagraph subtitle="VERIFICADOS Y RECIENTES" title="Publicaciones Recientes en el Campus" />
 				</View>
 
 				<View style={[styles.grid, isMobile && styles.mobileGrid]}>
@@ -35,7 +32,10 @@ export function PublishProductsSection() {
 						price="S/. 2,450.00"
 						actionLabel="Ver producto"
 						onActionPress={() =>
-							router.push({ pathname: "/productdetails", params: { id: "thinkpad" } })
+							router.push({
+								pathname: "/productdetails",
+								params: { id: "thinkpad" },
+							})
 						}
 						style={styles.card}
 					/>
@@ -50,7 +50,12 @@ export function PublishProductsSection() {
 						description="Casaca cómoda y versátil, perfecta para los días fríos en el campus."
 						price="S/. 85.00"
 						actionLabel="Ver oferta"
-						onActionPress={() => router.push({ pathname: "/productdetails", params: { id: "jacket" } })}
+						onActionPress={() =>
+							router.push({
+								pathname: "/productdetails",
+								params: { id: "jacket" },
+							})
+						}
 						style={styles.card}
 					/>
 					<CardProduct
@@ -65,7 +70,10 @@ export function PublishProductsSection() {
 						price="S/. 60.00"
 						actionLabel="Intercambiar"
 						onActionPress={() =>
-							router.push({ pathname: "/productdetails", params: { id: "basketball" } })
+							router.push({
+								pathname: "/productdetails",
+								params: { id: "basketball" },
+							})
 						}
 						style={styles.card}
 					/>

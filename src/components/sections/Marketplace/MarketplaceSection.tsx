@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-	ScrollView,
-	StyleProp,
-	StyleSheet,
-	useWindowDimensions,
-	View,
-	ViewStyle,
-} from "react-native";
+import { ScrollView, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { MarketplaceFilterChip, MarketplaceFilters } from "@/components/common/MarketplaceFilters";
 import { MarketplaceSearchBar } from "@/components/common/MarketplaceSearchBar";
@@ -23,11 +16,7 @@ const institutions = ["Selecciona una sede", "Lima Norte", "Lima Centro"];
 const exchangeTypes = ["Tipo de intercambio", "Venta", "Intercambio"];
 const sortOptions = ["Relevancia", "Más recientes", "Menor precio"];
 
-export function MarketplaceSection({
-	resultCount = "1,240",
-	onSearch,
-	style,
-}: MarketplaceSectionProps) {
+export function MarketplaceSection({ resultCount = "1,240", onSearch, style }: MarketplaceSectionProps) {
 	const { width } = useWindowDimensions();
 	const isMobile = width < 768;
 	const [search, setSearch] = useState("");
@@ -46,9 +35,7 @@ export function MarketplaceSection({
 	return (
 		<View style={[styles.section, isMobile && styles.mobileSection, style]}>
 			<View style={styles.content}>
-				<Breadcrumb
-					items={[{ label: "Inicio" }, { label: "Marketplace" }, { label: "Productos" }]}
-				/>
+				<Breadcrumb items={[{ label: "Inicio" }, { label: "Marketplace" }, { label: "Productos" }]} />
 
 				<ScrollView
 					horizontal={isMobile}

@@ -2,13 +2,7 @@ import { ReactNode } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 import { type CardCategoryTone } from "@/components/common/CardCategoryLink";
-import {
-	Chair,
-	Experiment,
-	LaptopChromebook,
-	MenuBook,
-	SportsBasketball,
-} from "@/components/icons";
+import { Chair, Experiment, LaptopChromebook, MenuBook, SportsBasketball } from "@/components/icons";
 import { colors, spacing, typography } from "@/theme";
 
 import { CardCategoryLink as CategoryCard } from "@/components/common/CardCategoryLink";
@@ -56,8 +50,7 @@ const categories: CategorySectionItem[] = [
 	{
 		id: "4",
 		title: "Mobiliario y Estudio",
-		description:
-			"Equipamiento ergonómico y accesorios para optimizar tu espacio de estudio en casa.",
+		description: "Equipamiento ergonómico y accesorios para optimizar tu espacio de estudio en casa.",
 		badges: ["Category", "Category", "Category", "Category"],
 		tone: "purple",
 		icon: <Chair size={24} color={colors.card.purple.foreground} />,
@@ -65,8 +58,7 @@ const categories: CategorySectionItem[] = [
 	{
 		id: "5",
 		title: "Deportes y Equipamiento",
-		description:
-			"Indumentaria oficial de los representativos universitarios y accesorios para bienestar físico.",
+		description: "Indumentaria oficial de los representativos universitarios y accesorios para bienestar físico.",
 		badges: ["Category", "Category", "Category", "Category"],
 		tone: "yellow",
 		icon: <SportsBasketball size={24} color={colors.card.yellow.foreground} />,
@@ -99,20 +91,15 @@ export function CategorySection({ onCategoryPress }: CategorySectionProps) {
 		<View style={styles.section}>
 			<View style={styles.inner}>
 				<View style={styles.titleSection}>
-					<LandingParagraph
-						subtitle="EXPLORA POR ÁREA DE ESTUDIO"
-						title="Categorías Universitarias Clave"
-					/>
+					<LandingParagraph subtitle="EXPLORA POR ÁREA DE ESTUDIO" title="Categorías Universitarias Clave" />
 					<Text style={styles.description}>
-						Encuentra exactamente los materiales específicos que demanda tu carrera sin
-						intermediarios ni cobros sorpresa.
+						Encuentra exactamente los materiales específicos que demanda tu carrera sin intermediarios ni
+						cobros sorpresa.
 					</Text>
 				</View>
 
 				{isMobile ? (
-					<View style={styles.mobileGrid}>
-						{categories.map((category) => renderCategory(category))}
-					</View>
+					<View style={styles.mobileGrid}>{categories.map((category) => renderCategory(category))}</View>
 				) : (
 					<View style={styles.bento}>
 						<View style={styles.topRow}>
@@ -120,10 +107,7 @@ export function CategorySection({ onCategoryPress }: CategorySectionProps) {
 						</View>
 						<View style={styles.bottomRow}>
 							{bottomCategories.map((category, index) =>
-								renderCategory(
-									category,
-									index === 0 ? styles.bottomSmallCard : styles.bottomLargeCard,
-								),
+								renderCategory(category, index === 0 ? styles.bottomSmallCard : styles.bottomLargeCard),
 							)}
 						</View>
 					</View>

@@ -17,8 +17,8 @@ export function ProceduresSection() {
 						<Text style={styles.highlightTitle}>compañeros verificados</Text>
 					</Text>
 					<Text style={styles.description}>
-						Implementamos rigurosos estándares de validación para que cada transacción dentro del
-						campus sea transparente, segura y completamente respaldada.
+						Implementamos rigurosos estándares de validación para que cada transacción dentro del campus sea
+						transparente, segura y completamente respaldada.
 					</Text>
 				</View>
 

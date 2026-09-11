@@ -1,52 +1,41 @@
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 import { colors } from "@/theme/colors";
 import { sharedBadgeStyles } from "./badge.styles";
 
 interface BadgeOutlineProps {
-  children: string;
-  style?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
+	children: string;
+	style?: StyleProp<ViewStyle>;
+	textStyle?: StyleProp<TextStyle>;
 }
 
-export function BadgeOutline({
-  children,
-  style,
-  textStyle,
-}: BadgeOutlineProps) {
-  return (
-    <View style={[styles.container, style]}>
-      <Text style={[styles.text, textStyle]}>{children}</Text>
-    </View>
-  );
+export function BadgeOutline({ children, style, textStyle }: BadgeOutlineProps) {
+	return (
+		<View style={[styles.container, style]}>
+			<Text style={[styles.text, textStyle]}>{children}</Text>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignSelf: "flex-start",
+	container: {
+		alignSelf: "flex-start",
 
-    paddingVertical: 4,
-    paddingHorizontal: 12,
+		paddingVertical: 4,
+		paddingHorizontal: 12,
 
-    borderWidth: 1,
-    borderColor: colors.border.default,
+		borderWidth: 1,
+		borderColor: colors.border.default,
 
-    borderRadius: 999,
-  },
+		borderRadius: 999,
+	},
 
-  text: {
-    ...sharedBadgeStyles.text,
+	text: {
+		...sharedBadgeStyles.text,
 
-    fontWeight: "600",
-    letterSpacing: 0.28,
+		fontWeight: "600",
+		letterSpacing: 0.28,
 
-    color: colors.text.primary,
-  },
+		color: colors.text.primary,
+	},
 });

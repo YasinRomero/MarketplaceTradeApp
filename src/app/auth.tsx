@@ -6,11 +6,7 @@ import { AuthenticationSection } from "@/components/sections/Authentication/Auth
 
 export default function AuthScreen() {
 	return (
-		<ScrollView
-			style={styles.screen}
-			contentContainerStyle={styles.contentContainer}
-			stickyHeaderIndices={[0]}
-		>
+		<ScrollView style={styles.screen} contentContainerStyle={styles.contentContainer} stickyHeaderIndices={[0]}>
 			<Header />
 			<AuthenticationSection />
 			<Footer />

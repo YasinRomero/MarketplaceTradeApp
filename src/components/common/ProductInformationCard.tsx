@@ -41,8 +41,7 @@ const defaultAttributes: ProductAttribute[] = [
 const INVALID_SYMBOLS_MESSAGE = "Inválido, no se pueden colocar símbolos.";
 const INVALID_NUMBER_MESSAGE = "Inválido, solo se pueden colocar números.";
 
-const hasInvalidTextCharacters = (value: string) =>
-	/[^\p{L}\p{N}\s+\-()[\]]/u.test(value);
+const hasInvalidTextCharacters = (value: string) => /[^\p{L}\p{N}\s+\-()[\]]/u.test(value);
 
 const hasInvalidNumberCharacters = (value: string) => !/^\d*(\.\d*)?$/.test(value);
 
@@ -51,9 +50,7 @@ const sanitizePrice = (value: string) => {
 	const [integerPart = "", ...decimalParts] = sanitized.split(".");
 	const decimalPart = decimalParts.join("").slice(0, 2);
 
-	return decimalParts.length > 0
-		? `${integerPart || "0"}.${decimalPart}`
-		: integerPart;
+	return decimalParts.length > 0 ? `${integerPart || "0"}.${decimalPart}` : integerPart;
 };
 
 const formatPrice = (value: string) => {
@@ -65,9 +62,7 @@ const formatPrice = (value: string) => {
 
 const getAttributeError = (label: string, value: string) => {
 	const isYear = label.toLowerCase() === "año" || label.toLowerCase() === "ano";
-	const hasError = isYear
-		? hasInvalidNumberCharacters(value)
-		: hasInvalidTextCharacters(value);
+	const hasError = isYear ? hasInvalidNumberCharacters(value) : hasInvalidTextCharacters(value);
 
 	return hasError ? (isYear ? INVALID_NUMBER_MESSAGE : INVALID_SYMBOLS_MESSAGE) : undefined;
 };
@@ -91,8 +86,8 @@ export function ProductInformationCard({
 	const [mode, setMode] = useState<ProductMode>(initialMode);
 	const [price, setPrice] = useState(() => sanitizePrice(initialPrice));
 	const [description, setDescription] = useState(initialDescription);
-	const [attributeValues, setAttributeValues] = useState<Record<string, string>>(
-		() => Object.fromEntries(attributes.map((attribute) => [attribute.label, attribute.value])),
+	const [attributeValues, setAttributeValues] = useState<Record<string, string>>(() =>
+		Object.fromEntries(attributes.map((attribute) => [attribute.label, attribute.value])),
 	);
 	const titleHasError = hasInvalidTextCharacters(title);
 
@@ -140,8 +135,16 @@ export function ProductInformationCard({
 					<Text style={styles.label}>Modalidad</Text>
 					<Tab
 						tabs={[
-							{ id: "sell", label: "Vender", icon: <Sell size={16} color={colors.text.inverse} /> },
-							{ id: "exchange", label: "Intercambiar", icon: <SwapHoriz size={16} color={colors.text.secondary} /> }
+							{
+								id: "sell",
+								label: "Vender",
+								icon: <Sell size={16} color={colors.text.inverse} />,
+							},
+							{
+								id: "exchange",
+								label: "Intercambiar",
+								icon: <SwapHoriz size={16} color={colors.text.secondary} />,
+							},
 						]}
 						selectedId={mode}
 						onChange={(value) => setMode(value as ProductMode)}
@@ -203,10 +206,7 @@ export function ProductInformationCard({
 								alert={attributeError}
 								visibleAlert={Boolean(attributeError)}
 								alertStyle={styles.errorText}
-								containerStyle={[
-									styles.attribute,
-									isNarrowMobile && styles.narrowMobileAttribute,
-								]}
+								containerStyle={[styles.attribute, isNarrowMobile && styles.narrowMobileAttribute]}
 							/>
 						);
 					})}

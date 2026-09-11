@@ -1,11 +1,4 @@
-import {
-	ImageSourcePropType,
-	StyleProp,
-	StyleSheet,
-	useWindowDimensions,
-	View,
-	ViewStyle,
-} from "react-native";
+import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { CardTransactionProduct } from "@/components/common/CardTransactionProduct";
 import { DescriptionAcademicContextCard } from "@/components/common/DescriptionAcademicContextCard";
@@ -25,17 +18,39 @@ export interface ProductDetailSectionProps {
 }
 
 const defaultProductImages: ImageSourcePropType[] = [
-	{ uri: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=1200&q=80" },
-	{ uri: "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=1200&q=80" },
-	{ uri: "https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=1200&q=80" },
+	{
+		uri: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=1200&q=80",
+	},
+	{
+		uri: "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=1200&q=80",
+	},
+	{
+		uri: "https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=1200&q=80",
+	},
 ];
 
 const productDetails: Record<string, { category: string; title: string; price: string }> = {
-	thinkpad: { category: "Computadoras", title: "Laptop Lenovo ThinkPad", price: "S/. 450.00" },
-	ipad: { category: "Tablets", title: "iPad Air con chip M1", price: "S/. 1,550.00" },
+	thinkpad: {
+		category: "Computadoras",
+		title: "Laptop Lenovo ThinkPad",
+		price: "S/. 450.00",
+	},
+	ipad: {
+		category: "Tablets",
+		title: "iPad Air con chip M1",
+		price: "S/. 1,550.00",
+	},
 	jacket: { category: "Ropa", title: "Casaca vintage", price: "S/. 85.00" },
-	basketball: { category: "Deportes", title: "Balón de básquetbol", price: "S/. 60.00" },
-	books: { category: "Libros", title: "Colección de libros técnicos", price: "S/. 120.00" },
+	basketball: {
+		category: "Deportes",
+		title: "Balón de básquetbol",
+		price: "S/. 60.00",
+	},
+	books: {
+		category: "Libros",
+		title: "Colección de libros técnicos",
+		price: "S/. 120.00",
+	},
 };
 
 export function ProductDetailSection({
@@ -77,8 +92,12 @@ export function ProductDetailSection({
 							price={product.price}
 							priceDescription="Equivalente o compensación acordada para intercambio justo."
 							reviews={[
-								{ message: "Entrega presencial coordinada dentro del campus universitario" },
-								{ message: "Revisión física del artículo antes de confirmar el pago o permuta" },
+								{
+									message: "Entrega presencial coordinada dentro del campus universitario",
+								},
+								{
+									message: "Revisión física del artículo antes de confirmar el pago o permuta",
+								},
 							]}
 							securityMessage="Tus datos y la conversación están protegidos por CampusTrade."
 							onPrimaryAction={onPrimaryAction}

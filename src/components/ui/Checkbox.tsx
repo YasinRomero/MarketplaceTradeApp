@@ -1,141 +1,129 @@
-import {
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 import { colors } from "@/theme/colors";
 
 interface CheckboxProps {
-  label: string;
-  checked: boolean;
-  inverse?: boolean;
-  bold?: boolean;
-  onChange?: (checked: boolean) => void;
-  style?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
-  disabled?: boolean;
+	label: string;
+	checked: boolean;
+	inverse?: boolean;
+	bold?: boolean;
+	onChange?: (checked: boolean) => void;
+	style?: StyleProp<ViewStyle>;
+	labelStyle?: StyleProp<TextStyle>;
+	disabled?: boolean;
 }
 
 export function Checkbox({
-  label,
-  checked,
-  inverse = false,
-  bold = true,
-  onChange,
-  style,
-  labelStyle,
-  disabled = false,
+	label,
+	checked,
+	inverse = false,
+	bold = true,
+	onChange,
+	style,
+	labelStyle,
+	disabled = false,
 }: CheckboxProps) {
-  return (
-    <Pressable
-      disabled={disabled}
-      onPress={() => onChange?.(!checked)}
-      accessibilityRole="checkbox"
-      accessibilityState={{
-        checked,
-        disabled,
-      }}
-      style={[styles.container, disabled && styles.disabled, style]}
-    >
-      <View
-        style={[
-          styles.checkbox,
+	return (
+		<Pressable
+			disabled={disabled}
+			onPress={() => onChange?.(!checked)}
+			accessibilityRole="checkbox"
+			accessibilityState={{
+				checked,
+				disabled,
+			}}
+			style={[styles.container, disabled && styles.disabled, style]}
+		>
+			<View
+				style={[
+					styles.checkbox,
 
-          checked
-            ? inverse
-              ? styles.checkedInverse
-              : styles.checked
-            : styles.unchecked,
-        ]}
-      >
-        {checked && <Text style={styles.check}>✓</Text>}
-      </View>
+					checked ? (inverse ? styles.checkedInverse : styles.checked) : styles.unchecked,
+				]}
+			>
+				{checked && <Text style={styles.check}>✓</Text>}
+			</View>
 
-      <Text
-        style={[
-          styles.label,
-          bold ? styles.labelMedium : styles.labelRegular,
+			<Text
+				style={[
+					styles.label,
+					bold ? styles.labelMedium : styles.labelRegular,
 
-          inverse && checked && styles.labelInverse,
+					inverse && checked && styles.labelInverse,
 
-          labelStyle,
-        ]}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
+					labelStyle,
+				]}
+			>
+				{label}
+			</Text>
+		</Pressable>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
+	container: {
+		flexDirection: "row",
+		alignItems: "center",
 
-    gap: 5,
-  },
+		gap: 5,
+	},
 
-  checkbox: {
-    width: 16,
-    height: 16,
+	checkbox: {
+		width: 16,
+		height: 16,
 
-    alignItems: "center",
-    justifyContent: "center",
+		alignItems: "center",
+		justifyContent: "center",
 
-    borderRadius: 4,
-  },
+		borderRadius: 4,
+	},
 
-  unchecked: {
-    backgroundColor: "transparent",
+	unchecked: {
+		backgroundColor: "transparent",
 
-    borderWidth: 1,
-    borderColor: colors.border.default,
-  },
+		borderWidth: 1,
+		borderColor: colors.border.default,
+	},
 
-  checked: {
-    backgroundColor: colors.action.primary,
-  },
+	checked: {
+		backgroundColor: colors.action.primary,
+	},
 
-  checkedInverse: {
-    backgroundColor: colors.text.primary,
-  },
+	checkedInverse: {
+		backgroundColor: colors.text.primary,
+	},
 
-  check: {
-    color: colors.text.inverse,
+	check: {
+		color: colors.text.inverse,
 
-    fontSize: 12,
-    lineHeight: 14,
+		fontSize: 12,
+		lineHeight: 14,
 
-    fontWeight: "700",
-  },
+		fontWeight: "700",
+	},
 
-  label: {
-    fontFamily: "Plus Jakarta Sans",
+	label: {
+		fontFamily: "Plus Jakarta Sans",
 
-    fontSize: 12,
-    lineHeight: 15,
+		fontSize: 12,
+		lineHeight: 15,
 
-    color: colors.text.primary,
-  },
+		color: colors.text.primary,
+	},
 
-  labelMedium: {
-    fontWeight: "500",
-  },
+	labelMedium: {
+		fontWeight: "500",
+	},
 
-  labelRegular: {
-    fontWeight: "400",
-  },
+	labelRegular: {
+		fontWeight: "400",
+	},
 
-  labelInverse: {
-    color: colors.text.secondary,
-  },
+	labelInverse: {
+		color: colors.text.secondary,
+	},
 
-  disabled: {
-    opacity: 0.5,
-  },
+	disabled: {
+		opacity: 0.5,
+	},
 });

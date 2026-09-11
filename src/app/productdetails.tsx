@@ -10,11 +10,7 @@ export default function ProductDetailScreen() {
 	const productId = Array.isArray(id) ? id[0] : id;
 
 	return (
-		<ScrollView
-			style={styles.screen}
-			contentContainerStyle={styles.contentContainer}
-			stickyHeaderIndices={[0]}
-		>
+		<ScrollView style={styles.screen} contentContainerStyle={styles.contentContainer} stickyHeaderIndices={[0]}>
 			<Header />
 			<ProductDetailSection productId={productId} />
 			<Footer />
