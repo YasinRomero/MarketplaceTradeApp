@@ -1,18 +1,19 @@
+import { radius, typography } from "@/theme";
 import { StyleSheet } from "react-native";
 
 export const sharedBadgeStyles = StyleSheet.create({
 	pill: {
-		borderRadius: 999,
+		borderRadius: radius.full,
 	},
 
 	rounded: {
-		borderRadius: 8,
+		borderRadius: radius.md,
 	},
 
 	text: {
-		fontFamily: "Plus Jakarta Sans",
-		fontSize: 12,
-		lineHeight: 15,
+		fontFamily: typography.family,
+		fontSize: typography.size.xs,
+		lineHeight: typography.lineHeight.sm,
 	},
 
 	row: {

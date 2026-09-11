@@ -1,41 +1,14 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
+import { colors, radius, typography } from "@/theme";
+import { StyleSheet, Text, View } from "react-native";
 import { sharedBadgeStyles } from "./badge.styles";
-
-export type BadgeColorName = "yellow" | "pink" | "orange" | "red" | "green" | "cyan" | "blue" | "purple";
-
-interface BadgeColorProps {
-	children: string;
-	color?: BadgeColorName;
-	style?: StyleProp<ViewStyle>;
-	textStyle?: StyleProp<TextStyle>;
-}
+import { BadgeColorProps } from "./badge.types";
 
 export function BadgeColor({ children, color = "orange", style, textStyle }: BadgeColorProps) {
 	const palette = colors.card[color];
 
 	return (
-		<View
-			style={[
-				styles.container,
-				{
-					backgroundColor: palette.background,
-				},
-				style,
-			]}
-		>
-			<Text
-				style={[
-					styles.text,
-					{
-						color: palette.foreground,
-					},
-					textStyle,
-				]}
-			>
-				{children}
-			</Text>
+		<View style={[styles.container, { backgroundColor: palette.background }, style]}>
+			<Text style={[styles.text, { color: palette.foreground }, textStyle]}>{children}</Text>
 		</View>
 	);
 }
@@ -43,17 +16,14 @@ export function BadgeColor({ children, color = "orange", style, textStyle }: Bad
 const styles = StyleSheet.create({
 	container: {
 		alignSelf: "flex-start",
-
 		paddingVertical: 2,
 		paddingHorizontal: 8,
-
-		borderRadius: 4,
+		borderRadius: radius.xs,
 	},
 
 	text: {
 		...sharedBadgeStyles.text,
-
-		fontWeight: "700",
+		fontWeight: typography.weight.bold,
 		letterSpacing: 0.5,
 	},
 });

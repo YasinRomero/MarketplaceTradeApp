@@ -1,13 +1,7 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
+import { colors, radius, typography } from "@/theme";
+import { StyleSheet, Text, View } from "react-native";
 import { sharedBadgeStyles } from "./badge.styles";
-
-interface BadgeWhiteProps {
-	children: string;
-	style?: StyleProp<ViewStyle>;
-	textStyle?: StyleProp<TextStyle>;
-}
+import { BadgeWhiteProps } from "./badge.types";
 
 export function BadgeWhite({ children, style, textStyle }: BadgeWhiteProps) {
 	return (
@@ -23,12 +17,12 @@ const styles = StyleSheet.create({
 		paddingVertical: 4,
 		paddingHorizontal: 12,
 		backgroundColor: colors.background.surface,
-		borderRadius: 999,
+		borderRadius: radius.full,
 	},
 
 	text: {
 		...sharedBadgeStyles.text,
-		fontWeight: "700",
+		fontWeight: typography.weight.bold,
 		color: colors.text.primary,
 	},
 });

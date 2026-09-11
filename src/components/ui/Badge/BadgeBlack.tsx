@@ -1,13 +1,7 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
 import { colors } from "@/theme/colors";
+import { StyleSheet, Text, View } from "react-native";
 import { sharedBadgeStyles } from "./badge.styles";
-
-interface BadgeBlackProps {
-	children: string;
-	style?: StyleProp<ViewStyle>;
-	textStyle?: StyleProp<TextStyle>;
-}
+import { BadgeBlackProps } from "./badge.types";
 
 export function BadgeBlack({ children, style, textStyle }: BadgeBlackProps) {
 	return (

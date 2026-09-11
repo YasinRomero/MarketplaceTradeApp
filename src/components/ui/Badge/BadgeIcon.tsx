@@ -1,15 +1,7 @@
-import { ReactNode } from "react";
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
+import { colors, radius } from "@/theme";
+import { StyleSheet, Text, View } from "react-native";
 import { sharedBadgeStyles } from "./badge.styles";
-
-interface BadgeIconProps {
-	children: string;
-	icon: ReactNode;
-	style?: StyleProp<ViewStyle>;
-	textStyle?: StyleProp<TextStyle>;
-}
+import { BadgeIconProps } from "./badge.types";
 
 export function BadgeIcon({ children, icon, style, textStyle }: BadgeIconProps) {
 	return (
@@ -32,7 +24,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.background.subtle,
 		borderWidth: 1,
 		borderColor: colors.border.default,
-		borderRadius: 999,
+		borderRadius: radius.full,
 	},
 
 	icon: {

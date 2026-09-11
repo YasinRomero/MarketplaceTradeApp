@@ -1,14 +1,7 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
-import { colors } from "@/theme/colors";
+import { colors, radius, typography } from "@/theme";
+import { StyleSheet, Text, View } from "react-native";
 import { sharedBadgeStyles } from "./badge.styles";
-
-interface BadgeProps {
-	children: string;
-	bordered?: boolean;
-	style?: StyleProp<ViewStyle>;
-	textStyle?: StyleProp<TextStyle>;
-}
+import { BadgeProps } from "./badge.types";
 
 export function Badge({ children, bordered = false, style, textStyle }: BadgeProps) {
 	return (
@@ -21,13 +14,10 @@ export function Badge({ children, bordered = false, style, textStyle }: BadgePro
 const styles = StyleSheet.create({
 	container: {
 		alignSelf: "flex-start",
-
 		paddingVertical: 2,
 		paddingHorizontal: 8,
-
 		backgroundColor: colors.background.subtle,
-
-		borderRadius: 999,
+		borderRadius: radius.full,
 	},
 
 	bordered: {
@@ -37,10 +27,8 @@ const styles = StyleSheet.create({
 
 	text: {
 		...sharedBadgeStyles.text,
-
-		fontWeight: "600",
+		fontWeight: typography.weight.semibold,
 		letterSpacing: 0.28,
-
 		color: colors.text.primary,
 	},
 });
