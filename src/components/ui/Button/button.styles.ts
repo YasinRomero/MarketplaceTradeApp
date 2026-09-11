@@ -1,57 +1,54 @@
+import { radius, typography } from "@/theme";
 import { StyleSheet } from "react-native";
 
-export type ButtonSize = "normal" | "large" | "xlarge";
-export type IconPosition = "left" | "right";
-
 export const buttonSizeStyles = StyleSheet.create({
-  normal: {
-    minHeight: 34,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    gap: 6,
-  },
+	compact: {
+		minHeight: 34,
+		paddingVertical: 8,
+		paddingHorizontal: 16,
+		gap: 6,
+	},
 
-  large: {
-    minHeight: 42,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    gap: 8,
-  },
+	normal: {
+		minHeight: 42,
+		paddingVertical: 12,
+		paddingHorizontal: 16,
+		gap: 8,
+	},
 
-  xlarge: {
-    minHeight: 48,
-    paddingVertical: 15,
-    paddingHorizontal: 24,
-    gap: 6,
-  },
+	large: {
+		minHeight: 48,
+		paddingVertical: 15,
+		paddingHorizontal: 24,
+		gap: 6,
+	},
 });
 
 export const sharedButtonStyles = StyleSheet.create({
-  base: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 6,
-  },
+	base: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		borderRadius: radius.sm,
+	},
 
-  rounded: {
-    borderRadius: 999,
-  },
+	rounded: {
+		borderRadius: radius.full,
+	},
 
-  label: {
-    fontFamily: "Plus Jakarta Sans",
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
-    textAlign: "center",
-  },
+	label: {
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		fontWeight: typography.weight.semibold,
+		textAlign: "center",
+	},
 
-  icon: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
+	icon: {
+		justifyContent: "center",
+		alignItems: "center",
+	},
 
-  disabled: {
-    opacity: 0.5,
-  },
+	disabled: {
+		opacity: 0.5,
+	},
 });

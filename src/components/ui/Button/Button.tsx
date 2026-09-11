@@ -1,90 +1,55 @@
-import { ReactNode } from "react";
-import {
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
-
 import { colors } from "@/theme/colors";
-
-import {
-  ButtonSize,
-  IconPosition,
-  buttonSizeStyles,
-  sharedButtonStyles,
-} from "./button.styles";
-
-interface ButtonProps {
-  children: string;
-  size?: ButtonSize;
-  icon?: ReactNode;
-  iconPosition?: IconPosition;
-  disabled?: boolean;
-  onPress?: () => void;
-  style?: StyleProp<ViewStyle>;
-}
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { buttonSizeStyles, sharedButtonStyles } from "./button.styles";
+import { ButtonProps } from "./button.types";
 
 export function Button({
-  children,
-  size = "normal",
-  icon,
-  iconPosition = "left",
-  disabled = false,
-  onPress,
-  style,
+	size = "normal",
+	icon,
+	iconPosition = "left",
+	disabled = false,
+	style,
+	children,
+	onPress,
 }: ButtonProps) {
-  return (
-    <Pressable
-      disabled={disabled}
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityState={{ disabled }}
-      style={({ pressed, hovered }) => [
-        sharedButtonStyles.base,
-        buttonSizeStyles[size],
+	return (
+		<Pressable
+			disabled={disabled}
+			onPress={onPress}
+			style={({ pressed, hovered }) => [
+				sharedButtonStyles.base,
+				buttonSizeStyles[size],
+				styles.base,
+				hovered && styles.hover,
+				pressed && styles.active,
+				disabled && sharedButtonStyles.disabled,
+				style,
+			]}
+		>
+			{icon && iconPosition === "left" && <View style={sharedButtonStyles.icon}>{icon}</View>}
 
-        styles.base,
+			<Text style={styles.label}>{children}</Text>
 
-        hovered && styles.hover,
-        pressed && styles.active,
-
-        disabled && sharedButtonStyles.disabled,
-
-        style,
-      ]}
-    >
-      {icon && iconPosition === "left" && (
-        <View style={sharedButtonStyles.icon}>{icon}</View>
-      )}
-
-      <Text style={styles.label}>{children}</Text>
-
-      {icon && iconPosition === "right" && (
-        <View style={sharedButtonStyles.icon}>{icon}</View>
-      )}
-    </Pressable>
-  );
+			{icon && iconPosition === "right" && <View style={sharedButtonStyles.icon}>{icon}</View>}
+		</Pressable>
+	);
 }
 
 const styles = StyleSheet.create({
-  base: {
-    backgroundColor: colors.action.primary,
-  },
+	base: {
+		backgroundColor: colors.action.primary,
+	},
 
-  hover: {
-    backgroundColor: colors.action.primaryHover,
-  },
+	hover: {
+		backgroundColor: colors.action.primaryHover,
+	},
 
-  active: {
-    backgroundColor: colors.action.primaryActive,
-  },
+	active: {
+		backgroundColor: colors.action.primaryActive,
+	},
 
-  label: {
-    ...sharedButtonStyles.label,
-
-    color: colors.action.primaryForeground,
-  },
+	label: {
+		...sharedButtonStyles.label,
+		color: colors.action.primaryForeground,
+	},
 });
