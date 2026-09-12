@@ -34,9 +34,7 @@ export function InputWithLabel({
 	return (
 		<View style={[styles.container, containerStyle]}>
 			<Text style={[styles.label, sizeStyles[size].label, labelStyle]}>{label}</Text>
-
 			<InputComponent {...inputProps} style={[sizeStyles[size].input, inputStyle]} />
-
 			{showAlert && <Text style={[styles.alert, alertStyle]}>{alert}</Text>}
 		</View>
 	);
@@ -48,9 +46,9 @@ const sizeStyles: Record<InputWithLabelSize, { label: TextStyle; input: TextStyl
 			fontSize: typography.size.sm,
 			lineHeight: typography.lineHeight.lg,
 		},
-
 		input: {
 			width: "100%",
+			alignSelf: "stretch",
 		},
 	},
 
@@ -59,9 +57,9 @@ const sizeStyles: Record<InputWithLabelSize, { label: TextStyle; input: TextStyl
 			fontSize: typography.size.xs,
 			lineHeight: 16,
 		},
-
 		input: {
 			width: "100%",
+			alignSelf: "stretch",
 		},
 	},
 };
@@ -69,6 +67,7 @@ const sizeStyles: Record<InputWithLabelSize, { label: TextStyle; input: TextStyl
 const styles = StyleSheet.create({
 	container: {
 		width: "100%",
+		alignSelf: "stretch",
 		gap: spacing.xs,
 	},
 

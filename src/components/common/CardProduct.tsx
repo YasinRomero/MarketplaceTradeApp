@@ -58,14 +58,13 @@ export function CardProduct({
 				</View>
 
 				<View style={styles.actions}>
+					<Text numberOfLines={1} style={styles.priceLabel}>
+						{priceLabel}
+					</Text>
 					<View style={styles.priceBlock}>
-						<Text numberOfLines={1} style={styles.priceLabel}>
-							{priceLabel}
-						</Text>
 						<Text style={styles.price}>{price}</Text>
+						<Button onPress={onActionPress}>{actionLabel}</Button>
 					</View>
-
-					<Button onPress={onActionPress}>{actionLabel}</Button>
 				</View>
 			</View>
 		</View>
@@ -111,7 +110,6 @@ const styles = StyleSheet.create({
 	},
 
 	content: {
-		minHeight: 193,
 		padding: spacing.xl,
 		justifyContent: "space-between",
 	},
@@ -146,22 +144,15 @@ const styles = StyleSheet.create({
 	},
 
 	actions: {
-		minHeight: 60,
 		paddingTop: spacing.lg,
-		flexDirection: "row",
-		flexWrap: "nowrap",
-		alignItems: "flex-end",
-		justifyContent: "space-between",
 		gap: spacing.lg,
 		borderTopWidth: 1,
 		borderTopColor: colors.border.default,
 	},
 
 	priceBlock: {
-		flex: 1,
-		minWidth: 150,
-		flexShrink: 0,
-		gap: 0,
+		minWidth: "100%",
+		gap: spacing.sm,
 	},
 
 	priceLabel: {

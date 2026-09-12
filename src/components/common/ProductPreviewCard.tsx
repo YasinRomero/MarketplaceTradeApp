@@ -5,7 +5,7 @@ import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { Publish, Verified } from "@/components/icons";
 import { ButtonOutline, ButtonRounded } from "@/components/ui/Button";
-import { boxShadows, colors, radius, spacing } from "@/theme";
+import { boxShadows, colors, radius, responsive, spacing } from "@/theme";
 
 export interface ProductPreviewCardProps {
 	image?: ImageSourcePropType;
@@ -33,10 +33,10 @@ export function ProductPreviewCard({
 	style,
 }: ProductPreviewCardProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 640;
+	const isTabletDown = responsive.isTabletDown(width);
 
 	return (
-		<View style={[styles.card, isMobile && styles.mobileCard, style]}>
+		<View style={[styles.card, isTabletDown && styles.mobileCard, style]}>
 			<HeaderSections size="compact" title="Vista previa del anuncio" />
 
 			<CardProduct
@@ -84,18 +84,21 @@ const styles = StyleSheet.create({
 		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
+
 	mobileCard: {
 		minHeight: 0,
 	},
+
 	actions: {
 		width: "100%",
 		gap: spacing.sm,
 		paddingTop: spacing.sm,
 	},
+
 	actionButton: {
 		width: "100%",
-		height: 48,
 	},
+
 	draftButton: {
 		borderColor: colors.text.primary,
 	},

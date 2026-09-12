@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { CardProduct } from "@/components/common/CardProduct";
@@ -7,146 +7,345 @@ import { InputWithLabel } from "@/components/common/InputWithLabel";
 import { ChevronBackward, ChevronForward } from "@/components/icons";
 import { Button, ButtonGhost, ButtonIcon, ButtonOutline } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
-import { colors, radius, spacing, typography } from "@/theme";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
+
+export type ProductModality = "Venta" | "Intercambio" | "Ambos";
 
 export interface MarketplaceProductsSectionProps {
 	style?: StyleProp<ViewStyle>;
+	searchValue?: string;
+	selectedSede?: string | null;
+	selectedModality?: ProductModality | null;
+	sortValue?: string;
+	onResultCountChange?: (count: number) => void;
 }
 
 interface ProductItem {
 	id: string;
 	category: string;
+	subcategory: string;
 	title: string;
 	description: string;
-	price: string;
+	price: number;
+	modality: ProductModality;
+	sede: string;
+	createdAt: number;
 }
 
 const products: ProductItem[] = [
 	{
 		id: "thinkpad",
-		category: "Tecnología · Computadoras",
+		category: "Tecnología",
+		subcategory: "Computadoras",
 		title: "Laptop Lenovo ThinkPad",
 		description: "Equipo ideal para clases, programación y trabajo diario.",
-		price: "S/. 450.00",
+		price: 450,
+		modality: "Venta",
+		sede: "Lima Centro",
+		createdAt: 6,
 	},
 	{
 		id: "ipad",
-		category: "Tecnología · Tablets",
+		category: "Tecnología",
+		subcategory: "Tablets",
 		title: "iPad Air con chip M1",
 		description: "Tablet en excelente estado para lectura y notas académicas.",
-		price: "S/. 1,550.00",
+		price: 1550,
+		modality: "Ambos",
+		sede: "Lima Norte",
+		createdAt: 5,
 	},
 	{
 		id: "books",
-		category: "Libros · Ingeniería",
+		category: "Libros",
+		subcategory: "Ingeniería",
 		title: "Colección de libros técnicos",
 		description: "Textos de arquitectura, algoritmos y desarrollo de software.",
-		price: "S/. 120.00",
+		price: 120,
+		modality: "Intercambio",
+		sede: "Lima Centro",
+		createdAt: 4,
 	},
 	{
 		id: "jacket",
-		category: "Ropa · Campus",
+		category: "Ropa",
+		subcategory: "Casacas",
 		title: "Casaca vintage",
 		description: "Casaca cómoda y versátil para los días fríos en el campus.",
-		price: "S/. 85.00",
+		price: 85,
+		modality: "Venta",
+		sede: "Lima Sur",
+		createdAt: 3,
+	},
+	{
+		id: "keyboard",
+		category: "Tecnología",
+		subcategory: "Accesorios",
+		title: "Teclado mecánico",
+		description: "Teclado compacto ideal para programación y videojuegos.",
+		price: 180,
+		modality: "Ambos",
+		sede: "Lima Norte",
+		createdAt: 2,
+	},
+	{
+		id: "phone",
+		category: "Tecnología",
+		subcategory: "Celulares",
+		title: "Samsung Galaxy A54",
+		description: "Celular en excelente estado con cargador original.",
+		price: 850,
+		modality: "Intercambio",
+		sede: "Lima Sur",
+		createdAt: 1,
 	},
 ];
 
-const subcategories = [
-	["Computadoras", "31"],
-	["Tablets", "22"],
-	["Accesorios", "18"],
-	["Celulares", "14"],
-];
+const ITEMS_PER_PAGE = 4;
 
-const filterGroups = [
-	{ title: "Modalidad", options: ["Venta", "Intercambio"] },
-	{ title: "Condición", options: ["Nuevo", "Usado"] },
-];
+const MODALITY_OPTIONS: ProductModality[] = ["Venta", "Intercambio", "Ambos"];
 
-export function MarketplaceProductsSection({ style }: MarketplaceProductsSectionProps) {
+const formatPrice = (price: number) =>
+	`S/. ${price.toLocaleString("en-US", {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	})}`;
+
+export function MarketplaceProductsSection({
+	style,
+	searchValue = "",
+	selectedSede = null,
+	selectedModality = null,
+	sortValue = "Relevancia",
+	onResultCountChange,
+}: MarketplaceProductsSectionProps) {
 	const router = useRouter();
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
-	const isTablet = width < 1100;
-	const isWideDesktop = width >= 1800;
-	const [selectedCategory, setSelectedCategory] = useState("Tecnología");
-	const [checkedFilters, setCheckedFilters] = useState<Record<string, boolean>>({
-		Venta: true,
+
+	const isTabletDown = responsive.isTabletDown(width);
+	const isMobileDown = responsive.isMobileDown(width);
+
+	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+	const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+	const [checkedFilters, setCheckedFilters] = useState<Record<ProductModality, boolean>>({
+		Venta: false,
 		Intercambio: false,
-		Nuevo: false,
-		Usado: true,
+		Ambos: false,
 	});
+
 	const [minimumPrice, setMinimumPrice] = useState("");
 	const [maximumPrice, setMaximumPrice] = useState("");
 	const [page, setPage] = useState(1);
+	const categories = useMemo(() => {
+		return [...new Set(products.map((product) => product.category))];
+	}, []);
 
-	const toggleFilter = (label: string) => {
-		setCheckedFilters((current) => ({ ...current, [label]: !current[label] }));
+	const subcategories = useMemo(() => {
+		if (!selectedCategory) {
+			return [];
+		}
+
+		return [
+			...new Set(
+				products
+					.filter((product) => product.category === selectedCategory)
+					.map((product) => product.subcategory),
+			),
+		];
+	}, [selectedCategory]);
+
+	const categoryCount = (category: string) => products.filter((product) => product.category === category).length;
+
+	const subcategoryCount = (subcategory: string) =>
+		products.filter((product) => product.category === selectedCategory && product.subcategory === subcategory)
+			.length;
+
+	const toggleFilter = (option: ProductModality) => {
+		setCheckedFilters((current) => ({
+			...current,
+			[option]: !current[option],
+		}));
+
+		setPage(1);
 	};
 
-	return (
-		<View style={[styles.section, style]}>
-			<View style={[styles.layout, isMobile && styles.mobileLayout]}>
-				<View style={[styles.filters, isMobile && styles.mobileFilters]}>
-					<FilterCategory
-						title="Categoría"
-						items={[
-							["Tecnología", "86"],
-							["Ropa", "45"],
-							["Libros", "32"],
-						]}
-						selectedItem={selectedCategory}
-						onSelect={setSelectedCategory}
-					/>
+	const matchesModality = (product: ProductItem, modality: ProductModality) => {
+		if (modality === "Venta") {
+			return product.modality === "Venta" || product.modality === "Ambos";
+		}
 
-					<View style={styles.subcategories}>
-						{selectedCategory === "Tecnología" &&
-							subcategories.map(([label, count], index) => (
-								<FilterLink key={label} label={label} count={count} active={index === 0} />
-							))}
+		if (modality === "Intercambio") {
+			return product.modality === "Intercambio" || product.modality === "Ambos";
+		}
+
+		return product.modality === "Ambos";
+	};
+
+	const filteredProducts = useMemo(() => {
+		const normalizedSearch = searchValue.trim().toLowerCase();
+		const min = minimumPrice !== "" ? Number(minimumPrice) : null;
+		const max = maximumPrice !== "" ? Number(maximumPrice) : null;
+		const activeModalities = MODALITY_OPTIONS.filter((option) => checkedFilters[option]);
+
+		const result = products.filter((product) => {
+			const matchesSearch =
+				!normalizedSearch ||
+				product.title.toLowerCase().includes(normalizedSearch) ||
+				product.description.toLowerCase().includes(normalizedSearch) ||
+				product.category.toLowerCase().includes(normalizedSearch) ||
+				product.subcategory.toLowerCase().includes(normalizedSearch) ||
+				product.sede.toLowerCase().includes(normalizedSearch);
+
+			const matchesSede = !selectedSede || product.sede === selectedSede;
+			const matchesTopModality = !selectedModality || matchesModality(product, selectedModality);
+			const matchesCategory = !selectedCategory || product.category === selectedCategory;
+			const matchesSubcategory = !selectedSubcategory || product.subcategory === selectedSubcategory;
+
+			const matchesSidebarModality =
+				activeModalities.length === 0 ||
+				activeModalities.some((modality) => matchesModality(product, modality));
+
+			const matchesMinimum = min === null || product.price >= min;
+			const matchesMaximum = max === null || product.price <= max;
+
+			return (
+				matchesSearch &&
+				matchesSede &&
+				matchesTopModality &&
+				matchesCategory &&
+				matchesSubcategory &&
+				matchesSidebarModality &&
+				matchesMinimum &&
+				matchesMaximum
+			);
+		});
+
+		if (sortValue === "Menor precio") {
+			return [...result].sort((a, b) => a.price - b.price);
+		}
+
+		if (sortValue === "Más recientes") {
+			return [...result].sort((a, b) => b.createdAt - a.createdAt);
+		}
+
+		return result;
+	}, [
+		searchValue,
+		selectedSede,
+		selectedModality,
+		selectedCategory,
+		selectedSubcategory,
+		checkedFilters,
+		minimumPrice,
+		maximumPrice,
+		sortValue,
+	]);
+
+	const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+
+	const safePage = Math.min(page, totalPages);
+
+	const paginatedProducts = filteredProducts.slice((safePage - 1) * ITEMS_PER_PAGE, safePage * ITEMS_PER_PAGE);
+
+	const selectCategory = (category: string) => {
+		setSelectedCategory((current) => (current === category ? null : category));
+
+		setSelectedSubcategory(null);
+		setPage(1);
+	};
+
+	const selectSubcategory = (subcategory: string) => {
+		setSelectedSubcategory((current) => (current === subcategory ? null : subcategory));
+
+		setPage(1);
+	};
+
+	if (onResultCountChange) {
+		onResultCountChange(filteredProducts.length);
+	}
+
+	return (
+		<View style={[styles.section, isMobileDown && styles.mobileSection, style]}>
+			<View style={[styles.layout, isTabletDown && styles.mobileLayout]}>
+				<View style={[styles.filters, isTabletDown && styles.mobileFilters]}>
+					<View style={styles.categoryGroup}>
+						<Text style={styles.filterTitle}>Categoría</Text>
+
+						{categories.map((category) => (
+							<FilterLink
+								key={category}
+								label={category}
+								count={String(categoryCount(category))}
+								active={selectedCategory === category}
+								onPress={() => selectCategory(category)}
+							/>
+						))}
 					</View>
 
-					{filterGroups.map((group) => (
-						<View key={group.title} style={styles.filterGroup}>
-							<Text style={styles.filterTitle}>{group.title}</Text>
-							{group.options.map((option) => (
-								<Checkbox
-									key={option}
-									label={option}
-									checked={Boolean(checkedFilters[option])}
-									bold={false}
-									onChange={() => toggleFilter(option)}
+					{selectedCategory && subcategories.length > 0 && (
+						<View style={styles.subcategories}>
+							{subcategories.map((subcategory) => (
+								<FilterLink
+									key={subcategory}
+									label={subcategory}
+									count={String(subcategoryCount(subcategory))}
+									active={selectedSubcategory === subcategory}
+									onPress={() => selectSubcategory(subcategory)}
 								/>
 							))}
 						</View>
-					))}
+					)}
+
+					<View style={styles.filterGroup}>
+						<Text style={styles.filterTitle}>Modalidad</Text>
+
+						{MODALITY_OPTIONS.map((option) => (
+							<Checkbox
+								key={option}
+								label={option}
+								checked={checkedFilters[option]}
+								bold={false}
+								onChange={() => toggleFilter(option)}
+							/>
+						))}
+					</View>
 
 					<View style={styles.filterGroup}>
 						<Text style={styles.filterTitle}>Rango de precio</Text>
+
 						<View style={styles.priceInputs}>
 							<InputWithLabel
 								label=""
 								value={minimumPrice}
-								onChangeText={setMinimumPrice}
+								onChangeText={(value) => {
+									setMinimumPrice(value.replace(/\D/g, ""));
+
+									setPage(1);
+								}}
 								placeholder="Mín."
-								accessibilityLabel="Precio mínimo"
+								keyboardType="numeric"
 								containerStyle={styles.priceInput}
 							/>
+
 							<Text style={styles.rangeSeparator}>-</Text>
+
 							<InputWithLabel
 								label=""
 								value={maximumPrice}
-								onChangeText={setMaximumPrice}
+								onChangeText={(value) => {
+									setMaximumPrice(value.replace(/\D/g, ""));
+
+									setPage(1);
+								}}
 								placeholder="Máx."
-								accessibilityLabel="Precio máximo"
+								keyboardType="numeric"
 								containerStyle={styles.priceInput}
 							/>
+
 							<ButtonIcon
-								accessibilityLabel="Aplicar rango de precio"
 								icon={<ChevronForward size={18} color={colors.text.inverse} />}
 								onPress={() => setPage(1)}
-								variant="primary"
+								color="primary"
 								style={styles.applyButton}
 							/>
 						</View>
@@ -154,100 +353,98 @@ export function MarketplaceProductsSection({ style }: MarketplaceProductsSection
 				</View>
 
 				<View style={styles.productsList}>
-					<View style={[styles.productsGrid, isMobile && styles.mobileProductsGrid]}>
-						{products.map((product) => (
-							<CardProduct
-								key={product.id}
-								span={product.category}
-								title={product.title}
-								description={product.description}
-								price={product.price}
-								primaryBadge="Venta"
-								secondaryBadge="Universidad"
-								actionLabel="Ver producto"
-								onActionPress={() =>
-									router.push({
-										pathname: "/productdetails",
-										params: { id: product.id },
-									})
-								}
-								style={[
-									styles.productCard,
-									isTablet && styles.tabletProductCard,
-									isWideDesktop && styles.wideProductCard,
-									isMobile && styles.mobileProductCard,
-								]}
-							/>
-						))}
+					<View style={styles.resultsHeader}>
+						<Text style={styles.resultsText}>
+							{filteredProducts.length}{" "}
+							{filteredProducts.length === 1 ? "producto encontrado" : "productos encontrados"}
+						</Text>
 					</View>
 
-					<View style={[styles.pagination, isMobile && styles.mobilePagination]}>
-						<ButtonOutline
-							icon={<ChevronBackward size={16} color={colors.text.secondary} />}
-							onPress={() => setPage((current) => Math.max(1, current - 1))}
-						>
-							Anterior
-						</ButtonOutline>
-
-						<View style={styles.pages}>
-							{[1, 2, 3, 4, 5, 6].map((pageNumber) =>
-								pageNumber === page ? (
-									<Button
-										key={pageNumber}
-										onPress={() => setPage(pageNumber)}
-										style={styles.pageButton}
-									>
-										{String(pageNumber)}
-									</Button>
-								) : (
-									<ButtonGhost
-										key={pageNumber}
-										onPress={() => setPage(pageNumber)}
-										style={styles.pageButton}
-									>
-										{String(pageNumber)}
-									</ButtonGhost>
-								),
-							)}
+					{paginatedProducts.length > 0 ? (
+						<View style={[styles.productsGrid, isMobileDown && styles.mobileProductsGrid]}>
+							{paginatedProducts.map((product) => (
+								<CardProduct
+									key={product.id}
+									span={`${product.category} · ${product.subcategory}`}
+									title={product.title}
+									description={product.description}
+									price={formatPrice(product.price)}
+									primaryBadge={product.modality}
+									secondaryBadge={product.sede}
+									actionLabel="Ver producto"
+									onActionPress={() =>
+										router.push({
+											pathname: "/productdetails",
+											params: {
+												id: product.id,
+											},
+										})
+									}
+									style={[
+										styles.productCard,
+										isTabletDown && styles.tabletProductCard,
+										isMobileDown && styles.mobileProductCard,
+									]}
+								/>
+							))}
 						</View>
+					) : (
+						<View style={styles.emptyState}>
+							<Text style={styles.emptyTitle}>No encontramos productos</Text>
 
-						<ButtonOutline
-							iconPosition="right"
-							icon={<ChevronForward size={16} color={colors.text.secondary} />}
-							onPress={() => setPage((current) => Math.min(6, current + 1))}
-						>
-							Siguiente
-						</ButtonOutline>
-					</View>
+							<Text style={styles.emptyDescription}>
+								Prueba modificando los filtros, la sede o la búsqueda.
+							</Text>
+						</View>
+					)}
+
+					{filteredProducts.length > 0 && (
+						<View style={[styles.pagination, isMobileDown && styles.mobilePagination]}>
+							<ButtonOutline
+								icon={<ChevronBackward size={16} color={colors.text.secondary} />}
+								onPress={() => setPage((current) => Math.max(1, current - 1))}
+							>
+								Anterior
+							</ButtonOutline>
+
+							<View style={styles.pages}>
+								{Array.from(
+									{
+										length: totalPages,
+									},
+									(_, index) => index + 1,
+								).map((pageNumber) =>
+									pageNumber === safePage ? (
+										<Button
+											key={pageNumber}
+											onPress={() => setPage(pageNumber)}
+											style={styles.pageButton}
+										>
+											{String(pageNumber)}
+										</Button>
+									) : (
+										<ButtonGhost
+											key={pageNumber}
+											onPress={() => setPage(pageNumber)}
+											style={styles.pageButton}
+										>
+											{String(pageNumber)}
+										</ButtonGhost>
+									),
+								)}
+							</View>
+
+							<ButtonOutline
+								iconPosition="right"
+								icon={<ChevronForward size={16} color={colors.text.secondary} />}
+								onPress={() => setPage((current) => Math.min(totalPages, current + 1))}
+							>
+								Siguiente
+							</ButtonOutline>
+						</View>
+					)}
 				</View>
 			</View>
-		</View>
-	);
-}
-
-function FilterCategory({
-	title,
-	items,
-	selectedItem,
-	onSelect,
-}: {
-	title: string;
-	items: string[][];
-	selectedItem: string;
-	onSelect: (item: string) => void;
-}) {
-	return (
-		<View style={styles.categoryGroup}>
-			<Text style={styles.filterTitle}>{title}</Text>
-			{items.map(([label, count]) => (
-				<FilterLink
-					key={label}
-					label={label}
-					count={count}
-					active={label === selectedItem}
-					onPress={() => onSelect(label)}
-				/>
-			))}
 		</View>
 	);
 }
@@ -270,6 +467,7 @@ function FilterLink({
 			style={[styles.filterLink, active && styles.activeFilterLink]}
 		>
 			<Text style={[styles.filterLabel, active && styles.activeFilterLabel]}>{label}</Text>
+
 			<Text style={[styles.filterCount, active && styles.activeFilterLabel]}>{count}</Text>
 		</Pressable>
 	);
@@ -282,6 +480,11 @@ const styles = StyleSheet.create({
 		paddingBottom: spacing["2xl"],
 		backgroundColor: colors.background.page,
 	},
+
+	mobileSection: {
+		paddingHorizontal: spacing.md,
+	},
+
 	layout: {
 		width: "100%",
 		maxWidth: 1800,
@@ -290,12 +493,13 @@ const styles = StyleSheet.create({
 		alignItems: "flex-start",
 		gap: spacing["2xl"],
 	},
+
 	mobileLayout: {
 		flexDirection: "column",
 	},
+
 	filters: {
 		width: 284,
-		minHeight: 640,
 		padding: 20,
 		gap: spacing.xl,
 		backgroundColor: colors.background.surface,
@@ -303,13 +507,15 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.lg,
 	},
+
 	mobileFilters: {
 		width: "100%",
-		minHeight: 0,
 	},
+
 	categoryGroup: {
 		gap: spacing.sm,
 	},
+
 	filterTitle: {
 		marginBottom: spacing.xs,
 		fontFamily: typography.family,
@@ -318,6 +524,7 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.semibold,
 		color: colors.text.primary,
 	},
+
 	filterLink: {
 		minHeight: 16,
 		flexDirection: "row",
@@ -325,11 +532,13 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		paddingVertical: 2,
 	},
+
 	activeFilterLink: {
 		paddingLeft: spacing.sm,
 		borderLeftWidth: 2,
 		borderLeftColor: colors.action.primary,
 	},
+
 	filterLabel: {
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,
@@ -337,43 +546,51 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.regular,
 		color: colors.text.secondary,
 	},
+
 	activeFilterLabel: {
 		fontWeight: typography.weight.bold,
-		color: "#B30031",
+		color: colors.action.primary,
 	},
+
 	filterCount: {
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,
 		lineHeight: 16,
-		fontWeight: typography.weight.regular,
 		color: colors.text.secondary,
 	},
+
 	subcategories: {
 		paddingLeft: spacing.sm,
 		gap: spacing.xs,
 		borderLeftWidth: 2,
-		borderLeftColor: "#B30031",
+		borderLeftColor: colors.action.primary,
 	},
+
 	filterGroup: {
 		paddingTop: spacing.xl,
 		gap: spacing.sm,
 		borderTopWidth: 1,
 		borderTopColor: colors.border.default,
 	},
+
 	priceInputs: {
+		width: "100%",
 		flexDirection: "row",
 		alignItems: "center",
 		gap: spacing.sm,
 	},
+
 	priceInput: {
 		flex: 1,
+		minWidth: 0,
 	},
+
 	rangeSeparator: {
 		fontFamily: typography.family,
 		fontSize: typography.size.base,
-		lineHeight: typography.lineHeight.xl,
 		color: colors.text.secondary,
 	},
+
 	applyButton: {
 		width: 32,
 		height: 32,
@@ -381,39 +598,82 @@ const styles = StyleSheet.create({
 		paddingVertical: 4,
 		borderRadius: radius.md,
 	},
+
 	productsList: {
 		flex: 1,
+		width: "100%",
 		minWidth: 0,
-		gap: spacing["2xl"],
+		gap: spacing.xl,
 	},
+
+	resultsHeader: {
+		width: "100%",
+	},
+
+	resultsText: {
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		fontWeight: typography.weight.semibold,
+		color: colors.text.secondary,
+	},
+
 	productsGrid: {
 		width: "100%",
 		flexDirection: "row",
 		flexWrap: "wrap",
-		alignContent: "flex-start",
+		alignItems: "flex-start",
 		gap: spacing.lg,
 	},
+
 	mobileProductsGrid: {
 		flexDirection: "column",
+		flexWrap: "nowrap",
 	},
+
 	productCard: {
-		width: "31.8%",
-		minWidth: 320,
-		minHeight: 525,
+		flexBasis: "31%",
+		flexGrow: 1,
+		maxWidth: 380,
+		minWidth: 280,
 	},
-	wideProductCard: {
-		width: "23.5%",
-	},
+
 	tabletProductCard: {
-		width: "48%",
+		flexBasis: "47%",
+		maxWidth: "100%",
 	},
+
 	mobileProductCard: {
 		width: "100%",
+		flexBasis: "auto",
+		flexGrow: 0,
+		maxWidth: "100%",
 		minWidth: 0,
+		alignSelf: "stretch",
 	},
+
+	emptyState: {
+		width: "100%",
+		paddingVertical: spacing["2xl"],
+		alignItems: "center",
+		gap: spacing.sm,
+	},
+
+	emptyTitle: {
+		fontFamily: typography.family,
+		fontSize: typography.size.md,
+		fontWeight: typography.weight.bold,
+		color: colors.text.primary,
+	},
+
+	emptyDescription: {
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		color: colors.text.secondary,
+		textAlign: "center",
+	},
+
 	pagination: {
 		width: "100%",
-		minHeight: 69,
 		paddingTop: spacing.xl,
 		flexDirection: "row",
 		alignItems: "center",
@@ -422,15 +682,21 @@ const styles = StyleSheet.create({
 		borderTopWidth: 1,
 		borderTopColor: colors.border.default,
 	},
+
 	mobilePagination: {
-		flexWrap: "wrap",
 		justifyContent: "center",
+		flexWrap: "wrap",
+		gap: spacing.md,
 	},
+
 	pages: {
 		flexDirection: "row",
 		alignItems: "center",
+		flexWrap: "wrap",
+		justifyContent: "center",
 		gap: spacing.xs,
 	},
+
 	pageButton: {
 		minWidth: 34,
 	},

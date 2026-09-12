@@ -15,7 +15,6 @@ export function InputLarge({ style, ...props }: InputLargeProps) {
 
 const styles = StyleSheet.create({
 	input: {
-		minHeight: 48,
 		paddingVertical: 14,
 		paddingHorizontal: 16,
 		borderColor: colors.border.default,

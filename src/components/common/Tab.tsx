@@ -22,25 +22,14 @@ export interface TabProps {
 	style?: StyleProp<ViewStyle>;
 }
 
-export function Tab({
-	tabs,
-	selectedId,
-	variant = "normal",
-	stacked = false,
-	onChange,
-	disabled = false,
-	style,
-}: TabProps) {
+export function Tab({ tabs, selectedId, variant = "normal", onChange, disabled = false, style }: TabProps) {
 	const getIcon = (icon: ReactNode, isSelected: boolean) => {
-		if (!isSelected || !isValidElement<{ color?: string }>(icon)) {
-			return icon;
-		}
-
+		if (!isSelected || !isValidElement<{ color?: string }>(icon)) return icon;
 		return cloneElement(icon, { color: colors.action.primaryForeground });
 	};
 
 	return (
-		<View style={[styles.container, variantStyles[variant], stacked && styles.stacked, style]}>
+		<View style={[styles.container, variantStyles[variant], style]}>
 			{tabs.map((tab) => {
 				const isSelected = tab.id === selectedId;
 				const onPress = () => onChange?.(tab.id);
@@ -50,8 +39,7 @@ export function Tab({
 						<ButtonIcon
 							key={tab.id}
 							icon={getIcon(tab.icon, isSelected)}
-							accessibilityLabel={tab.label ?? tab.id}
-							variant={isSelected ? "primary" : "ghost"}
+							color={isSelected ? "primary" : "ghost"}
 							disabled={disabled}
 							onPress={onPress}
 						/>
@@ -64,7 +52,7 @@ export function Tab({
 						icon={getIcon(tab.icon, isSelected)}
 						disabled={disabled}
 						onPress={onPress}
-						style={[styles.normalTab, styles.flexibleTab, stacked && styles.stackedTab]}
+						style={styles.normalTab}
 					>
 						{tab.label ?? tab.id}
 					</Button>
@@ -74,7 +62,7 @@ export function Tab({
 						icon={getIcon(tab.icon, isSelected)}
 						disabled={disabled}
 						onPress={onPress}
-						style={[styles.normalTab, styles.flexibleTab, stacked && styles.stackedTab]}
+						style={styles.normalTab}
 					>
 						{tab.label ?? tab.id}
 					</ButtonGhost>
@@ -87,9 +75,8 @@ export function Tab({
 const variantStyles: Record<TabVariant, ViewStyle> = {
 	normal: {
 		width: "100%",
-		maxWidth: 326,
-		height: 44,
 	},
+
 	icon: {
 		height: 42,
 	},
@@ -97,12 +84,9 @@ const variantStyles: Record<TabVariant, ViewStyle> = {
 
 const styles = StyleSheet.create({
 	container: {
-		alignSelf: "flex-start",
-		flexDirection: "row",
-		alignItems: "flex-start",
+		flexWrap: "wrap",
 		gap: spacing.sm,
 		padding: spacing.xs,
-
 		backgroundColor: colors.background.subtle,
 		borderWidth: 1,
 		borderColor: colors.border.default,
@@ -110,21 +94,7 @@ const styles = StyleSheet.create({
 	},
 
 	normalTab: {
-		flexShrink: 0,
-	},
-	flexibleTab: {
-		flex: 1,
-		minWidth: 0,
-	},
-	stacked: {
-		height: "auto",
-		alignSelf: "stretch",
-		flexDirection: "column",
-	},
-	stackedTab: {
 		width: "100%",
-		flexGrow: 0,
-		flexShrink: 0,
-		flexBasis: "auto",
+		minWidth: "100%",
 	},
 });

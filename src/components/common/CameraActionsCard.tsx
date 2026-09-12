@@ -6,7 +6,7 @@ import { GaleryCardSelect } from "@/components/common/GaleryCardSelect";
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { PhotoCamera, ShieldLock } from "@/components/icons";
-import { colors, radius, spacing } from "@/theme";
+import { colors, radius, responsive, spacing } from "@/theme";
 
 export interface CameraGalleryItem {
 	label: string;
@@ -38,7 +38,8 @@ export function CameraActionsCard({
 	style,
 }: CameraActionsCardProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 900;
+	const isTabletDown = responsive.isTabletDown(width);
+
 	const [selectedItems, setSelectedItems] = useState(() => galleryItems.map((item) => item.checked ?? false));
 	const [publishItems, setPublishItems] = useState(() => galleryItems.map((item) => item.primary ?? false));
 	const selectedCount = selectedItems.filter(Boolean).length;
@@ -51,7 +52,13 @@ export function CameraActionsCard({
 				description="Captura obligatoria en vivo desde la cámara web o móvil para validar tenencia física."
 			/>
 
-			<View style={[styles.content, isMobile && styles.mobileContent]}>
+			<Message
+				icon={<ShieldLock size={16} color={colors.text.secondary} />}
+				message="Por autenticidad de la comunidad, no se permite la carga de archivos locales ni fotos de galería externa."
+				style={styles.galleryMessage}
+			/>
+
+			<View style={[styles.content, isTabletDown && styles.mobileContent]}>
 				<CameraDisplay
 					badges={["Vista previa", "Sin archivos"]}
 					onCameraPress={onCameraPress}
@@ -82,12 +89,6 @@ export function CameraActionsCard({
 							/>
 						))}
 					</View>
-
-					<Message
-						icon={<ShieldLock size={16} color={colors.text.secondary} />}
-						message="Por autenticidad de la comunidad, no se permite la carga de archivos locales ni fotos de galería externa."
-						style={styles.galleryMessage}
-					/>
 				</View>
 			</View>
 		</View>
@@ -104,25 +105,30 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
 	},
+
 	content: {
 		width: "100%",
 		flexDirection: "row",
 		gap: spacing.xl,
 	},
+
 	mobileContent: {
 		flexDirection: "column",
 	},
+
 	galleryPanel: {
 		flex: 1,
 		minWidth: 0,
 		gap: spacing.sm,
 	},
+
 	galleryGrid: {
 		width: "100%",
 		flexDirection: "row",
 		flexWrap: "wrap",
 		gap: spacing.sm,
 	},
+
 	galleryMessage: {
 		marginTop: spacing.sm,
 	},

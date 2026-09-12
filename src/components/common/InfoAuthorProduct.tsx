@@ -1,9 +1,18 @@
 import { Image } from "expo-image";
 import { ReactNode } from "react";
-import { ImageSourcePropType, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import {
+	ImageSourcePropType,
+	StyleProp,
+	StyleSheet,
+	Text,
+	TextStyle,
+	useWindowDimensions,
+	View,
+	ViewStyle,
+} from "react-native";
 
 import { AccountCircle, Chronic, Distance, KidStar, School } from "@/components/icons";
-import { colors, radius, spacing, typography } from "@/theme";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
 
 import { HeaderSections } from "./HeaderSections";
 import { Message } from "./Message";
@@ -97,8 +106,11 @@ interface MetricRowProps {
 }
 
 function MetricRow({ icon, label, value, valueStyle }: MetricRowProps) {
+	const { width } = useWindowDimensions();
+	const isTabletDown = responsive.isTabletDown(width);
+
 	return (
-		<View style={styles.metricRow}>
+		<View style={[styles.metricRow, isTabletDown && styles.mobileMetricRow]}>
 			<View style={styles.metricLabel}>
 				{icon}
 				<Text style={styles.label}>{label}</Text>
@@ -116,10 +128,8 @@ const styles = StyleSheet.create({
 		width: "100%",
 		maxWidth: 390,
 		minHeight: 356,
-
 		padding: spacing.xl,
 		gap: spacing.md,
-
 		backgroundColor: colors.background.surface,
 		borderWidth: 1,
 		borderColor: colors.border.default,
@@ -231,5 +241,12 @@ const styles = StyleSheet.create({
 		paddingTop: spacing.lg,
 		borderTopWidth: 1,
 		borderTopColor: colors.border.default,
+	},
+
+	// Mobile Responsive
+	mobileMetricRow: {
+		flexDirection: "column",
+		alignItems: "flex-start",
+		gap: spacing.xs,
 	},
 });

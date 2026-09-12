@@ -1,4 +1,4 @@
-import { colors, typography } from "@/theme";
+import { colors, spacing, typography } from "@/theme";
 import { StyleSheet, TextInput } from "react-native";
 import { sharedInputStyles } from "./input.styles";
 import { InputProps } from "./input.types";
@@ -15,8 +15,7 @@ export function Input({ style, ...props }: InputProps) {
 
 const styles = StyleSheet.create({
 	input: {
-		minHeight: 41,
-		padding: 12,
+		padding: spacing.md,
 		borderColor: colors.border.default,
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,

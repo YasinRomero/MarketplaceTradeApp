@@ -5,7 +5,7 @@ import { ButtonIconColor, ButtonIconProps } from "./button.types";
 
 export function ButtonIcon({
 	icon,
-	size = "small",
+	size = "normal",
 	color = "primary",
 	disabled = false,
 	style,

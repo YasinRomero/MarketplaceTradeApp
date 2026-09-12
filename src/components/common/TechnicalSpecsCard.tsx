@@ -2,7 +2,7 @@ import { StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } fro
 
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Tune } from "@/components/icons";
-import { colors, radius, spacing, typography } from "@/theme";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
 
 export interface TechnicalSpec {
 	label: string;
@@ -27,20 +27,20 @@ const defaultSpecs: TechnicalSpec[] = [
 
 export function TechnicalSpecsCard({ specs = defaultSpecs, style }: TechnicalSpecsCardProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
+	const isTabletDown = responsive.isTabletDown(width);
 
 	return (
-		<View style={[styles.card, isMobile && styles.mobileCard, style]}>
+		<View style={[styles.card, isTabletDown && styles.mobileCard, style]}>
 			<HeaderSections
 				icon={<Tune size={20} color={colors.text.secondary} />}
 				title="Especificaciones técnicas y atributos"
 			/>
 
-			<View style={[styles.grid, isMobile && styles.mobileGrid]}>
+			<View style={[styles.grid, isTabletDown && styles.mobileGrid]}>
 				{specs.map((spec, index) => (
-					<View key={`${spec.label}-${index}`} style={[styles.item, isMobile && styles.mobileItem]}>
+					<View key={`${spec.label}-${index}`} style={[styles.item, isTabletDown && styles.mobileItem]}>
 						<Text style={styles.label}>{spec.label}</Text>
-						<Text style={[styles.value, isMobile && styles.mobileValue]}>{spec.value}</Text>
+						<Text style={[styles.value, isTabletDown && styles.mobileValue]}>{spec.value}</Text>
 					</View>
 				))}
 			</View>
@@ -58,25 +58,16 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.lg,
 	},
-	mobileCard: {
-		padding: spacing.lg,
-	},
+
 	grid: {
 		width: "100%",
 		flexDirection: "row",
 		flexWrap: "wrap",
 		columnGap: spacing.xl,
 	},
-	mobileGrid: {
-		flexDirection: "column",
-		flexWrap: "nowrap",
-		alignItems: "stretch",
-	},
+
 	item: {
 		flexBasis: "45%",
-		flexGrow: 1,
-		flexShrink: 1,
-		minHeight: 37,
 		paddingVertical: spacing.sm,
 		flexDirection: "row",
 		alignItems: "center",
@@ -85,17 +76,7 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderBottomColor: colors.border.default,
 	},
-	mobileItem: {
-		width: "100%",
-		alignSelf: "stretch",
-		flexBasis: "auto",
-		flexGrow: 0,
-		flexShrink: 1,
-		flexDirection: "column",
-		alignItems: "flex-start",
-		justifyContent: "flex-start",
-		gap: spacing.xs,
-	},
+
 	label: {
 		flex: 1,
 		fontFamily: typography.family,
@@ -105,6 +86,7 @@ const styles = StyleSheet.create({
 		letterSpacing: 0.12,
 		color: colors.text.secondary,
 	},
+
 	value: {
 		flexShrink: 1,
 		fontFamily: typography.family,
@@ -113,6 +95,30 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.semibold,
 		color: colors.text.primary,
 	},
+
+	// Mobile Responsive
+	mobileCard: {
+		padding: spacing.lg,
+	},
+
+	mobileGrid: {
+		flexDirection: "column",
+		flexWrap: "nowrap",
+		alignItems: "stretch",
+	},
+
+	mobileItem: {
+		minWidth: "100%",
+		alignSelf: "stretch",
+		flexBasis: "auto",
+		flexGrow: 0,
+		flexShrink: 1,
+		flexDirection: "column",
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
+		gap: spacing.xs,
+	},
+
 	mobileValue: {
 		width: "100%",
 		flexShrink: 1,

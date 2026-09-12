@@ -3,7 +3,6 @@ import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import { CardProduct } from "@/components/common/CardProduct";
 import { LandingParagraph } from "@/components/common/LandingParagraph";
-import { SwapHoriz } from "@/components/icons";
 import { ButtonOutline } from "@/components/ui/Button";
 import { colors, spacing } from "@/theme";
 
@@ -80,13 +79,7 @@ export function PublishProductsSection() {
 				</View>
 
 				<View style={styles.footerAction}>
-					<ButtonOutline
-						icon={<SwapHoriz size={16} color={colors.text.primary} />}
-						iconPosition="right"
-						onPress={() => router.push("/marketplace")}
-					>
-						Ver más productos
-					</ButtonOutline>
+					<ButtonOutline onPress={() => router.push("/marketplace")}>Ver más productos</ButtonOutline>
 				</View>
 			</View>
 		</View>

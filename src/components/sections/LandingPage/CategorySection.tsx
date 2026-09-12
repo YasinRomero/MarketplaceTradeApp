@@ -27,7 +27,7 @@ const categories: CategorySectionItem[] = [
 		id: "1",
 		title: "Libros y Textos Académicos",
 		description: "Bibliografía obligatoria y manuales recomendados por cátedra.",
-		badges: ["Category", "Category", "Category", "Category"],
+		badges: ["Manuales", "Guías", "Digital", "Físico"],
 		tone: "red",
 		icon: <MenuBook size={24} color={colors.card.red.foreground} />,
 	},
@@ -35,7 +35,7 @@ const categories: CategorySectionItem[] = [
 		id: "2",
 		title: "Tecnología y Gadgets",
 		description: "Herramientas de cómputo y cálculo para alto rendimiento académico.",
-		badges: ["Category", "Category", "Category", "Category"],
+		badges: ["Laptops", "Tablets", "Cálculo", "Accesorios"],
 		tone: "blue",
 		icon: <LaptopChromebook size={24} color={colors.card.blue.foreground} />,
 	},
@@ -43,7 +43,7 @@ const categories: CategorySectionItem[] = [
 		id: "3",
 		title: "Material de Laboratorio y Salud",
 		description: "Instrumental clínico y de protección verificado para prácticas y clínicas.",
-		badges: ["Category", "Category", "Category", "Category"],
+		badges: ["Protección", "Instrumental", "Clínica", "Kits"],
 		tone: "green",
 		icon: <Experiment size={24} color={colors.card.green.foreground} />,
 	},
@@ -51,7 +51,7 @@ const categories: CategorySectionItem[] = [
 		id: "4",
 		title: "Mobiliario y Estudio",
 		description: "Equipamiento ergonómico y accesorios para optimizar tu espacio de estudio en casa.",
-		badges: ["Category", "Category", "Category", "Category"],
+		badges: ["Sillas", "Escritorios", "Iluminación", "Soportes"],
 		tone: "purple",
 		icon: <Chair size={24} color={colors.card.purple.foreground} />,
 	},
@@ -59,7 +59,7 @@ const categories: CategorySectionItem[] = [
 		id: "5",
 		title: "Deportes y Equipamiento",
 		description: "Indumentaria oficial de los representativos universitarios y accesorios para bienestar físico.",
-		badges: ["Category", "Category", "Category", "Category"],
+		badges: ["Uniformes", "Calzado", "Balones", "Gimnasio"],
 		tone: "yellow",
 		icon: <SportsBasketball size={24} color={colors.card.yellow.foreground} />,
 	},
@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
 
 	inner: {
 		maxWidth: 1216,
-		alignSelf: "center",
 		gap: 40,
 	},
 
@@ -176,14 +175,16 @@ const styles = StyleSheet.create({
 		maxWidth: undefined,
 	},
 
+	// Mobile Responsive
+	mobileTitleSection: {
+		flexDirection: "column",
+		justifyContent: "flex-start",
+		gap: spacing.md,
+	},
+
 	mobileGrid: {
 		width: "100%",
 		gap: spacing.xl,
 		alignItems: "center",
-	},
-
-	// Mobile Responsive
-	mobileTitleSection: {
-		flexDirection: "column",
 	},
 });

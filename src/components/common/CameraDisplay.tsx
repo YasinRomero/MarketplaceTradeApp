@@ -1,11 +1,11 @@
 import { Image } from "expo-image";
 import { ReactNode } from "react";
-import { ImageSourcePropType, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { PhotoCamera, Upload, Videocam } from "@/components/icons";
 import { Badge } from "@/components/ui/Badge/Badge";
 import { ButtonIcon, ButtonOutline } from "@/components/ui/Button";
-import { colors, radius, spacing, typography } from "@/theme";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
 
 export interface CameraDisplayProps {
 	image?: ImageSourcePropType;
@@ -34,8 +34,11 @@ export function CameraDisplay({
 	disabled = false,
 	style,
 }: CameraDisplayProps) {
+	const { width } = useWindowDimensions();
+	const isTabletUp = responsive.isTabletUp(width);
+
 	return (
-		<View style={[styles.card, style]}>
+		<View style={[styles.card, isTabletUp && styles.desktopCard, style]}>
 			<View style={styles.media}>
 				{image && <Image contentFit="cover" source={image} style={styles.image} />}
 
@@ -52,29 +55,11 @@ export function CameraDisplay({
 
 			<View style={styles.actionsBar}>
 				<View style={styles.mainActions}>
-					<ButtonIcon
-						icon={cameraIcon}
-						accessibilityLabel="Tomar foto"
-						size="large"
-						disabled={disabled}
-						onPress={onCameraPress}
-					/>
-
-					<ButtonIcon
-						icon={videoIcon}
-						accessibilityLabel="Grabar video"
-						size="large"
-						disabled={disabled}
-						onPress={onVideoPress}
-					/>
+					<ButtonIcon icon={cameraIcon} disabled={disabled} onPress={onCameraPress} />
+					<ButtonIcon icon={videoIcon} disabled={disabled} onPress={onVideoPress} />
 				</View>
 
-				<ButtonOutline
-					icon={uploadIcon}
-					disabled={disabled}
-					onPress={onUploadPress}
-					style={styles.uploadButton}
-				>
+				<ButtonOutline icon={uploadIcon} disabled={disabled} onPress={onUploadPress}>
 					{uploadLabel}
 				</ButtonOutline>
 			</View>
@@ -85,9 +70,6 @@ export function CameraDisplay({
 const styles = StyleSheet.create({
 	card: {
 		width: "100%",
-		maxWidth: 435,
-		minHeight: 300,
-
 		backgroundColor: colors.background.surface,
 		borderWidth: 1,
 		borderColor: colors.border.default,
@@ -101,7 +83,6 @@ const styles = StyleSheet.create({
 		minHeight: 240,
 		padding: spacing.md,
 		position: "relative",
-
 		backgroundColor: colors.background.subtle,
 	},
 
@@ -137,10 +118,8 @@ const styles = StyleSheet.create({
 
 	actionsBar: {
 		width: "100%",
-		height: 72,
 		padding: spacing.md,
 		flexDirection: "row",
-		alignItems: "center",
 		justifyContent: "space-between",
 	},
 
@@ -150,7 +129,8 @@ const styles = StyleSheet.create({
 		gap: spacing.md,
 	},
 
-	uploadButton: {
-		height: 36,
+	// Desktop Responsive
+	desktopCard: {
+		maxWidth: 480,
 	},
 });

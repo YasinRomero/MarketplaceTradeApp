@@ -82,19 +82,17 @@ export function CardTransactionProduct({
 
 			<View style={styles.actions}>
 				<ButtonRounded
-					size="xlarge"
+					size="large"
 					icon={<ChangeCircle size={16} color={colors.action.primaryForeground} />}
 					onPress={onPrimaryAction}
-					style={styles.primaryButton}
 				>
 					{primaryActionLabel}
 				</ButtonRounded>
 
 				<ButtonOutline
-					size="xlarge"
+					size="large"
 					icon={<ShoppingBag size={16} color={colors.text.secondary} />}
 					onPress={onSecondaryAction}
-					style={styles.secondaryButton}
 				>
 					{secondaryActionLabel}
 				</ButtonOutline>
@@ -129,7 +127,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		maxWidth: 390,
 		minHeight: 586,
-
 		padding: spacing.xl,
 		backgroundColor: colors.background.surface,
 		borderWidth: 1,
@@ -240,16 +237,6 @@ const styles = StyleSheet.create({
 	actions: {
 		width: "100%",
 		gap: spacing.md,
-	},
-
-	primaryButton: {
-		width: "100%",
-		height: 48,
-	},
-
-	secondaryButton: {
-		width: "100%",
-		height: 50,
 	},
 
 	securitySection: {

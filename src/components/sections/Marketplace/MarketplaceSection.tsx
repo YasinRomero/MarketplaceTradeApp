@@ -6,60 +6,119 @@ import { MarketplaceSearchBar } from "@/components/common/MarketplaceSearchBar";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { colors, spacing } from "@/theme";
 
+export type MarketplaceExchangeType = "Tipo de intercambio" | "Venta" | "Intercambio" | "Ambos";
+
 export interface MarketplaceSectionProps {
 	resultCount?: string | number;
+
+	search: string;
+	onSearchChange: (value: string) => void;
 	onSearch?: (value: string) => void;
+
+	selectedSede: string;
+	onSedeChange: (value: string) => void;
+
+	exchangeType: MarketplaceExchangeType;
+	onExchangeTypeChange: (value: MarketplaceExchangeType) => void;
+
 	style?: StyleProp<ViewStyle>;
 }
 
-const institutions = ["Selecciona una sede", "Lima Norte", "Lima Centro"];
-const exchangeTypes = ["Tipo de intercambio", "Venta", "Intercambio"];
+const institutions = ["Selecciona una sede", "Lima Norte", "Lima Centro", "Lima Sur"];
+
+const exchangeTypes: MarketplaceExchangeType[] = ["Tipo de intercambio", "Venta", "Intercambio", "Ambos"];
+
 const sortOptions = ["Relevancia", "Más recientes", "Menor precio"];
 
-export function MarketplaceSection({ resultCount = "1,240", onSearch, style }: MarketplaceSectionProps) {
+export function MarketplaceSection({
+	resultCount = 0,
+
+	search,
+	onSearchChange,
+	onSearch,
+
+	selectedSede,
+	onSedeChange,
+
+	exchangeType,
+	onExchangeTypeChange,
+
+	style,
+}: MarketplaceSectionProps) {
 	const { width } = useWindowDimensions();
 	const isMobile = width < 768;
-	const [search, setSearch] = useState("");
-	const [institution, setInstitution] = useState(institutions[0]);
-	const [exchangeType, setExchangeType] = useState(exchangeTypes[0]);
+
 	const [sortValue, setSortValue] = useState(sortOptions[0]);
-	const [activeFilters, setActiveFilters] = useState<MarketplaceFilterChip[]>([
-		{ id: "institution", label: "Universidad Nacional" },
-		{ id: "exchange", label: "Venta" },
-	]);
+	const activeFilters: MarketplaceFilterChip[] = [];
+
+	if (selectedSede && selectedSede !== "Selecciona una sede") {
+		activeFilters.push({
+			id: "institution",
+			label: selectedSede,
+		});
+	}
+
+	if (exchangeType && exchangeType !== "Tipo de intercambio") {
+		activeFilters.push({
+			id: "exchange",
+			label: exchangeType,
+		});
+	}
 
 	const removeFilter = (id: string) => {
-		setActiveFilters((filters) => filters.filter((filter) => filter.id !== id));
+		if (id === "institution") {
+			onSedeChange("Selecciona una sede");
+		}
+
+		if (id === "exchange") {
+			onExchangeTypeChange("Tipo de intercambio");
+		}
+	};
+
+	const clearFilters = () => {
+		onSedeChange("Selecciona una sede");
+
+		onExchangeTypeChange("Tipo de intercambio");
 	};
 
 	return (
 		<View style={[styles.section, isMobile && styles.mobileSection, style]}>
 			<View style={styles.content}>
-				<Breadcrumb items={[{ label: "Inicio" }, { label: "Marketplace" }, { label: "Productos" }]} />
+				<Breadcrumb
+					items={[
+						{ label: "Inicio" },
+						{
+							label: "Marketplace",
+						},
+						{
+							label: "Productos",
+						},
+					]}
+				/>
 
 				<ScrollView
 					horizontal={isMobile}
 					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={isMobile && styles.wideContent}
+					contentContainerStyle={isMobile ? styles.wideContent : undefined}
 					style={styles.scroller}
 				>
 					<MarketplaceSearchBar
 						searchValue={search}
-						onSearchChange={setSearch}
+						onSearchChange={onSearchChange}
 						onSearchPress={() => onSearch?.(search)}
-						institution={institution}
+						institution={selectedSede}
 						institutionOptions={institutions}
-						onInstitutionChange={setInstitution}
+						onInstitutionChange={onSedeChange}
 						exchangeType={exchangeType}
 						exchangeTypeOptions={exchangeTypes}
-						onExchangeChange={setExchangeType}
+						onExchangeChange={(value) => onExchangeTypeChange(value as MarketplaceExchangeType)}
 					/>
 				</ScrollView>
 
 				<ScrollView
 					horizontal={isMobile}
 					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={isMobile && styles.wideContent}
+					contentContainerStyle={isMobile ? styles.wideContent : undefined}
 					style={styles.scroller}
 				>
 					<MarketplaceFilters
@@ -71,7 +130,7 @@ export function MarketplaceSection({ resultCount = "1,240", onSearch, style }: M
 						sortValue={sortValue}
 						sortOptions={sortOptions}
 						onSortChange={setSortValue}
-						onClearFilters={() => setActiveFilters([])}
+						onClearFilters={clearFilters}
 					/>
 				</ScrollView>
 			</View>
@@ -86,18 +145,22 @@ const styles = StyleSheet.create({
 		paddingHorizontal: spacing["2xl"],
 		backgroundColor: colors.background.page,
 	},
+
 	mobileSection: {
 		paddingHorizontal: spacing.lg,
 	},
+
 	content: {
 		width: "100%",
 		maxWidth: 1232,
 		alignSelf: "center",
 		gap: spacing.lg,
 	},
+
 	scroller: {
 		width: "100%",
 	},
+
 	wideContent: {
 		width: 1232,
 	},

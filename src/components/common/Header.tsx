@@ -1,10 +1,9 @@
-import { ReactNode } from "react";
-import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
 import { Add, ChatBubble, NotificationsUnread, School } from "@/components/icons";
 import { ButtonGhost, ButtonIcon, ButtonRounded } from "@/components/ui/Button";
-import { colors, radius, spacing, typography } from "@/theme";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
+import { useRouter } from "expo-router";
+import { ReactNode } from "react";
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export type HeaderVariant = "default" | "logged";
 
@@ -49,7 +48,8 @@ export function Header({
 }: HeaderProps) {
 	const router = useRouter();
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
+	const isMobile = responsive.isTabletDown(width);
+
 	const isLogged = variant === "logged";
 	const goToMarketplace = onCategoriesPress ?? (() => router.push("/marketplace"));
 	const goToPublishProduct = onPublishPress ?? (() => router.push("/publishproduct"));
@@ -70,9 +70,7 @@ export function Header({
 
 					<View style={[styles.navigation, isMobile && styles.mobileNavigation]}>
 						<ButtonGhost onPress={goToMarketplace}>Marketplace</ButtonGhost>
-
 						<ButtonGhost onPress={onHowItWorksPress}>Cómo funciona</ButtonGhost>
-
 						<ButtonGhost onPress={onHelpPress}>Ayuda</ButtonGhost>
 					</View>
 				</View>
@@ -93,19 +91,8 @@ export function Header({
 					</View>
 				) : (
 					<View style={[styles.loggedActions, isMobile && styles.mobileLoggedActions]}>
-						<ButtonIcon
-							icon={resolvedNotificationIcon}
-							accessibilityLabel="Notificaciones"
-							variant="ghost"
-							onPress={onNotificationsPress}
-						/>
-
-						<ButtonIcon
-							icon={resolvedChatIcon}
-							accessibilityLabel="Mensajes"
-							variant="ghost"
-							onPress={onChatPress}
-						/>
+						<ButtonIcon icon={resolvedNotificationIcon} color="ghost" onPress={onNotificationsPress} />
+						<ButtonIcon icon={resolvedChatIcon} color="ghost" onPress={onChatPress} />
 
 						<View style={styles.divider} />
 
@@ -143,72 +130,42 @@ const styles = StyleSheet.create({
 	header: {
 		width: "100%",
 		minHeight: 73,
-
 		justifyContent: "center",
-
 		paddingVertical: spacing.md + 2,
 		paddingHorizontal: spacing.xl,
-
 		backgroundColor: colors.background.surface,
-
 		borderBottomWidth: 1,
 		borderBottomColor: colors.border.default,
-	},
-
-	mobileHeader: {
-		paddingHorizontal: spacing.lg,
-		paddingTop: spacing.lg,
-		paddingBottom: spacing.lg,
 	},
 
 	maxWidth: {
 		width: "100%",
 		maxWidth: 1232,
-
 		alignSelf: "center",
-
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-	},
-
-	mobileMaxWidth: {
-		flexDirection: "column",
-		alignItems: "stretch",
-		gap: spacing.sm,
 	},
 
 	left: {
 		flex: 1,
-
 		flexDirection: "row",
 		alignItems: "center",
-
 		gap: spacing["2xl"],
-	},
-
-	mobileLeft: {
-		width: "100%",
-		flex: 0,
-		justifyContent: "space-between",
 	},
 
 	logo: {
 		flexDirection: "row",
 		alignItems: "center",
-
 		gap: spacing.md - 2,
 	},
 
 	logoIcon: {
 		width: 36,
 		height: 36,
-
 		alignItems: "center",
 		justifyContent: "center",
-
 		backgroundColor: colors.action.primary,
-
 		borderRadius: radius.lg,
 	},
 
@@ -217,7 +174,6 @@ const styles = StyleSheet.create({
 		fontSize: typography.size.md,
 		lineHeight: typography.lineHeight.xl,
 		fontWeight: typography.weight.bold,
-
 		color: colors.text.primary,
 	},
 
@@ -226,37 +182,16 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 
-	mobileNavigation: {
-		display: "none",
-	},
-
 	actions: {
 		flexDirection: "row",
 		alignItems: "center",
-
 		gap: spacing.sm,
-	},
-
-	mobileActions: {
-		width: "100%",
-		justifyContent: "space-between",
-	},
-
-	mobileActionButton: {
-		flex: 1,
 	},
 
 	loggedActions: {
 		flexDirection: "row",
 		alignItems: "center",
-
 		gap: spacing.sm,
-	},
-
-	mobileLoggedActions: {
-		width: "100%",
-		flexWrap: "wrap",
-		justifyContent: "flex-end",
 	},
 
 	divider: {
@@ -275,15 +210,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: spacing.sm,
 		gap: spacing.md - 2,
 		borderRadius: radius.md,
-	},
-
-	mobileProfile: {
-		flex: 1,
-		minWidth: 0,
-	},
-
-	mobileLoggedPublishButton: {
-		width: "100%",
 	},
 
 	avatar: {
@@ -323,5 +249,52 @@ const styles = StyleSheet.create({
 		lineHeight: typography.lineHeight.sm,
 		fontWeight: typography.weight.regular,
 		color: colors.text.secondary,
+	},
+
+	// Mobile Responsive
+	mobileHeader: {
+		paddingHorizontal: spacing.lg,
+		paddingTop: spacing.lg,
+		paddingBottom: spacing.lg,
+	},
+
+	mobileNavigation: {
+		display: "none",
+	},
+
+	mobileProfile: {
+		flex: 1,
+		minWidth: 0,
+	},
+
+	mobileLoggedPublishButton: {
+		width: "100%",
+	},
+
+	mobileActions: {
+		width: "100%",
+		flexDirection: "column",
+	},
+
+	mobileLoggedActions: {
+		width: "100%",
+		flexWrap: "wrap",
+		justifyContent: "flex-end",
+	},
+
+	mobileActionButton: {
+		width: "100%",
+	},
+
+	mobileMaxWidth: {
+		flexDirection: "column",
+		alignItems: "stretch",
+		gap: spacing.sm,
+	},
+
+	mobileLeft: {
+		width: "100%",
+		flex: 0,
+		justifyContent: "space-between",
 	},
 });

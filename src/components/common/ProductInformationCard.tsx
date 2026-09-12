@@ -1,22 +1,30 @@
-import { useState } from "react";
-import { StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { InputTextArea } from "@/components/common/InputTextArea";
 import { InputWithLabel } from "@/components/common/InputWithLabel";
 import { Message } from "@/components/common/Message";
 import { SelectLabel } from "@/components/common/SelectLabel";
 import { Tab } from "@/components/common/Tab";
-import { Info, News, Sell, SwapHoriz, Tune } from "@/components/icons";
+import { Info, News, Sell, SwapCalls, SwapHoriz, Tune } from "@/components/icons";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import { boxShadows, colors, radius, spacing, typography } from "@/theme";
+import { boxShadows, colors, radius, responsive, spacing, typography } from "@/theme";
+import { useEffect, useState } from "react";
+import { StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
-type ProductMode = "sell" | "exchange" | "donate";
+export type ProductMode = "sell" | "exchange" | "both";
 
 interface ProductAttribute {
 	label: string;
 	value: string;
+}
+
+export interface ProductInformation {
+	title: string;
+	category: string;
+	subcategory: string;
+	mode: ProductMode;
+	price: string;
+	description: string;
 }
 
 export interface ProductInformationCardProps {
@@ -28,16 +36,19 @@ export interface ProductInformationCardProps {
 	initialPrice?: string;
 	initialDescription?: string;
 	attributes?: ProductAttribute[];
+	onChange?: (product: ProductInformation) => void;
 }
 
 const categories = ["Tecnología", "Ropa", "Libros"];
 const subcategories = ["Computadoras", "Accesorios", "Otros"];
+
 const defaultAttributes: ProductAttribute[] = [
 	{ label: "Marca", value: "Lenovo" },
 	{ label: "Modelo", value: "ThinkPad" },
 	{ label: "Estado", value: "Usado" },
 	{ label: "Año", value: "2022" },
 ];
+
 const INVALID_SYMBOLS_MESSAGE = "Inválido, no se pueden colocar símbolos.";
 const INVALID_NUMBER_MESSAGE = "Inválido, solo se pueden colocar números.";
 
@@ -76,10 +87,12 @@ export function ProductInformationCard({
 	initialPrice = "450.00",
 	initialDescription = "Completa los datos esenciales de tu publicación",
 	attributes = defaultAttributes,
+	onChange,
 }: ProductInformationCardProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 640;
-	const isNarrowMobile = width < 360;
+	const isTabletDown = responsive.isTabletDown(width);
+	const isMobileDpwn = responsive.isMobileDown(width);
+
 	const [title, setTitle] = useState(initialTitle);
 	const [category, setCategory] = useState(initialCategory);
 	const [subcategory, setSubcategory] = useState(initialSubcategory);
@@ -89,14 +102,26 @@ export function ProductInformationCard({
 	const [attributeValues, setAttributeValues] = useState<Record<string, string>>(() =>
 		Object.fromEntries(attributes.map((attribute) => [attribute.label, attribute.value])),
 	);
+
 	const titleHasError = hasInvalidTextCharacters(title);
+
+	useEffect(() => {
+		onChange?.({
+			title,
+			category,
+			subcategory,
+			mode,
+			price,
+			description,
+		});
+	}, [title, category, subcategory, mode, price, description, onChange]);
 
 	const updateAttribute = (label: string, value: string) => {
 		setAttributeValues((current) => ({ ...current, [label]: value }));
 	};
 
 	return (
-		<View style={[styles.card, isMobile && styles.mobileCard, style]}>
+		<View style={[styles.card, isTabletDown && styles.mobileCard, style]}>
 			<HeaderSections
 				icon={<News size={20} color={colors.text.secondary} />}
 				title="Información del producto"
@@ -113,48 +138,55 @@ export function ProductInformationCard({
 				alertStyle={styles.errorText}
 			/>
 
-			<View style={[styles.row, isMobile && styles.mobileRow]}>
+			<View style={[styles.row, isTabletDown && styles.mobileRow]}>
 				<SelectLabel
 					label="Categoría"
 					value={category}
 					options={categories}
 					onChange={setCategory}
-					containerStyle={[styles.flexField, isMobile && styles.mobileFlexField]}
+					containerStyle={[styles.flexField, isTabletDown && styles.mobileFlexField]}
 				/>
+
 				<SelectLabel
 					label="Subcategoría"
 					value={subcategory}
 					options={subcategories}
 					onChange={setSubcategory}
-					containerStyle={[styles.flexField, isMobile && styles.mobileFlexField]}
+					containerStyle={[styles.flexField, isTabletDown && styles.mobileFlexField]}
 				/>
 			</View>
 
-			<View style={[styles.row, styles.modeRow, isMobile && styles.mobileRow]}>
-				<View style={[styles.flexField, isMobile && styles.mobileFlexField]}>
+			<View style={[styles.row, styles.modeRow, isTabletDown && styles.mobileRow]}>
+				<View style={[styles.flexField, isTabletDown && styles.mobileFlexField]}>
 					<Text style={styles.label}>Modalidad</Text>
+
 					<Tab
 						tabs={[
 							{
 								id: "sell",
 								label: "Vender",
-								icon: <Sell size={16} color={colors.text.inverse} />,
+								icon: <Sell size={16} />,
 							},
 							{
 								id: "exchange",
 								label: "Intercambiar",
-								icon: <SwapHoriz size={16} color={colors.text.secondary} />,
+								icon: <SwapHoriz size={16} />,
+							},
+							{
+								id: "both",
+								label: "Ambos",
+								icon: <SwapCalls size={16} />,
 							},
 						]}
 						selectedId={mode}
 						onChange={(value) => setMode(value as ProductMode)}
-						stacked={isMobile}
-						style={[styles.modeTabs, isMobile && styles.mobileModeTabs]}
+						style={[isTabletDown && styles.mobileModeTabs]}
 					/>
 				</View>
 
-				<View style={[styles.flexField, isMobile && styles.mobileFlexField]}>
+				<View style={[styles.flexField, isTabletDown && styles.mobileFlexField]}>
 					<Label style={styles.priceLabel}>Precio / valor referencial</Label>
+
 					<View style={styles.priceCard}>
 						<View style={styles.priceInputContainer}>
 							<Input
@@ -164,6 +196,7 @@ export function ProductInformationCard({
 								keyboardType="decimal-pad"
 								style={styles.priceInput}
 							/>
+
 							<Text style={styles.currencyPrefix}>S/</Text>
 							<Text style={styles.currencySuffix}>PEN</Text>
 						</View>
@@ -186,12 +219,9 @@ export function ProductInformationCard({
 			/>
 
 			<View style={styles.properties}>
-				<HeaderSections
-					size="medium"
-					icon={<Tune size={12} color={colors.text.secondary} />}
-					title="Características"
-				/>
-				<View style={[styles.attributes, isNarrowMobile && styles.narrowMobileAttributes]}>
+				<HeaderSections size="medium" icon={<Tune size={12} />} title="Características" />
+
+				<View style={[styles.attributes, isMobileDpwn && styles.narrowMobileAttributes]}>
 					{attributes.map((attribute) => {
 						const attributeValue = attributeValues[attribute.label] ?? "";
 						const attributeError = getAttributeError(attribute.label, attributeValue);
@@ -206,7 +236,7 @@ export function ProductInformationCard({
 								alert={attributeError}
 								visibleAlert={Boolean(attributeError)}
 								alertStyle={styles.errorText}
-								containerStyle={[styles.attribute, isNarrowMobile && styles.narrowMobileAttribute]}
+								containerStyle={[styles.attribute, isMobileDpwn && styles.narrowMobileAttribute]}
 							/>
 						);
 					})}
@@ -226,33 +256,23 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
 	},
-	mobileCard: {
-		padding: spacing.lg,
-		gap: spacing.lg,
-	},
+
 	row: {
 		width: "100%",
 		flexDirection: "row",
 		gap: spacing.lg,
 	},
-	mobileRow: {
-		flexDirection: "column",
-		gap: spacing.lg,
-	},
+
 	flexField: {
 		flex: 1,
 		minWidth: 0,
 	},
-	mobileFlexField: {
-		flexGrow: 0,
-		flexShrink: 1,
-		flexBasis: "auto",
-		width: "100%",
-	},
+
 	modeRow: {
 		alignItems: "flex-start",
 		paddingTop: spacing.xs,
 	},
+
 	label: {
 		marginBottom: spacing.xs,
 		fontFamily: typography.family,
@@ -261,16 +281,11 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.semibold,
 		color: colors.text.primary,
 	},
+
 	priceLabel: {
 		marginBottom: spacing.xs,
 	},
-	modeTabs: {
-		maxWidth: "100%",
-	},
-	mobileModeTabs: {
-		width: "100%",
-		maxWidth: "100%",
-	},
+
 	priceCard: {
 		width: "100%",
 		padding: 14,
@@ -282,11 +297,13 @@ const styles = StyleSheet.create({
 		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
+
 	priceInputContainer: {
 		width: "100%",
 		height: 48,
 		position: "relative",
 	},
+
 	priceInput: {
 		width: "100%",
 		height: 48,
@@ -301,6 +318,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: 8,
 	},
+
 	currencyPrefix: {
 		position: "absolute",
 		left: 12,
@@ -311,6 +329,7 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.bold,
 		color: colors.text.primary,
 	},
+
 	currencySuffix: {
 		position: "absolute",
 		right: 12,
@@ -321,12 +340,14 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.semibold,
 		color: colors.text.secondary,
 	},
+
 	priceMessage: {
 		padding: 0,
 		minHeight: 40,
 		backgroundColor: "transparent",
 		borderWidth: 0,
 	},
+
 	errorText: {
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,
@@ -334,30 +355,57 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.regular,
 		color: colors.card.red.foreground,
 	},
+
 	descriptionInput: {
 		height: 108,
 	},
+
 	properties: {
 		width: "100%",
 		gap: spacing.md,
 	},
+
 	attributes: {
 		width: "100%",
 		flexDirection: "row",
 		flexWrap: "wrap",
 		gap: spacing.md,
 	},
-	narrowMobileAttributes: {
-		flexDirection: "column",
-	},
-	narrowMobileAttribute: {
-		flexBasis: "auto",
-		flexGrow: 0,
-		width: "100%",
-	},
+
 	attribute: {
 		flexBasis: "22%",
 		flexGrow: 1,
 		minWidth: 120,
+	},
+
+	// Mobile Responsive
+	mobileCard: {
+		padding: spacing.lg,
+		gap: spacing.lg,
+	},
+
+	mobileRow: {
+		flexDirection: "column",
+		gap: spacing.lg,
+	},
+
+	mobileFlexField: {
+		flexBasis: "auto",
+		width: "100%",
+	},
+
+	mobileModeTabs: {
+		width: "100%",
+		minWidth: "100%",
+	},
+
+	narrowMobileAttributes: {
+		flexDirection: "column",
+	},
+
+	narrowMobileAttribute: {
+		flexBasis: "auto",
+		flexGrow: 0,
+		width: "100%",
 	},
 });

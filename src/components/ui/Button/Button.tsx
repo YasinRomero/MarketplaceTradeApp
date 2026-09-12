@@ -27,9 +27,7 @@ export function Button({
 			]}
 		>
 			{icon && iconPosition === "left" && <View style={sharedButtonStyles.icon}>{icon}</View>}
-
 			<Text style={styles.label}>{children}</Text>
-
 			{icon && iconPosition === "right" && <View style={sharedButtonStyles.icon}>{icon}</View>}
 		</Pressable>
 	);

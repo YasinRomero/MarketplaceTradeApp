@@ -1,10 +1,10 @@
-import { StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { CameraActionsCard } from "@/components/common/CameraActionsCard";
 import { EvidencesCard } from "@/components/common/EvidencesCard";
-import { ProductInformationCard } from "@/components/common/ProductInformationCard";
+import { ProductInformation, ProductInformationCard } from "@/components/common/ProductInformationCard";
 import { ProductPreviewCard } from "@/components/common/ProductPreviewCard";
-import { spacing } from "@/theme";
+import { responsive, spacing } from "@/theme";
+import { useState } from "react";
+import { StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export interface PublishProductSectionProps {
 	onCameraPress?: () => void;
@@ -24,13 +24,30 @@ export function PublishProductSection({
 	style,
 }: PublishProductSectionProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 900;
+	const isTabletDown = responsive.isTabletDown(width);
+
+	const [product, setProduct] = useState<ProductInformation>({
+		title: "Laptop Lenovo ThinkPad",
+		category: "Tecnología",
+		subcategory: "Computadoras",
+		mode: "sell",
+		price: "450.00",
+		description: "Completa los datos esenciales de tu publicación",
+	});
+
+	const modeLabel = {
+		sell: "Venta",
+		exchange: "Intercambio",
+		both: "Ambos",
+	}[product.mode];
+
+	const previewPrice = product.price ? `S/. ${product.price}` : "S/. 0.00";
 
 	return (
-		<View style={[styles.section, isMobile && styles.mobileSection, style]}>
-			<View style={[styles.layout, isMobile && styles.mobileLayout]}>
+		<View style={[styles.section, isTabletDown && styles.mobileSection, style]}>
+			<View style={[styles.layout, isTabletDown && styles.mobileLayout]}>
 				<View style={styles.leftColumn}>
-					<ProductInformationCard />
+					<ProductInformationCard onChange={setProduct} />
 
 					<CameraActionsCard
 						onCameraPress={onCameraPress}
@@ -41,8 +58,16 @@ export function PublishProductSection({
 					<EvidencesCard />
 				</View>
 
-				<View style={[styles.previewColumn, isMobile && styles.mobilePreviewColumn]}>
-					<ProductPreviewCard onPublishPress={onPublishPress} onDraftPress={onDraftPress} />
+				<View style={[styles.previewColumn, isTabletDown && styles.mobilePreviewColumn]}>
+					<ProductPreviewCard
+						category={`${product.category} · ${product.subcategory}`}
+						title={product.title}
+						description={product.description}
+						price={previewPrice}
+						primaryBadge={modeLabel}
+						onPublishPress={onPublishPress}
+						onDraftPress={onDraftPress}
+					/>
 				</View>
 			</View>
 		</View>
@@ -54,9 +79,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		padding: spacing["2xl"],
 	},
-	mobileSection: {
-		padding: spacing.lg,
-	},
+
 	layout: {
 		width: "100%",
 		maxWidth: 1232,
@@ -65,18 +88,27 @@ const styles = StyleSheet.create({
 		alignItems: "flex-start",
 		gap: spacing["2xl"],
 	},
-	mobileLayout: {
-		flexDirection: "column",
-	},
+
 	leftColumn: {
 		flex: 1,
 		minWidth: 0,
 		gap: spacing["2xl"],
 	},
+
 	previewColumn: {
 		width: 389,
 		maxWidth: "100%",
 	},
+
+	// Mobile Responsive
+	mobileSection: {
+		padding: spacing.lg,
+	},
+
+	mobileLayout: {
+		flexDirection: "column",
+	},
+
 	mobilePreviewColumn: {
 		width: "100%",
 	},

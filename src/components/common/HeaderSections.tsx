@@ -163,10 +163,8 @@ const sizeStyles: Record<
 const styles = StyleSheet.create({
 	header: {
 		width: "100%",
-
 		flexDirection: "row",
 		gap: 10,
-
 		borderBottomWidth: 1,
 		borderBottomColor: colors.border.default,
 	},
