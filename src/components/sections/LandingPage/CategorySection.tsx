@@ -3,7 +3,7 @@ import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 import { type CardCategoryTone } from "@/components/common/CardCategoryLink";
 import { Chair, Experiment, LaptopChromebook, MenuBook, SportsBasketball } from "@/components/icons";
-import { colors, spacing, typography } from "@/theme";
+import { colors, responsive, spacing, typography } from "@/theme";
 
 import { CardCategoryLink as CategoryCard } from "@/components/common/CardCategoryLink";
 import { LandingParagraph } from "@/components/common/LandingParagraph";
@@ -67,7 +67,8 @@ const categories: CategorySectionItem[] = [
 
 export function CategorySection({ onCategoryPress }: CategorySectionProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
+	const isTabletDown = responsive.isTabletDown(width);
+
 	const topCategories = categories.slice(0, 3);
 	const bottomCategories = categories.slice(3);
 
@@ -90,7 +91,7 @@ export function CategorySection({ onCategoryPress }: CategorySectionProps) {
 	return (
 		<View style={styles.section}>
 			<View style={styles.inner}>
-				<View style={styles.titleSection}>
+				<View style={[styles.titleSection, isTabletDown && styles.mobileTitleSection]}>
 					<LandingParagraph subtitle="EXPLORA POR ÁREA DE ESTUDIO" title="Categorías Universitarias Clave" />
 					<Text style={styles.description}>
 						Encuentra exactamente los materiales específicos que demanda tu carrera sin intermediarios ni
@@ -98,7 +99,7 @@ export function CategorySection({ onCategoryPress }: CategorySectionProps) {
 					</Text>
 				</View>
 
-				{isMobile ? (
+				{isTabletDown ? (
 					<View style={styles.mobileGrid}>{categories.map((category) => renderCategory(category))}</View>
 				) : (
 					<View style={styles.bento}>
@@ -119,29 +120,24 @@ export function CategorySection({ onCategoryPress }: CategorySectionProps) {
 
 const styles = StyleSheet.create({
 	section: {
-		width: "100%",
 		paddingVertical: 64,
 		paddingHorizontal: spacing["2xl"],
 		backgroundColor: colors.background.page,
 	},
 
 	inner: {
-		width: "100%",
 		maxWidth: 1216,
 		alignSelf: "center",
 		gap: 40,
 	},
 
 	titleSection: {
-		width: "100%",
 		flexDirection: "row",
-		alignItems: "flex-end",
 		justifyContent: "space-between",
 		gap: spacing["2xl"],
 	},
 
 	description: {
-		width: "100%",
 		maxWidth: 448,
 		fontFamily: typography.family,
 		fontSize: typography.size.sm,
@@ -184,5 +180,10 @@ const styles = StyleSheet.create({
 		width: "100%",
 		gap: spacing.xl,
 		alignItems: "center",
+	},
+
+	// Mobile Responsive
+	mobileTitleSection: {
+		flexDirection: "column",
 	},
 });

@@ -1,17 +1,16 @@
-import { ReactNode } from "react";
-import { StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { Distance, KeyboardArrowDown, Search, SwapHoriz } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { InputIcon } from "@/components/ui/Input";
 import { InputSelect } from "@/components/ui/InputSelect";
-import { colors, radius, spacing, typography } from "@/theme";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
+import { ReactNode } from "react";
+import { StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export interface SearchBarGlobalProps {
 	location?: string;
 	exchangeType?: string;
-	locationOptions?: readonly string[];
-	exchangeTypeOptions?: readonly string[];
+	locationOptions?: string[];
+	exchangeTypeOptions?: string[];
 	searchValue?: string;
 	searchPlaceholder?: string;
 	locationIcon?: ReactNode;
@@ -26,8 +25,8 @@ export interface SearchBarGlobalProps {
 
 export function SearchBarGlobal({
 	location = "Ubicación",
-	exchangeType = "Intercambio",
-	locationOptions = ["Ubicación", "Sede central", "Sede norte", "Sede sur"],
+	exchangeType = "Modalidad",
+	locationOptions = ["Sede central", "Sede norte", "Sede sur"],
 	exchangeTypeOptions = ["Intercambio", "Venta"],
 	searchValue,
 	searchPlaceholder = "¿Qué estás buscando?",
@@ -41,12 +40,13 @@ export function SearchBarGlobal({
 	style,
 }: SearchBarGlobalProps) {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
+	const isTabletDown = responsive.isTabletDown(width);
+
 	const arrowIcon = <KeyboardArrowDown size={24} color={colors.text.secondary} />;
 	const searchIcon = <Search size={16} color={colors.action.primaryForeground} />;
 
 	return (
-		<View style={[styles.container, isMobile && styles.containerMobile, style]}>
+		<View style={[styles.container, isTabletDown && styles.mobileContainer, style]}>
 			<InputSelect
 				value={location}
 				options={locationOptions}
@@ -55,7 +55,6 @@ export function SearchBarGlobal({
 				iconPosition="both"
 				disabled={disabled}
 				onPress={onLocationPress}
-				containerStyle={[styles.select, isMobile && styles.controlMobile]}
 				textStyle={styles.selectText}
 			/>
 
@@ -67,7 +66,7 @@ export function SearchBarGlobal({
 				returnKeyType="search"
 				editable={!disabled}
 				icon={<Search size={24} color={colors.text.secondary} />}
-				containerStyle={[styles.input, isMobile && styles.controlMobile]}
+				containerStyle={[styles.input, isTabletDown && styles.mobileControl]}
 				inputStyle={styles.inputText}
 			/>
 
@@ -79,7 +78,6 @@ export function SearchBarGlobal({
 				iconPosition="both"
 				disabled={disabled}
 				onPress={onExchangePress}
-				containerStyle={[styles.select, isMobile && styles.controlMobile]}
 				textStyle={styles.selectText}
 			/>
 
@@ -88,7 +86,7 @@ export function SearchBarGlobal({
 				icon={searchIcon}
 				disabled={disabled}
 				onPress={onSearchPress}
-				style={isMobile && styles.buttonMobile}
+				style={isTabletDown && styles.mobileButton}
 			>
 				Buscar
 			</Button>
@@ -99,41 +97,21 @@ export function SearchBarGlobal({
 const styles = StyleSheet.create({
 	container: {
 		width: "100%",
-		maxWidth: 896,
-		height: 78,
-
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
 		gap: spacing.md,
-		padding: spacing.lg,
-
+		padding: spacing.sm,
 		backgroundColor: colors.background.surface,
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
-	},
-	containerMobile: {
-		height: "auto",
-		alignItems: "stretch",
-		flexDirection: "column",
-		gap: spacing.sm,
-		padding: spacing.md,
 	},
 
 	select: {
 		width: 200,
 		flexGrow: 0,
 		flexShrink: 0,
-	},
-	controlMobile: {
-		width: "100%",
-		minHeight: 44,
-		flexGrow: 0,
-		flexShrink: 1,
-	},
-	buttonMobile: {
-		width: "100%",
 	},
 
 	selectText: {
@@ -156,5 +134,25 @@ const styles = StyleSheet.create({
 		fontSize: typography.size.sm,
 		lineHeight: typography.lineHeight.md,
 		fontWeight: typography.weight.regular,
+	},
+
+	// Mobile Responsive
+	mobileContainer: {
+		height: "auto",
+		alignItems: "stretch",
+		flexDirection: "column",
+		gap: spacing.sm,
+		padding: spacing.md,
+	},
+
+	mobileControl: {
+		width: "100%",
+		minHeight: 44,
+		flexGrow: 0,
+		flexShrink: 1,
+	},
+
+	mobileButton: {
+		width: "100%",
 	},
 });

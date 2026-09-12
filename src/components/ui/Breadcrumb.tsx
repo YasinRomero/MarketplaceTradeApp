@@ -26,7 +26,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
 
 						{!isLast && (
 							<Text style={styles.separator}>
-								<ChevronForward />
+								<ChevronForward size={14} />
 							</Text>
 						)}
 					</React.Fragment>
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.regular,
 		letterSpacing: 0.12,
 		color: colors.text.secondary,
+		cursor: "pointer",
 	},
 
 	activeText: {
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
 	},
 
 	separator: {
+		display: "flex",
+		alignItems: "center",
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,
 		color: colors.text.secondary,

@@ -1,7 +1,6 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
 import { SearchBarGlobal, type SearchBarGlobalProps } from "@/components/common/SearchBarGlobal";
-import { colors, primitives, radius, spacing, typography } from "@/theme";
+import { colors, primitives, radius, responsive, spacing, typography } from "@/theme";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export interface HeroSectionProps {
 	searchBarProps?: Omit<SearchBarGlobalProps, "style">;
@@ -9,7 +8,7 @@ export interface HeroSectionProps {
 
 export function HeroSection({ searchBarProps }: HeroSectionProps) {
 	const { width } = useWindowDimensions();
-	const horizontalPadding = width < 768 ? spacing.xl : 128;
+	const horizontalPadding = responsive.isTabletDown(width) ? spacing.xl : 128;
 
 	return (
 		<View style={[styles.hero, { paddingHorizontal: horizontalPadding }]}>
@@ -17,7 +16,7 @@ export function HeroSection({ searchBarProps }: HeroSectionProps) {
 			<View style={styles.decorativeBottom} />
 
 			<View style={styles.content}>
-				<View style={styles.decoration} accessibilityElementsHidden>
+				<View style={styles.decoration}>
 					<View style={styles.dot} />
 					<View style={styles.dot} />
 					<View style={styles.dot} />
@@ -25,8 +24,9 @@ export function HeroSection({ searchBarProps }: HeroSectionProps) {
 
 				<Text style={styles.title}>
 					Intercambia lo que quieras{"\n"}
-					<Text style={styles.highlightTitle}>con quien quierass</Text>
+					<Text style={styles.highlightTitle}>con quien quieras</Text>
 				</Text>
+
 				<Text style={styles.description}>
 					Desde tecnología y ropa hasta hobbies y más. El punto de encuentro estudiantil para darle vuelta a
 					lo que tienes sin gastar de más.
@@ -42,14 +42,12 @@ const styles = StyleSheet.create({
 	hero: {
 		width: "100%",
 		minHeight: 550,
-
 		alignItems: "center",
 		justifyContent: "center",
 		paddingTop: 80,
 		paddingBottom: 100,
 		position: "relative",
 		overflow: "hidden",
-
 		backgroundColor: colors.background.page,
 		borderBottomWidth: 1,
 		borderBottomColor: colors.border.default,

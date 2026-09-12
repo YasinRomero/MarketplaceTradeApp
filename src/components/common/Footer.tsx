@@ -1,19 +1,25 @@
-import { ReactNode } from "react";
+import { Login, School } from "@/components/icons";
+import { colors, radius, spacing, typography } from "@/theme";
 import { useRouter } from "expo-router";
+import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 
-import { Login, School } from "@/components/icons";
-import { colors } from "@/theme/colors";
-import { radius, spacing } from "@/theme/spacing";
-import { typography } from "@/theme/typography";
-
-type FooterAction = () => void;
-
 interface FooterProps {
-	onLoginPress?: FooterAction;
+	onLoginPress?: () => void;
 	onCategoryPress?: (category: string) => void;
 	onHelpPress?: (item: string) => void;
 	onSocialPress?: (network: string) => void;
+}
+
+interface FooterSectionProps {
+	children: ReactNode;
+	compact: boolean;
+	title: string;
+}
+
+interface FooterLinkProps {
+	children: string;
+	onPress?: () => void;
 }
 
 const categories = [
@@ -26,13 +32,12 @@ const categories = [
 
 const helpItems = [
 	"Política de Privacidad y Datos",
-	"Contacto con Soporte Campus",
 	"Preguntas Frecuentes (FAQ)",
 	"Términos y Condiciones de Uso",
 	"Guía para nuevos usuarios",
 ];
 
-function FooterLink({ children, onPress }: { children: string; onPress?: FooterAction }) {
+function FooterLink({ children, onPress }: FooterLinkProps) {
 	return (
 		<Pressable accessibilityRole="link" onPress={onPress} style={styles.linkButton}>
 			<Text style={styles.link}>{children}</Text>
@@ -121,7 +126,7 @@ export function Footer({ onLoginPress, onCategoryPress, onHelpPress, onSocialPre
 	);
 }
 
-function FooterSection({ children, compact, title }: { children: ReactNode; compact: boolean; title: string }) {
+function FooterSection({ children, compact, title }: FooterSectionProps) {
 	return (
 		<View style={[styles.section, compact && styles.columnCompact]}>
 			<Text style={styles.sectionTitle}>{title}</Text>
@@ -137,6 +142,7 @@ const styles = StyleSheet.create({
 		borderTopWidth: 1,
 		borderTopColor: colors.border.default,
 	},
+
 	container: {
 		width: "100%",
 		maxWidth: 1280,
@@ -148,26 +154,47 @@ const styles = StyleSheet.create({
 		paddingHorizontal: spacing["2xl"],
 		paddingBottom: spacing["4xl"],
 	},
+
 	containerCompact: {
 		flexDirection: "column",
 		gap: spacing["3xl"],
 	},
+
 	containerNarrow: {
 		gap: spacing["2xl"],
 		paddingTop: spacing["2xl"],
 		paddingHorizontal: spacing.lg,
 		paddingBottom: spacing["3xl"],
 	},
-	information: { flex: 1, gap: spacing.lg },
-	section: { flex: 1, gap: spacing.lg },
-	loginSection: { flex: 1, gap: spacing.lg },
+
+	information: {
+		flex: 1,
+		gap: spacing.lg,
+	},
+
+	section: {
+		flex: 1,
+		gap: spacing.lg,
+	},
+
+	loginSection: {
+		flex: 1,
+		gap: spacing.lg,
+	},
+
 	columnCompact: {
 		width: "100%",
 		flexGrow: 0,
 		flexShrink: 0,
 		flexBasis: "auto",
 	},
-	logo: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+
+	logo: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: spacing.sm,
+	},
+
 	logoIcon: {
 		width: 36,
 		height: 36,
@@ -176,6 +203,7 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.action.primary,
 		borderRadius: radius.lg,
 	},
+
 	logoText: {
 		fontFamily: typography.family,
 		fontSize: typography.size.base,
@@ -183,6 +211,7 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.bold,
 		color: colors.text.primary,
 	},
+
 	description: {
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,
@@ -191,7 +220,13 @@ const styles = StyleSheet.create({
 		letterSpacing: 0.12,
 		color: colors.text.secondary,
 	},
-	socials: { flexDirection: "row", alignItems: "center", gap: spacing.md },
+
+	socials: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: spacing.md,
+	},
+
 	social: {
 		width: 32,
 		height: 32,
@@ -200,7 +235,11 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.background.subtle,
 		borderRadius: radius.full,
 	},
-	socialPressed: { opacity: 0.7 },
+
+	socialPressed: {
+		opacity: 0.7,
+	},
+
 	socialMark: {
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,
@@ -208,6 +247,7 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.bold,
 		color: colors.text.secondary,
 	},
+
 	sectionTitle: {
 		fontFamily: typography.family,
 		fontSize: typography.size.sm,
@@ -216,8 +256,16 @@ const styles = StyleSheet.create({
 		letterSpacing: 0.12,
 		color: colors.text.primary,
 	},
-	links: { gap: spacing.sm },
-	linkButton: { minHeight: 20, justifyContent: "center" },
+
+	links: {
+		gap: spacing.sm,
+	},
+
+	linkButton: {
+		minHeight: 20,
+		justifyContent: "center",
+	},
+
 	link: {
 		fontFamily: typography.family,
 		fontSize: typography.size.xs,
@@ -226,6 +274,7 @@ const styles = StyleSheet.create({
 		letterSpacing: 0.12,
 		color: colors.text.secondary,
 	},
+
 	loginTitle: {
 		fontFamily: typography.family,
 		fontSize: typography.size.base,
@@ -233,6 +282,7 @@ const styles = StyleSheet.create({
 		fontWeight: typography.weight.bold,
 		color: colors.text.primary,
 	},
+
 	loginButton: {
 		width: 112,
 		height: 34,
@@ -243,7 +293,11 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.action.primary,
 		borderRadius: radius.sm,
 	},
-	loginButtonPressed: { backgroundColor: colors.action.primaryActive },
+
+	loginButtonPressed: {
+		backgroundColor: colors.action.primaryActive,
+	},
+
 	loginLabel: {
 		fontFamily: typography.family,
 		fontSize: typography.size.sm,

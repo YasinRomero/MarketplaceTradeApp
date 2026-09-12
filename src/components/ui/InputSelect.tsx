@@ -1,8 +1,7 @@
-import { colors, radius, typography } from "@/theme";
+import { colors, radius, responsive, typography } from "@/theme";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import {
 	Modal,
-	Platform,
 	Pressable,
 	StyleProp,
 	StyleSheet,
@@ -15,17 +14,39 @@ import {
 
 interface InputSelectProps {
 	value: string;
-	options?: readonly string[];
+	options?: string[];
 	leftIcon?: ReactNode;
 	rightIcon?: ReactNode;
 	iconPosition?: "left" | "right" | "both" | "none";
 	size?: "normal" | "compact";
-	variant?: "outline" | "filled" | "plain";
+	variant?: "outline" | "filled";
 	onPress?: () => void;
 	onChange?: (value: string) => void;
 	disabled?: boolean;
 	containerStyle?: StyleProp<ViewStyle>;
 	textStyle?: StyleProp<TextStyle>;
+}
+
+interface InputOptionsProps {
+	value: string;
+	options: string[];
+	onPress: (option: string) => void;
+}
+
+function InputOptions({ value, options, onPress }: InputOptionsProps) {
+	return options.map((option) => (
+		<Pressable
+			key={option}
+			onPress={() => onPress(option)}
+			style={({ pressed }) => [
+				styles.menuItem,
+				option === value && styles.selectedMenuItem,
+				pressed && styles.pressedMenuItem,
+			]}
+		>
+			<Text style={styles.menuText}>{option}</Text>
+		</Pressable>
+	));
 }
 
 export function InputSelect({
@@ -42,49 +63,39 @@ export function InputSelect({
 	containerStyle,
 	textStyle,
 }: InputSelectProps) {
+	// Validamos si el dispositivo es movil
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
-	const [isOpen, setIsOpen] = useState(false);
-	const [selectedValue, setSelectedValue] = useState(value);
-	const [menuPosition, setMenuPosition] = useState({
-		left: 0,
-		top: 0,
-		width: 0,
-	});
+	const isMobile = responsive.isMobile(width);
+
 	const selectRef = useRef<View>(null);
-	const menuRef = useRef<View>(null);
-	const flattenedContainerStyle = StyleSheet.flatten(containerStyle);
-	const wrapperStyle: ViewStyle = {
-		width: flattenedContainerStyle?.width,
-		maxWidth: flattenedContainerStyle?.maxWidth,
-		minWidth: flattenedContainerStyle?.minWidth,
-		flex: flattenedContainerStyle?.flex,
-		flexGrow: flattenedContainerStyle?.flexGrow,
-		flexShrink: flattenedContainerStyle?.flexShrink,
-		flexBasis: flattenedContainerStyle?.flexBasis,
-		alignSelf: flattenedContainerStyle?.alignSelf,
-	};
+	const selectOptionsRef = useRef<View>(null);
+
+	const [isOpen, setIsOpen] = useState(false);
+	const [positionSelectOptions, setPositionSelectOptions] = useState({ left: 0, top: 0, width: 0 });
+	const [selectedValue, setSelectedValue] = useState(value);
+
 	const showLeftIcon = iconPosition === "left" || iconPosition === "both";
 	const showRightIcon = iconPosition === "right" || iconPosition === "both";
 	const hasOptions = options.length > 0;
 
+	// Se implemento un sistema de Select Custom
+	// Asimismo, permitimos que el Dropdown del InputSelect cuando se hace click fuera del mismo se cierre
 	useEffect(() => {
-		if (!isOpen || isMobile) return;
-
-		selectRef.current?.measureInWindow((left, top, width, height) => {
-			setMenuPosition({ left, top: top + height + 4, width });
+		if (!isOpen || isMobile || !selectRef.current) return;
+		selectRef.current.measureInWindow((left, top, width, height) => {
+			setPositionSelectOptions({ left, top: top + height + 4, width });
 		});
 	}, [isMobile, isOpen]);
 
 	useEffect(() => {
-		if (!isOpen || isMobile || Platform.OS !== "web") return;
+		if (!isOpen || isMobile) return;
 
 		const handleOutsidePress = (event: PointerEvent) => {
 			const target = event.target as Node;
-			const selectElement = selectRef.current as unknown as HTMLElement | null;
-			const menuElement = menuRef.current as unknown as HTMLElement | null;
-
-			if (!selectElement?.contains(target) && !menuElement?.contains(target)) {
+			const selectElement = selectRef.current as HTMLElement | null;
+			const selectMenuElement = selectOptionsRef.current as HTMLElement | null;
+			if (!selectElement || !selectMenuElement) return;
+			if (!selectElement.contains(target) && !selectMenuElement.contains(target)) {
 				setIsOpen(false);
 			}
 		};
@@ -94,38 +105,14 @@ export function InputSelect({
 	}, [isMobile, isOpen]);
 
 	const handleSelect = (option: string) => {
+		if (onChange) onChange(option);
 		setSelectedValue(option);
 		setIsOpen(false);
-		onChange?.(option);
 	};
 
-	const optionsMenu = (
-		<View style={styles.menu}>
-			{options.map((option) => (
-				<Pressable
-					key={option}
-					onPress={() => handleSelect(option)}
-					style={({ pressed }) => [
-						styles.menuItem,
-						option === selectedValue && styles.selectedMenuItem,
-						pressed && styles.pressedMenuItem,
-					]}
-				>
-					<Text style={styles.menuText}>{option}</Text>
-				</Pressable>
-			))}
-		</View>
-	);
-
 	return (
-		<View style={[styles.wrapper, wrapperStyle]}>
+		<View ref={selectRef} style={containerStyle}>
 			<Pressable
-				ref={selectRef}
-				onPress={() => {
-					if (!hasOptions) onPress?.();
-					if (hasOptions) setIsOpen((current) => !current);
-				}}
-				disabled={disabled}
 				style={[
 					styles.base,
 					sizeStyles[size],
@@ -133,10 +120,14 @@ export function InputSelect({
 					disabled && styles.disabled,
 					containerStyle,
 				]}
+				disabled={disabled}
+				onPress={() => {
+					if (!hasOptions && onPress) onPress();
+					else setIsOpen((current) => !current);
+				}}
 			>
 				<View style={styles.valueContainer}>
 					{showLeftIcon && leftIcon && <View style={styles.icon}>{leftIcon}</View>}
-
 					<Text numberOfLines={1} style={[styles.text, textStyle]}>
 						{selectedValue}
 					</Text>
@@ -148,29 +139,29 @@ export function InputSelect({
 			{hasOptions && isMobile && (
 				<Modal visible={isOpen} transparent animationType="fade" onRequestClose={() => setIsOpen(false)}>
 					<Pressable style={styles.backdrop} onPress={() => setIsOpen(false)}>
-						{optionsMenu}
+						<View style={[styles.menu, styles.mobileMenu]}>
+							<InputOptions value={selectedValue} options={options} onPress={handleSelect} />
+						</View>
 					</Pressable>
 				</Modal>
 			)}
 
-			{hasOptions && !isMobile && (
-				<Modal visible={isOpen} transparent animationType="none" onRequestClose={() => setIsOpen(false)}>
-					<View pointerEvents="box-none" style={styles.desktopOverlay}>
-						{menuPosition.width > 0 && (
-							<View
-								ref={menuRef}
-								style={[
-									styles.desktopMenu,
-									{
-										left: menuPosition.left,
-										top: menuPosition.top,
-										width: menuPosition.width,
-									},
-								]}
-							>
-								{optionsMenu}
-							</View>
-						)}
+			{hasOptions && !isMobile && isOpen && positionSelectOptions.width > 0 && (
+				<Modal visible={isOpen} transparent animationType="fade" onRequestClose={() => setIsOpen(false)}>
+					<View
+						ref={selectOptionsRef}
+						style={[
+							styles.menu,
+							{
+								position: "absolute",
+								zIndex: 9999,
+								left: positionSelectOptions.left,
+								top: positionSelectOptions.top,
+								minWidth: positionSelectOptions.width,
+							},
+						]}
+					>
+						<InputOptions value={selectedValue} options={options} onPress={handleSelect} />
 					</View>
 				</Modal>
 			)}
@@ -180,13 +171,11 @@ export function InputSelect({
 
 const sizeStyles = StyleSheet.create({
 	normal: {
-		minHeight: 44,
 		paddingVertical: 10,
 		paddingHorizontal: 16,
 	},
 
 	compact: {
-		minHeight: 32,
 		paddingVertical: 4,
 		paddingHorizontal: 12,
 	},
@@ -199,23 +188,13 @@ const variantStyles = StyleSheet.create({
 	},
 
 	outline: {
-		backgroundColor: "transparent",
 		borderWidth: 1,
 		borderColor: colors.border.default,
-		borderRadius: radius.md,
-	},
-
-	plain: {
-		backgroundColor: "transparent",
 		borderRadius: radius.md,
 	},
 });
 
 const styles = StyleSheet.create({
-	wrapper: {
-		width: "100%",
-	},
-
 	base: {
 		flexDirection: "row",
 		alignItems: "center",
@@ -258,8 +237,6 @@ const styles = StyleSheet.create({
 	},
 
 	menu: {
-		width: "100%",
-		maxWidth: 360,
 		alignSelf: "center",
 		paddingVertical: 6,
 		backgroundColor: colors.background.surface,
@@ -271,15 +248,6 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.14,
 		shadowRadius: 10,
 		elevation: 5,
-	},
-
-	desktopMenu: {
-		position: "absolute",
-		zIndex: 1000,
-	},
-
-	desktopOverlay: {
-		flex: 1,
 	},
 
 	menuItem: {
@@ -301,5 +269,10 @@ const styles = StyleSheet.create({
 		fontSize: typography.size.sm,
 		lineHeight: typography.lineHeight.md,
 		color: colors.text.primary,
+	},
+
+	// Mobile Responsive
+	mobileMenu: {
+		width: "100%",
 	},
 });

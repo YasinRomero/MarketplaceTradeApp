@@ -237,7 +237,6 @@ const styles = StyleSheet.create({
 
 	mobileSortSelect: {
 		flex: 1,
-		width: undefined,
 	},
 
 	mobileClearButton: {
