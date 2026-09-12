@@ -26,8 +26,8 @@ export interface SearchBarGlobalProps {
 export function SearchBarGlobal({
 	location = "Ubicación",
 	exchangeType = "Modalidad",
-	locationOptions = ["Sede central", "Sede norte", "Sede sur"],
-	exchangeTypeOptions = ["Intercambio", "Venta"],
+	locationOptions = ["Todos", "Sede central", "Sede norte", "Sede sur"],
+	exchangeTypeOptions = ["Ambos", "Intercambio", "Venta"],
 	searchValue,
 	searchPlaceholder = "¿Qué estás buscando?",
 	locationIcon = <Distance size={24} color={colors.text.secondary} />,

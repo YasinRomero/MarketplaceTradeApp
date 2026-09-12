@@ -5,7 +5,7 @@ import { Domain, KeyboardArrowDown, Search, SwapHoriz } from "@/components/icons
 import { Button } from "@/components/ui/Button";
 import { InputIcon } from "@/components/ui/Input";
 import { InputSelect } from "@/components/ui/InputSelect";
-import { colors, radius, spacing, typography } from "@/theme";
+import { boxShadows, colors, radius, spacing, typography } from "@/theme";
 
 export interface MarketplaceSearchBarProps {
 	searchValue?: string;
@@ -132,10 +132,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
 
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 	mobileContainer: {

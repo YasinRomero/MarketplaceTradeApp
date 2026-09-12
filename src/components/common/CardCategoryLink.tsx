@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 import { AccountCircle } from "@/components/icons";
-import { colors, radius, spacing, typography } from "@/theme";
+import { boxShadows, colors, radius, spacing, typography } from "@/theme";
 
 export type CardCategoryTone = keyof typeof colors.card;
 
@@ -33,7 +33,7 @@ export function CardCategoryLink({
 			onPress={onPress}
 			style={({ pressed }) => [styles.card, pressed && styles.pressed, style]}
 		>
-			<View pointerEvents="none" style={[styles.decorative, { backgroundColor: palette.transparent }]} />
+			<View style={[styles.decorative, { backgroundColor: palette.transparent }]} />
 
 			<View style={styles.content}>
 				<View style={[styles.icon, { backgroundColor: palette.background }]}>{icon}</View>
@@ -62,21 +62,15 @@ const styles = StyleSheet.create({
 		width: "100%",
 		maxWidth: 390,
 		minHeight: 263,
-
 		paddingTop: spacing.xl,
 		paddingHorizontal: spacing.xl,
 		paddingBottom: 70,
-
 		backgroundColor: colors.background.surface,
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
 		overflow: "hidden",
-
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 
@@ -149,5 +143,6 @@ const styles = StyleSheet.create({
 		width: 128,
 		height: 128,
 		borderBottomLeftRadius: radius.full,
+		pointerEvents: "none",
 	},
 });

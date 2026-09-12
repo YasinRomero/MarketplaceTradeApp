@@ -1,4 +1,4 @@
-import { colors, radius, responsive, typography } from "@/theme";
+import { boxShadows, colors, radius, responsive, typography } from "@/theme";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import {
 	Modal,
@@ -243,10 +243,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: radius.md,
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 4 },
-		shadowOpacity: 0.14,
-		shadowRadius: 10,
+		boxShadow: boxShadows.default,
 		elevation: 5,
 	},
 

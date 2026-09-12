@@ -77,17 +77,12 @@ const styles = StyleSheet.create({
 		width: "100%",
 		maxWidth: 380,
 		minHeight: 485,
-
 		backgroundColor: colors.background.surface,
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
 		overflow: "hidden",
-
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.05)",
 		elevation: 1,
 	},
 
@@ -96,7 +91,6 @@ const styles = StyleSheet.create({
 		padding: spacing.sm,
 		justifyContent: "flex-start",
 		position: "relative",
-
 		backgroundColor: colors.background.subtle,
 	},
 
@@ -159,7 +153,6 @@ const styles = StyleSheet.create({
 		alignItems: "flex-end",
 		justifyContent: "space-between",
 		gap: spacing.lg,
-
 		borderTopWidth: 1,
 		borderTopColor: colors.border.default,
 	},

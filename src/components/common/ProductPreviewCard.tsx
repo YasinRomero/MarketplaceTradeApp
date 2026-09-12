@@ -5,7 +5,7 @@ import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { Publish, Verified } from "@/components/icons";
 import { ButtonOutline, ButtonRounded } from "@/components/ui/Button";
-import { colors, radius, spacing } from "@/theme";
+import { boxShadows, colors, radius, spacing } from "@/theme";
 
 export interface ProductPreviewCardProps {
 	image?: ImageSourcePropType;
@@ -81,10 +81,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: radius.xl,
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 	mobileCard: {

@@ -4,7 +4,7 @@ import { ImageSourcePropType, StyleProp, StyleSheet, Text, useWindowDimensions, 
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { ShieldLock, Verified } from "@/components/icons";
-import { colors, radius, spacing, typography } from "@/theme";
+import { boxShadows, colors, radius, spacing, typography } from "@/theme";
 
 export interface EvidenceItem {
 	label: string;
@@ -84,10 +84,7 @@ const styles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.lg,
 		overflow: "hidden",
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 	image: {

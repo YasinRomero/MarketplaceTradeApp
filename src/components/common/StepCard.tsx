@@ -1,6 +1,6 @@
 import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
-import { colors, primitives, radius, spacing, typography } from "@/theme";
+import { boxShadows, colors, primitives, radius, spacing, typography } from "@/theme";
 
 export type StepCardTone = keyof typeof colors.card;
 
@@ -70,11 +70,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		borderRadius: radius.xl,
-
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 

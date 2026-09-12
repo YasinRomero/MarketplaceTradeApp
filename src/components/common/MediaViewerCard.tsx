@@ -65,9 +65,7 @@ export function MediaViewerCard({
 								style={[styles.thumbnail, isSelected && styles.selectedThumbnail]}
 							>
 								<Image contentFit="cover" source={image} style={styles.thumbnailImage} />
-								{index === selectedIndex && (
-									<View style={styles.selectedOverlay} pointerEvents="none" />
-								)}
+								{index === selectedIndex && <View style={styles.selectedOverlay} />}
 							</Pressable>
 						);
 					})}
@@ -87,7 +85,7 @@ export function MediaViewerCard({
 					)}
 
 					{selectedImage && (
-						<View style={styles.zoomPrompt} pointerEvents="none">
+						<View style={styles.zoomPrompt}>
 							<ZoomIn size={12} color={colors.text.secondary} />
 							<Text style={styles.zoomText}>{zoomLabel}</Text>
 						</View>
@@ -165,6 +163,7 @@ const styles = StyleSheet.create({
 	},
 	selectedOverlay: {
 		...StyleSheet.absoluteFill,
+		pointerEvents: "none",
 		backgroundColor: "rgba(15, 23, 42, 0.12)",
 	},
 	stage: {
@@ -214,6 +213,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: radius.full,
+		pointerEvents: "none",
 	},
 	zoomText: {
 		fontFamily: typography.family,

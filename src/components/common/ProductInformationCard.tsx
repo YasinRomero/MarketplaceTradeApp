@@ -10,7 +10,7 @@ import { Tab } from "@/components/common/Tab";
 import { Info, News, Sell, SwapHoriz, Tune } from "@/components/icons";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import { colors, radius, spacing, typography } from "@/theme";
+import { boxShadows, colors, radius, spacing, typography } from "@/theme";
 
 type ProductMode = "sell" | "exchange" | "donate";
 
@@ -279,10 +279,7 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		borderColor: colors.border.default,
 		borderRadius: 12,
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 	priceInputContainer: {

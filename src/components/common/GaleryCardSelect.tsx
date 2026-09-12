@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { ImageSourcePropType, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 import { Checkbox } from "@/components/ui/Checkbox";
-import { colors, radius, spacing } from "@/theme";
+import { boxShadows, colors, radius, spacing } from "@/theme";
 
 export interface GaleryCardSelectProps {
 	image?: ImageSourcePropType;
@@ -59,10 +59,7 @@ const styles = StyleSheet.create({
 		borderRadius: radius.md,
 		overflow: "hidden",
 
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 

@@ -3,7 +3,7 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { Message } from "@/components/common/Message";
 import { School, VerifiedUser } from "@/components/icons";
 import { ButtonOutline } from "@/components/ui/Button";
-import { colors, radius, spacing, typography } from "@/theme";
+import { boxShadows, colors, radius, spacing, typography } from "@/theme";
 
 export interface AuthenticationSectionProps {
 	onProviderPress?: () => void;
@@ -27,7 +27,7 @@ export function AuthenticationSection({ onProviderPress, style }: Authentication
 				</Text>
 
 				<ButtonOutline
-					size="xlarge"
+					size="large"
 					icon={<MicrosoftMark />}
 					onPress={onProviderPress}
 					style={styles.providerButton}
@@ -97,10 +97,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: colors.border.default,
 		borderRadius: radius.xl + spacing.sm,
-		shadowColor: "#000000",
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.05,
-		shadowRadius: 2,
+		boxShadow: boxShadows.default,
 		elevation: 1,
 	},
 	brandIcon: {
