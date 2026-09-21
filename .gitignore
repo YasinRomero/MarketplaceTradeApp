@@ -41,3 +41,9 @@ example
 # generated native folders
 /ios
 /android
+
+# documentación
+docs/
+AGENTS.md
+PROJECT_STATUS.md
+TASKS.md
