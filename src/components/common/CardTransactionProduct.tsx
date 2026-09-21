@@ -20,8 +20,8 @@ export interface CardTransactionProductProps {
 	priceDescription: string;
 	reviews: TransactionReview[];
 	securityMessage: string;
-	primaryActionLabel?: string;
-	secondaryActionLabel?: string;
+	primaryActionLabel?: string | null;
+	secondaryActionLabel?: string | null;
 	onPrimaryAction?: () => void;
 	onSecondaryAction?: () => void;
 	style?: StyleProp<ViewStyle>;
@@ -80,23 +80,29 @@ export function CardTransactionProduct({
 				</View>
 			</View>
 
-			<View style={styles.actions}>
-				<ButtonRounded
-					size="large"
-					icon={<ChangeCircle size={16} color={colors.action.primaryForeground} />}
-					onPress={onPrimaryAction}
-				>
-					{primaryActionLabel}
-				</ButtonRounded>
+			{(primaryActionLabel || secondaryActionLabel) && (
+				<View style={styles.actions}>
+					{primaryActionLabel && (
+						<ButtonRounded
+							size="large"
+							icon={<ChangeCircle size={16} color={colors.action.primaryForeground} />}
+							onPress={onPrimaryAction}
+						>
+							{primaryActionLabel}
+						</ButtonRounded>
+					)}
 
-				<ButtonOutline
-					size="large"
-					icon={<ShoppingBag size={16} color={colors.text.secondary} />}
-					onPress={onSecondaryAction}
-				>
-					{secondaryActionLabel}
-				</ButtonOutline>
-			</View>
+					{secondaryActionLabel && (
+						<ButtonOutline
+							size="large"
+							icon={<ShoppingBag size={16} color={colors.text.secondary} />}
+							onPress={onSecondaryAction}
+						>
+							{secondaryActionLabel}
+						</ButtonOutline>
+					)}
+				</View>
+			)}
 
 			<View style={styles.securitySection}>
 				<View style={styles.securityMessage}>

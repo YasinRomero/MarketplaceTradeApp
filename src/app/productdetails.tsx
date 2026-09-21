@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { ScrollView, StyleSheet } from "react-native";
+import { Alert, ScrollView, StyleSheet } from "react-native";
 
 import { Footer } from "@/components/common/Footer";
 import { Header } from "@/components/common/Header";
@@ -12,7 +12,15 @@ export default function ProductDetailScreen() {
 	return (
 		<ScrollView style={styles.screen} contentContainerStyle={styles.contentContainer} stickyHeaderIndices={[0]}>
 			<Header />
-			<ProductDetailSection productId={productId} />
+			<ProductDetailSection
+				productId={productId}
+				onPrimaryAction={() =>
+					Alert.alert("Solicitud de intercambio", "La solicitud se habilitará en el bloque de operaciones.")
+				}
+				onSecondaryAction={() =>
+					Alert.alert("Compra directa", "La compra se habilitará en el bloque de operaciones.")
+				}
+			/>
 			<Footer />
 		</ScrollView>
 	);

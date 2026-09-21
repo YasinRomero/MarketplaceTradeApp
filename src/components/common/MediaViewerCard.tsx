@@ -1,7 +1,8 @@
 import { Image } from "expo-image";
-import { useState } from "react";
+import { createElement, useState } from "react";
 import {
 	ImageSourcePropType,
+	Platform,
 	Pressable,
 	ScrollView,
 	StyleProp,
@@ -17,6 +18,7 @@ import { colors, radius, responsive, spacing, typography } from "@/theme";
 
 export interface MediaViewerCardProps {
 	images: ImageSourcePropType[];
+	videos?: string[];
 	initialIndex?: number;
 	zoomLabel?: string;
 	onImageChange?: (index: number) => void;
@@ -26,6 +28,7 @@ export interface MediaViewerCardProps {
 
 export function MediaViewerCard({
 	images,
+	videos = [],
 	initialIndex = 0,
 	zoomLabel = "Haz clic para ampliar",
 	onImageChange,
@@ -36,6 +39,7 @@ export function MediaViewerCard({
 	const isTabletDown = responsive.isTabletDown(width);
 
 	const [selectedIndex, setSelectedIndex] = useState(() => getSafeIndex(initialIndex, images.length));
+	const [unavailableVideos, setUnavailableVideos] = useState<Record<string, boolean>>({});
 	const safeSelectedIndex = getSafeIndex(selectedIndex, images.length);
 	const selectedImage = images[safeSelectedIndex];
 
@@ -99,6 +103,27 @@ export function MediaViewerCard({
 						</View>
 					)}
 				</Pressable>
+
+				{videos.length > 0 && (
+					<View style={styles.videos}>
+						{videos.map((videoUrl) =>
+							Platform.OS === "web" && !unavailableVideos[videoUrl] ? (
+								createElement("video", {
+									key: videoUrl,
+									controls: true,
+									preload: "metadata",
+									src: videoUrl,
+									style: styles.video,
+									onError: () => setUnavailableVideos((current) => ({ ...current, [videoUrl]: true })),
+								})
+							) : (
+								<Text key={videoUrl} style={styles.unavailableVideo}>
+									Video no disponible en esta plataforma.
+								</Text>
+							),
+						)}
+					</View>
+				)}
 			</View>
 		</View>
 	);
@@ -140,6 +165,27 @@ const styles = StyleSheet.create({
 		maxWidth: "100%",
 		flexDirection: "column",
 		gap: spacing.md,
+	},
+
+	videos: {
+		width: "100%",
+		gap: spacing.sm,
+	},
+
+	video: {
+		width: "100%",
+		maxHeight: 320,
+		backgroundColor: colors.background.page,
+		borderRadius: radius.md,
+	},
+
+	unavailableVideo: {
+		padding: spacing.md,
+		color: colors.text.secondary,
+		backgroundColor: colors.background.subtle,
+		borderRadius: radius.md,
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
 	},
 
 	thumbnails: {

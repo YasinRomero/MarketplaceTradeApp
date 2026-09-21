@@ -14,12 +14,12 @@ import {
 
 interface InputSelectProps {
 	value: string;
-	options?: string[];
+	options?: readonly string[];
 	leftIcon?: ReactNode;
 	rightIcon?: ReactNode;
 	iconPosition?: "left" | "right" | "both" | "none";
 	size?: "normal" | "compact";
-	variant?: "outline" | "filled";
+	variant?: "outline" | "filled" | "plain";
 	onPress?: () => void;
 	onChange?: (value: string) => void;
 	disabled?: boolean;
@@ -29,7 +29,7 @@ interface InputSelectProps {
 
 interface InputOptionsProps {
 	value: string;
-	options: string[];
+	options: readonly string[];
 	onPress: (option: string) => void;
 }
 
@@ -192,6 +192,8 @@ const variantStyles = StyleSheet.create({
 		borderColor: colors.border.default,
 		borderRadius: radius.md,
 	},
+
+	plain: {},
 });
 
 const styles = StyleSheet.create({

@@ -25,7 +25,11 @@ export default function MarketplaceScreen() {
 				exchangeType={exchangeType}
 				onExchangeTypeChange={setExchangeType}
 			/>
-			<MarketplaceProductsSection selectedSede={selectedSede === "Selecciona una sede" ? null : selectedSede} />
+			<MarketplaceProductsSection
+				searchValue={search}
+				selectedSede={selectedSede === "Selecciona una sede" ? null : selectedSede}
+				selectedModality={exchangeType === "Tipo de intercambio" ? null : exchangeType}
+			/>
 			<Footer />
 		</ScrollView>
 	);

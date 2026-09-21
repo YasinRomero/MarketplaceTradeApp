@@ -1,4 +1,5 @@
-import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
+import { useEffect, useState } from "react";
+import { ImageSourcePropType, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { CardTransactionProduct } from "@/components/common/CardTransactionProduct";
 import { DescriptionAcademicContextCard } from "@/components/common/DescriptionAcademicContextCard";
@@ -6,7 +7,9 @@ import { DetailsProductBreadcrumb } from "@/components/common/DetailsProductBrea
 import { InfoAuthorProduct } from "@/components/common/InfoAuthorProduct";
 import { MediaViewerCard } from "@/components/common/MediaViewerCard";
 import { TechnicalSpecsCard } from "@/components/common/TechnicalSpecsCard";
+import { getProductById } from "@/services/productService";
 import { spacing } from "@/theme";
+import { Product } from "@/types/domain";
 
 export interface ProductDetailSectionProps {
 	productId?: string;
@@ -29,30 +32,6 @@ const defaultProductImages: ImageSourcePropType[] = [
 	},
 ];
 
-const productDetails: Record<string, { category: string; title: string; price: string }> = {
-	thinkpad: {
-		category: "Computadoras",
-		title: "Laptop Lenovo ThinkPad",
-		price: "S/. 450.00",
-	},
-	ipad: {
-		category: "Tablets",
-		title: "iPad Air con chip M1",
-		price: "S/. 1,550.00",
-	},
-	jacket: { category: "Ropa", title: "Casaca vintage", price: "S/. 85.00" },
-	basketball: {
-		category: "Deportes",
-		title: "Balón de básquetbol",
-		price: "S/. 60.00",
-	},
-	books: {
-		category: "Libros",
-		title: "Colección de libros técnicos",
-		price: "S/. 120.00",
-	},
-};
-
 export function ProductDetailSection({
 	productId,
 	images = defaultProductImages,
@@ -63,7 +42,49 @@ export function ProductDetailSection({
 }: ProductDetailSectionProps) {
 	const { width } = useWindowDimensions();
 	const isMobile = width < 900;
-	const product = productDetails[productId ?? "thinkpad"] ?? productDetails.thinkpad;
+	const [product, setProduct] = useState<Product | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		let cancelled = false;
+
+		const loadProduct = async () => {
+			setProduct(null);
+			if (!productId || Number.isNaN(Number(productId))) {
+				setIsLoading(false);
+				return;
+			}
+
+			setIsLoading(true);
+			const result = await getProductById(Number(productId));
+			if (!cancelled) {
+				setProduct(result);
+				setIsLoading(false);
+			}
+		};
+
+		void loadProduct();
+		return () => {
+			cancelled = true;
+		};
+	}, [productId]);
+
+	if (!productId || isLoading) return <Text style={styles.message}>Cargando publicación...</Text>;
+	if (!product) return <Text style={styles.message}>La publicación no está disponible.</Text>;
+
+	const productCategory =
+		product.categoryId === 10 ? "Computadoras" : product.categoryId === 11 ? "Libros" : "General";
+	const productImages = product.media.filter((item) => item.type === "imagen").map((item) => ({ uri: item.url }));
+	const productVideos = product.media.filter((item) => item.type === "video").map((item) => item.url);
+	const modeLabel =
+		product.mode === "venta"
+			? "Venta directa"
+			: product.mode === "intercambio"
+				? "Intercambio"
+				: "Venta e intercambio";
+	const productPrice = product.salePrice ?? product.referenceValue;
+	const supportsExchange = product.mode === "intercambio" || product.mode === "ambas";
+	const supportsSale = product.mode === "venta" || product.mode === "ambas";
 
 	return (
 		<View style={[styles.section, isMobile && styles.mobileSection, style]}>
@@ -72,25 +93,31 @@ export function ProductDetailSection({
 					items={[
 						{ label: "Inicio" },
 						{ label: "Marketplace" },
-						{ label: product.category },
+						{ label: productCategory },
 						{ label: product.title },
 					]}
 				/>
 
 				<View style={[styles.columns, isMobile && styles.mobileColumns]}>
 					<View style={styles.mainColumn}>
-						<MediaViewerCard images={images} onZoomPress={onZoomPress} />
+						<MediaViewerCard
+							images={productImages.length > 0 ? productImages : images}
+							videos={productVideos}
+							onZoomPress={onZoomPress}
+						/>
 						<TechnicalSpecsCard />
 						<DescriptionAcademicContextCard />
 					</View>
 
 					<View style={[styles.sideColumn, isMobile && styles.mobileSideColumn]}>
 						<CardTransactionProduct
-							primaryBadge="Intercambio preferido"
-							secondaryBadge="Venta directa"
+							primaryBadge={modeLabel}
+							secondaryBadge={product.status === "activo" ? "Disponible" : "No disponible"}
 							title={product.title}
-							price={product.price}
+							price={productPrice === null ? "Valor por definir" : `S/. ${productPrice.toFixed(2)}`}
 							priceDescription="Equivalente o compensación acordada para intercambio justo."
+							primaryActionLabel={supportsExchange ? "Solicitar intercambio" : null}
+							secondaryActionLabel={supportsSale ? "Comprar ahora" : null}
 							reviews={[
 								{
 									message: "Entrega presencial coordinada dentro del campus universitario",
@@ -135,6 +162,10 @@ const styles = StyleSheet.create({
 		maxWidth: 1232,
 		alignSelf: "center",
 		gap: spacing.lg,
+	},
+	message: {
+		padding: spacing["2xl"],
+		textAlign: "center",
 	},
 	columns: {
 		width: "100%",

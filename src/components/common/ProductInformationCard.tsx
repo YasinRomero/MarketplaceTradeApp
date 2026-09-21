@@ -25,6 +25,7 @@ export interface ProductInformation {
 	mode: ProductMode;
 	price: string;
 	description: string;
+	attributes: Record<string, string>;
 }
 
 export interface ProductInformationCardProps {
@@ -113,8 +114,9 @@ export function ProductInformationCard({
 			mode,
 			price,
 			description,
+			attributes: attributeValues,
 		});
-	}, [title, category, subcategory, mode, price, description, onChange]);
+	}, [title, category, subcategory, mode, price, description, attributeValues, onChange]);
 
 	const updateAttribute = (label: string, value: string) => {
 		setAttributeValues((current) => ({ ...current, [label]: value }));

@@ -1,13 +1,14 @@
-import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
-import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { CardProduct } from "@/components/common/CardProduct";
 import { InputWithLabel } from "@/components/common/InputWithLabel";
 import { ChevronBackward, ChevronForward } from "@/components/icons";
 import { Button, ButtonGhost, ButtonIcon, ButtonOutline } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { useProductStore } from "@/stores/productStore";
 import { colors, radius, responsive, spacing, typography } from "@/theme";
+import { Product } from "@/types/domain";
+import { useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export type ProductModality = "Venta" | "Intercambio" | "Ambos";
 
@@ -21,7 +22,8 @@ export interface MarketplaceProductsSectionProps {
 }
 
 interface ProductItem {
-	id: string;
+	id: number;
+	image?: { uri: string };
 	category: string;
 	subcategory: string;
 	title: string;
@@ -29,77 +31,30 @@ interface ProductItem {
 	price: number;
 	modality: ProductModality;
 	sede: string;
-	createdAt: number;
+	createdAt: string;
 }
 
-const products: ProductItem[] = [
-	{
-		id: "thinkpad",
-		category: "Tecnología",
-		subcategory: "Computadoras",
-		title: "Laptop Lenovo ThinkPad",
-		description: "Equipo ideal para clases, programación y trabajo diario.",
-		price: 450,
-		modality: "Venta",
-		sede: "Lima Centro",
-		createdAt: 6,
-	},
-	{
-		id: "ipad",
-		category: "Tecnología",
-		subcategory: "Tablets",
-		title: "iPad Air con chip M1",
-		description: "Tablet en excelente estado para lectura y notas académicas.",
-		price: 1550,
-		modality: "Ambos",
-		sede: "Lima Norte",
-		createdAt: 5,
-	},
-	{
-		id: "books",
-		category: "Libros",
-		subcategory: "Ingeniería",
-		title: "Colección de libros técnicos",
-		description: "Textos de arquitectura, algoritmos y desarrollo de software.",
-		price: 120,
-		modality: "Intercambio",
-		sede: "Lima Centro",
-		createdAt: 4,
-	},
-	{
-		id: "jacket",
-		category: "Ropa",
-		subcategory: "Casacas",
-		title: "Casaca vintage",
-		description: "Casaca cómoda y versátil para los días fríos en el campus.",
-		price: 85,
-		modality: "Venta",
-		sede: "Lima Sur",
-		createdAt: 3,
-	},
-	{
-		id: "keyboard",
-		category: "Tecnología",
-		subcategory: "Accesorios",
-		title: "Teclado mecánico",
-		description: "Teclado compacto ideal para programación y videojuegos.",
-		price: 180,
-		modality: "Ambos",
-		sede: "Lima Norte",
-		createdAt: 2,
-	},
-	{
-		id: "phone",
-		category: "Tecnología",
-		subcategory: "Celulares",
-		title: "Samsung Galaxy A54",
-		description: "Celular en excelente estado con cargador original.",
-		price: 850,
-		modality: "Intercambio",
-		sede: "Lima Sur",
-		createdAt: 1,
-	},
-];
+const categoryNames: Record<number, [string, string]> = {
+	10: ["Tecnología", "Computadoras"],
+	11: ["Libros", "Ingeniería"],
+};
+const siteNames: Record<number, string> = { 1: "Lima Norte" };
+const toProductItem = (product: Product): ProductItem => {
+	const image = product.media.find((item) => item.type === "imagen");
+
+	return {
+		id: product.id,
+		image: image ? { uri: image.url } : undefined,
+		category: categoryNames[product.categoryId]?.[0] ?? "General",
+		subcategory: categoryNames[product.categoryId]?.[1] ?? "Otros",
+		title: product.title,
+		description: product.description,
+		price: product.salePrice ?? product.referenceValue ?? 0,
+		modality: product.mode === "venta" ? "Venta" : product.mode === "intercambio" ? "Intercambio" : "Ambos",
+		sede: siteNames[product.siteId] ?? "Sede institucional",
+		createdAt: product.createdAt,
+	};
+};
 
 const ITEMS_PER_PAGE = 4;
 
@@ -120,6 +75,7 @@ export function MarketplaceProductsSection({
 	onResultCountChange,
 }: MarketplaceProductsSectionProps) {
 	const router = useRouter();
+	const { products: sharedProducts, isLoading, loadProducts } = useProductStore();
 	const { width } = useWindowDimensions();
 
 	const isTabletDown = responsive.isTabletDown(width);
@@ -136,9 +92,13 @@ export function MarketplaceProductsSection({
 	const [minimumPrice, setMinimumPrice] = useState("");
 	const [maximumPrice, setMaximumPrice] = useState("");
 	const [page, setPage] = useState(1);
+	useEffect(() => {
+		void loadProducts();
+	}, [loadProducts]);
+	const products = useMemo(() => sharedProducts.map(toProductItem), [sharedProducts]);
 	const categories = useMemo(() => {
 		return [...new Set(products.map((product) => product.category))];
-	}, []);
+	}, [products]);
 
 	const subcategories = useMemo(() => {
 		if (!selectedCategory) {
@@ -152,7 +112,7 @@ export function MarketplaceProductsSection({
 					.map((product) => product.subcategory),
 			),
 		];
-	}, [selectedCategory]);
+	}, [products, selectedCategory]);
 
 	const categoryCount = (category: string) => products.filter((product) => product.category === category).length;
 
@@ -225,7 +185,7 @@ export function MarketplaceProductsSection({
 		}
 
 		if (sortValue === "Más recientes") {
-			return [...result].sort((a, b) => b.createdAt - a.createdAt);
+			return [...result].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 		}
 
 		return result;
@@ -239,6 +199,7 @@ export function MarketplaceProductsSection({
 		minimumPrice,
 		maximumPrice,
 		sortValue,
+		products,
 	]);
 
 	const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
@@ -360,11 +321,16 @@ export function MarketplaceProductsSection({
 						</Text>
 					</View>
 
-					{paginatedProducts.length > 0 ? (
+					{isLoading ? (
+						<View style={styles.emptyState}>
+							<Text style={styles.emptyDescription}>Cargando publicaciones...</Text>
+						</View>
+					) : paginatedProducts.length > 0 ? (
 						<View style={[styles.productsGrid, isMobileDown && styles.mobileProductsGrid]}>
 							{paginatedProducts.map((product) => (
 								<CardProduct
 									key={product.id}
+									image={product.image}
 									span={`${product.category} · ${product.subcategory}`}
 									title={product.title}
 									description={product.description}
@@ -376,7 +342,7 @@ export function MarketplaceProductsSection({
 										router.push({
 											pathname: "/productdetails",
 											params: {
-												id: product.id,
+												id: String(product.id),
 											},
 										})
 									}
