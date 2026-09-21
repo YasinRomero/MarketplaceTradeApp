@@ -253,7 +253,7 @@ function ProposalModal({
 								title="Propuesta enviada"
 								message="La solicitud quedó registrada como pendiente."
 							/>
-							<ButtonRounded onPress={() => router.push("/operations")}>Ver MisOperaciones</ButtonRounded>
+							<ButtonRounded onPress={() => router.push("/operations")}>Ver mis operaciones</ButtonRounded>
 							<ButtonOutline onPress={handleClose}>Cerrar</ButtonOutline>
 						</View>
 					) : (
@@ -356,7 +356,7 @@ function PurchaseModal({
 								title="Compra iniciada"
 								message="El producto quedó reservado y la operación está pendiente de respaldo."
 							/>
-							<ButtonRounded onPress={() => router.push("/operations")}>Ver MisOperaciones</ButtonRounded>
+							<ButtonRounded onPress={() => router.push("/operations")}>Ver mis operaciones</ButtonRounded>
 							<ButtonOutline onPress={handleClose}>Cerrar</ButtonOutline>
 						</View>
 					) : (

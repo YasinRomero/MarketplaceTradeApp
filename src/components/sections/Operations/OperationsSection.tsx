@@ -180,7 +180,7 @@ export function OperationsSection({ style }: OperationsSectionProps) {
 		<View style={[styles.section, style]}>
 			<View style={styles.content}>
 				<HeaderSections
-					title="MisOperaciones"
+					title="Mis Operaciones"
 					description="Consulta tus propuestas de intercambio enviadas y recibidas."
 					size="2xl"
 				/>
@@ -193,7 +193,7 @@ export function OperationsSection({ style }: OperationsSectionProps) {
 				)}
 				{error && !isLoading && <Message title="No se pudieron cargar las propuestas" message={error} />}
 				{feedback && <Message title="Operación actualizada" message={feedback} />}
-				{financialFeedback && <Message title="Procesamiento financiero simulado" message={financialFeedback} />}
+				{financialFeedback && <Message title="Actualización de pagos" message={financialFeedback} />}
 
 				{!currentUser ? (
 					<Message
@@ -637,7 +637,7 @@ function FinancialMovementGroup({
 	);
 	return (
 		<View style={styles.movementBox}>
-			<Text style={styles.movementTitle}>Respaldos financieros simulados</Text>
+			<Text style={styles.movementTitle}>Movimientos de pago</Text>
 			{movements.length === 0 ? (
 				<Text style={styles.detailText}>No hay movimientos registrados.</Text>
 			) : (

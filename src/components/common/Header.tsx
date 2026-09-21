@@ -1,9 +1,10 @@
-import { Add, ChatBubble, NotificationsUnread, School } from "@/components/icons";
+import { Add, ChatBubble, KeyboardArrowDown, NotificationsUnread, School } from "@/components/icons";
 import { ButtonGhost, ButtonIcon, ButtonRounded } from "@/components/ui/Button";
-import { colors, radius, responsive, spacing, typography } from "@/theme";
+import { isModerator } from "@/services/authService";
+import { boxShadows, colors, radius, responsive, spacing, typography } from "@/theme";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "expo-router";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export type HeaderVariant = "default" | "logged";
@@ -49,6 +50,8 @@ export function Header({
 }: HeaderProps) {
 	const router = useRouter();
 	const sessionUser = useAuthStore((state) => state.currentUser);
+	const signOut = useAuthStore((state) => state.signOut);
+	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 	const { width } = useWindowDimensions();
 	const isMobile = responsive.isTabletDown(width);
 
@@ -57,10 +60,29 @@ export function Header({
 	const goToPublishProduct = onPublishPress ?? (() => router.push(sessionUser ? "/publishproduct" : "/auth"));
 	const goToLogin = onLoginPress ?? (() => router.push("/auth"));
 	const goToHome = onLogoPress ?? (() => router.push("/"));
-	const goToProfile = onProfilePress ?? (() => router.push("/auth"));
 	const resolvedNotificationIcon = notificationIcon ?? <NotificationsUnread size={24} color={colors.text.primary} />;
 	const resolvedChatIcon = chatIcon ?? <ChatBubble size={24} color={colors.text.primary} />;
 	const goToChat = onChatPress ?? (() => router.push("/chat"));
+	const isModeratorUser = isModerator(sessionUser);
+
+	const toggleProfileMenu = () => {
+		if (onProfilePress) {
+			onProfilePress();
+			return;
+		}
+		setIsProfileMenuOpen((open) => !open);
+	};
+
+	const navigateFromProfileMenu = (path: "/publications" | "/operations" | "/chat" | "/dispute") => {
+		setIsProfileMenuOpen(false);
+		router.push(path);
+	};
+
+	const handleSignOut = () => {
+		setIsProfileMenuOpen(false);
+		signOut();
+		router.push("/");
+	};
 
 	return (
 		<View style={[styles.header, isMobile && styles.mobileHeader]}>
@@ -100,21 +122,50 @@ export function Header({
 
 						<View style={styles.divider} />
 
-						<Pressable onPress={goToProfile} style={[styles.profile, isMobile && styles.mobileProfile]}>
-							<View style={styles.avatar}>
-								<Text style={styles.avatarText}>{userInitials || sessionUser?.fullName.split(" ").map((part) => part[0]).slice(0, 2).join("") || "U"}</Text>
-							</View>
+						<View style={styles.profileMenuAnchor}>
+							<Pressable
+								accessibilityLabel="Abrir menú de usuario"
+								onPress={toggleProfileMenu}
+								style={[styles.profile, isMobile && styles.mobileProfile]}
+							>
+								<View style={styles.avatar}>
+									<Text style={styles.avatarText}>{userInitials || sessionUser?.fullName.split(" ").map((part) => part[0]).slice(0, 2).join("") || "U"}</Text>
+								</View>
 
-							<View style={styles.profileInfo}>
-								<Text numberOfLines={1} style={styles.profileName}>
-									{userName || sessionUser?.fullName || "Usuario"}
-								</Text>
+								<View style={styles.profileInfo}>
+									<Text numberOfLines={1} style={styles.profileName}>
+										{userName || sessionUser?.fullName || "Usuario"}
+									</Text>
 
-								<Text numberOfLines={1} style={styles.profileEmail}>
-									{userEmail || sessionUser?.email || "Cuenta institucional"}
-								</Text>
-							</View>
-						</Pressable>
+									<Text numberOfLines={1} style={styles.profileEmail}>
+										{userEmail || sessionUser?.email || "Cuenta institucional"}
+									</Text>
+								</View>
+								<KeyboardArrowDown size={18} color={colors.text.secondary} />
+							</Pressable>
+
+							{isProfileMenuOpen && (
+								<View accessibilityLabel="Menú de usuario" style={styles.profileMenu}>
+									<Pressable accessibilityRole="button" onPress={() => navigateFromProfileMenu("/publications")} style={styles.menuItem}>
+										<Text style={styles.menuItemText}>Mis publicaciones</Text>
+									</Pressable>
+									<Pressable accessibilityRole="button" onPress={() => navigateFromProfileMenu("/operations")} style={styles.menuItem}>
+										<Text style={styles.menuItemText}>Mis operaciones</Text>
+									</Pressable>
+									<Pressable accessibilityRole="button" onPress={() => navigateFromProfileMenu("/chat")} style={styles.menuItem}>
+										<Text style={styles.menuItemText}>Chat</Text>
+									</Pressable>
+									{isModeratorUser && (
+										<Pressable accessibilityRole="button" onPress={() => navigateFromProfileMenu("/dispute")} style={styles.menuItem}>
+											<Text style={styles.menuItemText}>Resolver disputas</Text>
+										</Pressable>
+									)}
+									<Pressable accessibilityRole="button" onPress={handleSignOut} style={[styles.menuItem, styles.signOutItem]}>
+										<Text style={styles.signOutText}>Cerrar sesión</Text>
+									</Pressable>
+								</View>
+							)}
+						</View>
 
 						<ButtonRounded
 							icon={addIcon}
@@ -253,6 +304,52 @@ const styles = StyleSheet.create({
 		lineHeight: typography.lineHeight.sm,
 		fontWeight: typography.weight.regular,
 		color: colors.text.secondary,
+	},
+
+	profileMenuAnchor: {
+		position: "relative",
+		zIndex: 2,
+	},
+
+	profileMenu: {
+		position: "absolute",
+		top: 50,
+		right: 0,
+		width: 220,
+		paddingVertical: spacing.xs,
+		backgroundColor: colors.background.surface,
+		borderWidth: 1,
+		borderColor: colors.border.default,
+		borderRadius: radius.md,
+		boxShadow: boxShadows.default,
+	},
+
+	menuItem: {
+		minHeight: 40,
+		justifyContent: "center",
+		paddingHorizontal: spacing.md,
+	},
+
+	menuItemText: {
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		lineHeight: typography.lineHeight.md,
+		fontWeight: typography.weight.medium,
+		color: colors.text.primary,
+	},
+
+	signOutItem: {
+		marginTop: spacing.xs,
+		borderTopWidth: 1,
+		borderTopColor: colors.border.default,
+	},
+
+	signOutText: {
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		lineHeight: typography.lineHeight.md,
+		fontWeight: typography.weight.medium,
+		color: colors.action.primary,
 	},
 
 	// Mobile Responsive

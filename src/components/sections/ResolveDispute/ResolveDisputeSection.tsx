@@ -38,7 +38,7 @@ export function ResolveDisputeSection({ style }: ResolveDisputeSectionProps) {
 		<View style={[styles.section, style]}>
 			<View style={styles.content}>
 				<HeaderSections
-					title="ResolverDisputa"
+					title="Disputas Pendientes"
 					description="Consulta incidencias y registra la decisión del moderador."
 					size="2xl"
 				/>
