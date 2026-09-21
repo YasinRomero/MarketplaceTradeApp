@@ -1,11 +1,10 @@
-import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { CardProduct } from "@/components/common/CardProduct";
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { Publish, Verified } from "@/components/icons";
 import { ButtonOutline, ButtonRounded } from "@/components/ui/Button";
 import { boxShadows, colors, radius, responsive, spacing } from "@/theme";
+import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export interface ProductPreviewCardProps {
 	image?: ImageSourcePropType;
@@ -17,6 +16,9 @@ export interface ProductPreviewCardProps {
 	secondaryBadge?: string;
 	onPublishPress?: () => void;
 	onDraftPress?: () => void;
+	primaryActionLabel?: string;
+	secondaryActionLabel?: string;
+	showSecondaryAction?: boolean;
 	style?: StyleProp<ViewStyle>;
 }
 
@@ -30,6 +32,9 @@ export function ProductPreviewCard({
 	secondaryBadge = "Universidad",
 	onPublishPress,
 	onDraftPress,
+	primaryActionLabel = "Publicar producto",
+	secondaryActionLabel = "Guardar como borrador",
+	showSecondaryAction = true,
 	style,
 }: ProductPreviewCardProps) {
 	const { width } = useWindowDimensions();
@@ -61,11 +66,13 @@ export function ProductPreviewCard({
 					onPress={onPublishPress}
 					style={styles.actionButton}
 				>
-					Publicar producto
+					{primaryActionLabel}
 				</ButtonRounded>
-				<ButtonOutline onPress={onDraftPress} style={[styles.actionButton, styles.draftButton]}>
-					Guardar como borrador
-				</ButtonOutline>
+				{showSecondaryAction && (
+					<ButtonOutline onPress={onDraftPress} style={[styles.actionButton, styles.draftButton]}>
+						{secondaryActionLabel}
+					</ButtonOutline>
+				)}
 			</View>
 		</View>
 	);

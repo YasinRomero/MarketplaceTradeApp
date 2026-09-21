@@ -1,6 +1,5 @@
-import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-import type { IconProps } from "./icons.type";
+import { IconProps } from "./icons.type";
 const SvgSell = ({ size = 24, color = "currentColor" }: IconProps) => (
 	<Svg width={size} height={size} viewBox="0 -960 960 960">
 		<Path

@@ -1,10 +1,8 @@
-import { useState } from "react";
-import { ScrollView, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { MarketplaceFilterChip, MarketplaceFilters } from "@/components/common/MarketplaceFilters";
 import { MarketplaceSearchBar } from "@/components/common/MarketplaceSearchBar";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { colors, spacing } from "@/theme";
+import { ScrollView, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export type MarketplaceExchangeType = "Tipo de intercambio" | "Venta" | "Intercambio" | "Ambos";
 
@@ -20,6 +18,9 @@ export interface MarketplaceSectionProps {
 
 	exchangeType: MarketplaceExchangeType;
 	onExchangeTypeChange: (value: MarketplaceExchangeType) => void;
+
+	sortValue: string;
+	onSortChange: (value: string) => void;
 
 	style?: StyleProp<ViewStyle>;
 }
@@ -42,13 +43,14 @@ export function MarketplaceSection({
 
 	exchangeType,
 	onExchangeTypeChange,
+	sortValue,
+	onSortChange,
 
 	style,
 }: MarketplaceSectionProps) {
 	const { width } = useWindowDimensions();
 	const isMobile = width < 768;
 
-	const [sortValue, setSortValue] = useState(sortOptions[0]);
 	const activeFilters: MarketplaceFilterChip[] = [];
 
 	if (selectedSede && selectedSede !== "Selecciona una sede") {
@@ -129,7 +131,7 @@ export function MarketplaceSection({
 						}))}
 						sortValue={sortValue}
 						sortOptions={sortOptions}
-						onSortChange={setSortValue}
+						onSortChange={onSortChange}
 						onClearFilters={clearFilters}
 					/>
 				</ScrollView>

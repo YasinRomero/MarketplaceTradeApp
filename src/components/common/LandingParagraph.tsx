@@ -1,6 +1,5 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
 import { colors, spacing, typography } from "@/theme";
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 export interface LandingParagraphProps {
 	subtitle: string;

@@ -1,10 +1,9 @@
-import { ReactNode } from "react";
-import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { Close, KeyboardArrowDown } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { colors, radius, spacing, typography } from "@/theme";
+import { ReactNode } from "react";
+import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export interface MarketplaceFilterChip {
 	id: string;

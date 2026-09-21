@@ -1,8 +1,7 @@
-import { ReactNode } from "react";
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
 import { AccountCircle } from "@/components/icons";
 import { colors, radius, spacing, typography } from "@/theme";
+import { ReactNode } from "react";
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 export type MessageVariant = "ghost" | "center" | "base" | "medium" | "large" | "iconColored";
 

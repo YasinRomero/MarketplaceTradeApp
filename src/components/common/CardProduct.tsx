@@ -1,10 +1,9 @@
-import { Image } from "expo-image";
-import { ImageSourcePropType, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-
 import { BadgeBlack } from "@/components/ui/Badge/BadgeBlack";
 import { BadgeWhite } from "@/components/ui/Badge/BadgeWhite";
 import { Button } from "@/components/ui/Button";
 import { colors, primitives, radius, spacing, typography } from "@/theme";
+import { Image } from "expo-image";
+import { ImageSourcePropType, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 export interface CardProductProps {
 	image?: ImageSourcePropType;

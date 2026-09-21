@@ -1,9 +1,8 @@
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { DeployedCode, News } from "@/components/icons";
 import { colors, radius, spacing, typography } from "@/theme";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 export interface DescriptionAcademicContextCardProps {
 	description?: string;

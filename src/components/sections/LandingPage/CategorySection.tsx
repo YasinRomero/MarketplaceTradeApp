@@ -1,12 +1,9 @@
-import { ReactNode } from "react";
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
-import { type CardCategoryTone } from "@/components/common/CardCategoryLink";
+import { CardCategoryTone, CardCategoryLink as CategoryCard } from "@/components/common/CardCategoryLink";
+import { LandingParagraph } from "@/components/common/LandingParagraph";
 import { Chair, Experiment, LaptopChromebook, MenuBook, SportsBasketball } from "@/components/icons";
 import { colors, responsive, spacing, typography } from "@/theme";
-
-import { CardCategoryLink as CategoryCard } from "@/components/common/CardCategoryLink";
-import { LandingParagraph } from "@/components/common/LandingParagraph";
+import { ReactNode } from "react";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export interface CategorySectionItem {
 	id: string;

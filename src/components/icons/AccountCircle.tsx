@@ -1,5 +1,5 @@
 import Svg, { Path } from "react-native-svg";
-import type { IconProps } from "./icons.type";
+import { IconProps } from "./icons.type";
 const SvgAccountCircle = ({ size = 24, color = "currentColor" }: IconProps) => (
 	<Svg width={size} height={size} viewBox="0 -960 960 960">
 		<Path

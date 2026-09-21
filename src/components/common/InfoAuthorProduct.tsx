@@ -1,3 +1,5 @@
+import { AccountCircle, Chronic, Distance, KidStar, School } from "@/components/icons";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
 import { Image } from "expo-image";
 import { ReactNode } from "react";
 import {
@@ -10,10 +12,6 @@ import {
 	View,
 	ViewStyle,
 } from "react-native";
-
-import { AccountCircle, Chronic, Distance, KidStar, School } from "@/components/icons";
-import { colors, radius, responsive, spacing, typography } from "@/theme";
-
 import { HeaderSections } from "./HeaderSections";
 import { Message } from "./Message";
 

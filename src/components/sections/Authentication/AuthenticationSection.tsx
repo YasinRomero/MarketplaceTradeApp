@@ -1,10 +1,15 @@
+import { useEffect, useState } from "react";
 import { StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 import { Message } from "@/components/common/Message";
 import { School, VerifiedUser } from "@/components/icons";
 import MicrosoftLogo from "@/components/icons/MicrosoftLogo";
-import { ButtonOutline } from "@/components/ui/Button";
+import { ButtonOutline, ButtonRounded } from "@/components/ui/Button";
+import { InputSelect } from "@/components/ui/InputSelect";
+import { listMockUsers } from "@/services/authService";
+import { useAuthStore } from "@/stores/authStore";
 import { boxShadows, colors, radius, responsive, spacing, typography } from "@/theme";
+import { useRouter } from "expo-router";
 
 export interface AuthenticationSectionProps {
 	onProviderPress?: () => void;
@@ -12,8 +17,30 @@ export interface AuthenticationSectionProps {
 }
 
 export function AuthenticationSection({ onProviderPress, style }: AuthenticationSectionProps) {
+	const router = useRouter();
+	const { currentUser, isLoading, error, signInAsMockUser, signOut } = useAuthStore();
+	const [users, setUsers] = useState<Awaited<ReturnType<typeof listMockUsers>>>([]);
+	const [selectedUserId, setSelectedUserId] = useState<number | null>(currentUser?.id ?? null);
 	const { width } = useWindowDimensions();
 	const isTableDown = responsive.isTabletDown(width);
+
+	useEffect(() => {
+		listMockUsers().then(setUsers);
+	}, []);
+
+	const effectiveSelectedUserId = selectedUserId;
+	const selectedUser = users.find((user) => user.id === effectiveSelectedUserId);
+
+	const handleSignIn = async () => {
+		if (effectiveSelectedUserId === null) return;
+
+		const user = await signInAsMockUser(effectiveSelectedUserId);
+
+		if (user) {
+			onProviderPress?.();
+			router.replace("/marketplace");
+		}
+	};
 
 	return (
 		<View style={[styles.section, isTableDown && styles.mobileSection, style]}>
@@ -27,17 +54,35 @@ export function AuthenticationSection({ onProviderPress, style }: Authentication
 				</View>
 
 				<Text style={styles.description}>
-					Continúa con tu cuenta institucional para acceder a la plataforma.
+					Selecciona una cuenta institucional mock para continuar. Microsoft OAuth no se conecta en esta
+					etapa.
 				</Text>
+
+				<Text style={styles.fieldLabel}>Cuenta institucional simulada</Text>
+
+				<InputSelect
+					value={selectedUser ? `${selectedUser.fullName} · ${selectedUser.role}` : "Selecciona un usuario"}
+					options={users.map((user) => `${user.id} · ${user.fullName} · ${user.role}`)}
+					variant="outline"
+					onChange={(value) => setSelectedUserId(Number(value.split(" ")[0]))}
+					containerStyle={styles.userSelect}
+				/>
 
 				<ButtonOutline
 					size="large"
 					icon={<MicrosoftLogo />}
-					onPress={onProviderPress}
+					disabled={isLoading || effectiveSelectedUserId === null}
+					onPress={() => handleSignIn()}
 					style={styles.providerButton}
 				>
-					Continuar con Microsoft
+					Continuar con Microsoft (simulado)
 				</ButtonOutline>
+				{currentUser && (
+					<ButtonRounded disabled={isLoading} onPress={signOut}>
+						Cerrar sesión simulada
+					</ButtonRounded>
+				)}
+				{error && <Message title="No se pudo iniciar sesión" message={error} />}
 
 				<Message
 					icon={
@@ -113,6 +158,18 @@ const styles = StyleSheet.create({
 	},
 
 	providerButton: {
+		width: "100%",
+	},
+
+	fieldLabel: {
+		alignSelf: "stretch",
+		fontFamily: typography.family,
+		fontSize: typography.size.sm,
+		fontWeight: typography.weight.bold,
+		color: colors.text.primary,
+	},
+
+	userSelect: {
 		width: "100%",
 	},
 

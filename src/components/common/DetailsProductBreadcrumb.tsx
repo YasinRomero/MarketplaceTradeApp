@@ -1,7 +1,6 @@
-import { Pressable, ScrollView, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-
 import { ChevronForward } from "@/components/icons";
 import { colors, spacing, typography } from "@/theme";
+import { Pressable, ScrollView, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 export interface DetailsProductBreadcrumbItem {
 	label: string;

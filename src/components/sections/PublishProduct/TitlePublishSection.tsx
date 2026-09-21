@@ -1,13 +1,12 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Distance } from "@/components/icons";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
-import { colors, primitives, spacing, typography } from "@/theme";
+import { colors, primitives, responsive, spacing, typography } from "@/theme";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export function TitlePublishSection() {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
+	const isMobile = responsive.isTabletDown(width);
 
 	return (
 		<View style={[styles.section, isMobile && styles.mobileSection]}>

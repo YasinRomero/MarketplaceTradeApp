@@ -1,7 +1,6 @@
+import { colors, radius, spacing, typography } from "@/theme";
 import { ReactNode } from "react";
 import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
-import { colors, radius, spacing, typography } from "@/theme";
 
 export type HeaderSectionsSize = "2xl" | "xl" | "large" | "medium" | "compact";
 

@@ -1,8 +1,7 @@
-import { ReactNode } from "react";
-import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-
 import { AccountCircle } from "@/components/icons";
 import { boxShadows, colors, radius, spacing, typography } from "@/theme";
+import { ReactNode } from "react";
+import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 export type CardCategoryTone = keyof typeof colors.card;
 

@@ -1,8 +1,7 @@
-import { StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Tune } from "@/components/icons";
 import { colors, radius, responsive, spacing, typography } from "@/theme";
+import { StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export interface TechnicalSpec {
 	label: string;

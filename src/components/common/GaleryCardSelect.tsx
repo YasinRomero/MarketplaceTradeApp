@@ -1,50 +1,66 @@
 import { Image } from "expo-image";
-import { ImageSourcePropType, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { createElement } from "react";
+import { ImageSourcePropType, Platform, Pressable, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
+import { Close } from "@/components/icons";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { MediaType } from "@/schemas/product";
 import { boxShadows, colors, radius, spacing } from "@/theme";
 
 export interface GaleryCardSelectProps {
 	image?: ImageSourcePropType;
+	url?: string;
+	mediaType?: MediaType;
 	label: string;
-	secondaryLabel?: string;
-	checked?: boolean;
-	secondaryChecked?: boolean;
-	inverse?: boolean;
-	onChange?: (checked: boolean) => void;
-	onSecondaryChange?: (checked: boolean) => void;
+	publicationChecked: boolean;
+	evidenceChecked: boolean;
+	onPublicationChange?: (checked: boolean) => void;
+	onEvidenceChange?: (checked: boolean) => void;
+	onRemove?: () => void;
 	disabled?: boolean;
 	style?: StyleProp<ViewStyle>;
 }
 
 export function GaleryCardSelect({
 	image,
+	url,
+	mediaType,
 	label,
-	secondaryLabel = "Publicar",
-	checked = false,
-	secondaryChecked = false,
-	inverse = false,
-	onChange,
-	onSecondaryChange,
+	publicationChecked,
+	evidenceChecked,
+	onPublicationChange,
+	onEvidenceChange,
+	onRemove,
 	disabled = false,
 	style,
 }: GaleryCardSelectProps) {
 	return (
 		<View style={[styles.card, style]}>
+			{onRemove && (
+				<Pressable accessibilityLabel={`Eliminar ${label}`} onPress={onRemove} style={styles.removeButton}>
+					<Close size={14} color={colors.text.inverse} />
+				</Pressable>
+			)}
 			<View style={styles.media}>
-				{image && <Image contentFit="cover" source={image} style={styles.image} />}
+				{Platform.OS === "web" && mediaType === "video" && url
+					? createElement("video", {
+							controls: true,
+							muted: true,
+							preload: "metadata",
+							src: url,
+							style: styles.video,
+						})
+					: image && <Image contentFit="cover" source={image} style={styles.image} />}
 			</View>
 
 			<View style={styles.options}>
-				<Checkbox label={label} checked={checked} inverse={inverse} disabled={disabled} onChange={onChange} />
 				<Checkbox
-					label={secondaryLabel}
-					checked={secondaryChecked}
-					inverse
+					label="Publicación"
+					checked={publicationChecked}
 					disabled={disabled}
-					labelStyle={styles.secondaryLabel}
-					onChange={onSecondaryChange}
+					onChange={onPublicationChange}
 				/>
+				<Checkbox label="Evidencia" checked={evidenceChecked} disabled={disabled} onChange={onEvidenceChange} />
 			</View>
 		</View>
 	);
@@ -61,6 +77,7 @@ const styles = StyleSheet.create({
 
 		boxShadow: boxShadows.default,
 		elevation: 1,
+		position: "relative",
 	},
 
 	media: {
@@ -74,15 +91,30 @@ const styles = StyleSheet.create({
 		height: "100%",
 	},
 
+	video: {
+		width: "100%",
+		height: "100%",
+		objectFit: "cover",
+	},
+
+	removeButton: {
+		position: "absolute",
+		top: spacing.xs,
+		right: spacing.xs,
+		zIndex: 2,
+		width: 24,
+		height: 24,
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: colors.action.primary,
+		borderRadius: radius.full,
+	},
+
 	options: {
 		width: "100%",
 		height: 54,
 		padding: spacing.sm,
 		gap: spacing.xs + 2,
 		backgroundColor: colors.background.surface,
-	},
-
-	secondaryLabel: {
-		color: colors.text.secondary,
 	},
 });

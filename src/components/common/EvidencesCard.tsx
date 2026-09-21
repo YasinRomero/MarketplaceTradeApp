@@ -1,14 +1,26 @@
-import { Image } from "expo-image";
-import { ImageSourcePropType, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
-
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { ShieldLock, Verified } from "@/components/icons";
+import { MediaType } from "@/schemas/product";
 import { boxShadows, colors, radius, spacing, typography } from "@/theme";
+import { Image } from "expo-image";
+import { createElement } from "react";
+import {
+	ImageSourcePropType,
+	Platform,
+	StyleProp,
+	StyleSheet,
+	Text,
+	useWindowDimensions,
+	View,
+	ViewStyle,
+} from "react-native";
 
 export interface EvidenceItem {
 	label: string;
 	image?: ImageSourcePropType;
+	url?: string;
+	type?: MediaType;
 }
 
 export interface EvidencesCardProps {
@@ -36,8 +48,16 @@ export function EvidencesCard({ evidences = defaultEvidences, style }: Evidences
 
 			<View style={[styles.evidences, isMobile && styles.mobileEvidences]}>
 				{evidences.map((evidence) => (
-					<View key={evidence.label} style={styles.evidenceCard}>
-						{evidence.image ? (
+					<View key={`${evidence.label}-${evidence.url ?? "placeholder"}`} style={styles.evidenceCard}>
+						{Platform.OS === "web" && evidence.type === "video" && evidence.url ? (
+							createElement("video", {
+								controls: true,
+								playsInline: true,
+								preload: "metadata",
+								src: evidence.url,
+								style: styles.video,
+							})
+						) : evidence.image ? (
 							<Image contentFit="cover" source={evidence.image} style={styles.image} />
 						) : (
 							<View style={styles.placeholder}>
@@ -90,6 +110,12 @@ const styles = StyleSheet.create({
 	image: {
 		width: "100%",
 		height: "100%",
+	},
+	video: {
+		width: "100%",
+		height: "100%",
+		objectFit: "cover",
+		backgroundColor: colors.background.subtle,
 	},
 	placeholder: {
 		width: "100%",

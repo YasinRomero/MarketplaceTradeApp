@@ -1,8 +1,7 @@
-import { ScrollView, StyleSheet } from "react-native";
-
 import { Footer } from "@/components/common/Footer";
 import { Header } from "@/components/common/Header";
 import { AuthenticationSection } from "@/components/sections/Authentication/AuthenticationSection";
+import { ScrollView, StyleSheet } from "react-native";
 
 export default function AuthScreen() {
 	return (

@@ -1,3 +1,6 @@
+import { CardProduct } from "@/components/common/CardProduct";
+import { HeaderSections } from "@/components/common/HeaderSections";
+import { colors, spacing, typography } from "@/theme";
 import {
 	ImageSourcePropType,
 	Pressable,
@@ -8,10 +11,6 @@ import {
 	View,
 	ViewStyle,
 } from "react-native";
-
-import { CardProduct } from "@/components/common/CardProduct";
-import { HeaderSections } from "@/components/common/HeaderSections";
-import { colors, spacing, typography } from "@/theme";
 
 export interface RecommendationItem {
 	id: string;

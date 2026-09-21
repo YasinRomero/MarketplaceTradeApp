@@ -1,6 +1,7 @@
 import { Add, ChatBubble, NotificationsUnread, School } from "@/components/icons";
 import { ButtonGhost, ButtonIcon, ButtonRounded } from "@/components/ui/Button";
 import { colors, radius, responsive, spacing, typography } from "@/theme";
+import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "expo-router";
 import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
@@ -47,16 +48,19 @@ export function Header({
 	onProfilePress,
 }: HeaderProps) {
 	const router = useRouter();
+	const sessionUser = useAuthStore((state) => state.currentUser);
 	const { width } = useWindowDimensions();
 	const isMobile = responsive.isTabletDown(width);
 
-	const isLogged = variant === "logged";
+	const isLogged = variant === "logged" || Boolean(sessionUser);
 	const goToMarketplace = onCategoriesPress ?? (() => router.push("/marketplace"));
-	const goToPublishProduct = onPublishPress ?? (() => router.push("/publishproduct"));
+	const goToPublishProduct = onPublishPress ?? (() => router.push(sessionUser ? "/publishproduct" : "/auth"));
 	const goToLogin = onLoginPress ?? (() => router.push("/auth"));
 	const goToHome = onLogoPress ?? (() => router.push("/"));
+	const goToProfile = onProfilePress ?? (() => router.push("/auth"));
 	const resolvedNotificationIcon = notificationIcon ?? <NotificationsUnread size={24} color={colors.text.primary} />;
 	const resolvedChatIcon = chatIcon ?? <ChatBubble size={24} color={colors.text.primary} />;
+	const goToChat = onChatPress ?? (() => router.push("/chat"));
 
 	return (
 		<View style={[styles.header, isMobile && styles.mobileHeader]}>
@@ -92,22 +96,22 @@ export function Header({
 				) : (
 					<View style={[styles.loggedActions, isMobile && styles.mobileLoggedActions]}>
 						<ButtonIcon icon={resolvedNotificationIcon} color="ghost" onPress={onNotificationsPress} />
-						<ButtonIcon icon={resolvedChatIcon} color="ghost" onPress={onChatPress} />
+						<ButtonIcon icon={resolvedChatIcon} color="ghost" onPress={goToChat} />
 
 						<View style={styles.divider} />
 
-						<Pressable onPress={onProfilePress} style={[styles.profile, isMobile && styles.mobileProfile]}>
+						<Pressable onPress={goToProfile} style={[styles.profile, isMobile && styles.mobileProfile]}>
 							<View style={styles.avatar}>
-								<Text style={styles.avatarText}>{userInitials}</Text>
+								<Text style={styles.avatarText}>{userInitials || sessionUser?.fullName.split(" ").map((part) => part[0]).slice(0, 2).join("") || "U"}</Text>
 							</View>
 
 							<View style={styles.profileInfo}>
 								<Text numberOfLines={1} style={styles.profileName}>
-									{userName}
+									{userName || sessionUser?.fullName || "Usuario"}
 								</Text>
 
 								<Text numberOfLines={1} style={styles.profileEmail}>
-									{userEmail}
+									{userEmail || sessionUser?.email || "Cuenta institucional"}
 								</Text>
 							</View>
 						</Pressable>

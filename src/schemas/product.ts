@@ -2,12 +2,16 @@ import { z } from "zod";
 
 export const PublicationModeSchema = z.enum(["venta", "intercambio", "ambas"]);
 export const ProductStatusSchema = z.enum(["borrador", "activo", "reservado", "finalizado", "inactivo"]);
+export const MediaTypeSchema = z.enum(["imagen", "video"]);
+
 export const ProductMediaSchema = z.object({
 	id: z.number().int().positive(),
 	productId: z.number().int().positive(),
-	type: z.enum(["imagen", "video"]),
+	type: MediaTypeSchema,
 	url: z.string().min(1),
-	capturedAt: z.string().datetime(),
+	capturedAt: z.iso.datetime(),
+	isPublication: z.boolean().optional(),
+	isEvidence: z.boolean().optional(),
 });
 
 export const ProductSchema = z
@@ -29,9 +33,10 @@ export const ProductSchema = z
 	})
 	.superRefine((product, context) => {
 		if (product.status !== "activo") return;
-		if ((product.mode === "venta" || product.mode === "ambas") && product.salePrice === null) {
+
+		if ((product.mode === "venta" || product.mode === "ambas") && product.salePrice === null)
 			context.addIssue({ code: "custom", path: ["salePrice"], message: "El precio de venta es obligatorio." });
-		}
+
 		if ((product.mode === "intercambio" || product.mode === "ambas") && product.referenceValue === null) {
 			context.addIssue({
 				code: "custom",
@@ -39,12 +44,25 @@ export const ProductSchema = z
 				message: "El valor referencial es obligatorio.",
 			});
 		}
-		if (!product.media.some((media) => media.type === "imagen")) {
+
+		const publicationMedia = product.media.filter((media) => media.isPublication !== false);
+		const evidenceMedia = product.media.filter((media) => media.isEvidence !== false);
+
+		if (!publicationMedia.some((media) => media.type === "imagen"))
 			context.addIssue({ code: "custom", path: ["media"], message: "Se requiere una fotografía capturada." });
-		}
-		if (!product.media.some((media) => media.type === "video")) {
+
+		if (!publicationMedia.some((media) => media.type === "video"))
 			context.addIssue({ code: "custom", path: ["media"], message: "Se requiere un video capturado." });
-		}
+
+		if (!evidenceMedia.some((media) => media.type === "imagen"))
+			context.addIssue({
+				code: "custom",
+				path: ["media"],
+				message: "Se requiere una fotografía como evidencia.",
+			});
+
+		if (!evidenceMedia.some((media) => media.type === "video"))
+			context.addIssue({ code: "custom", path: ["media"], message: "Se requiere un video como evidencia." });
 	});
 
 export const ProductDraftInputSchema = z.object({
@@ -84,4 +102,12 @@ export const ProductFiltersSchema = z.object({
 	mode: PublicationModeSchema.optional(),
 });
 
-export type ProductDraftInputValidated = z.infer<typeof ProductDraftInputSchema>;
+// Inferencias
+export type PublicationMode = z.infer<typeof PublicationModeSchema>;
+export type ProductStatus = z.infer<typeof ProductStatusSchema>;
+export type MediaType = z.infer<typeof MediaTypeSchema>;
+export type ProductMedia = z.infer<typeof ProductMediaSchema>;
+export type Product = z.infer<typeof ProductSchema>;
+export type ProductDraft = z.infer<typeof ProductDraftSchema>;
+export type ProductDraftInput = z.input<typeof ProductDraftInputSchema>;
+export type ProductFilters = z.infer<typeof ProductFiltersSchema>;

@@ -3,9 +3,9 @@ import { InputWithLabel } from "@/components/common/InputWithLabel";
 import { ChevronBackward, ChevronForward } from "@/components/icons";
 import { Button, ButtonGhost, ButtonIcon, ButtonOutline } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { Product } from "@/schemas/product";
 import { useProductStore } from "@/stores/productStore";
 import { colors, radius, responsive, spacing, typography } from "@/theme";
-import { Product } from "@/types/domain";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleProp, StyleSheet, Text, useWindowDimensions, View, ViewStyle } from "react-native";
@@ -40,7 +40,7 @@ const categoryNames: Record<number, [string, string]> = {
 };
 const siteNames: Record<number, string> = { 1: "Lima Norte" };
 const toProductItem = (product: Product): ProductItem => {
-	const image = product.media.find((item) => item.type === "imagen");
+	const image = product.media.find((item) => item.type === "imagen" && item.isPublication !== false);
 
 	return {
 		id: product.id,
@@ -93,7 +93,7 @@ export function MarketplaceProductsSection({
 	const [maximumPrice, setMaximumPrice] = useState("");
 	const [page, setPage] = useState(1);
 	useEffect(() => {
-		void loadProducts();
+		loadProducts();
 	}, [loadProducts]);
 	const products = useMemo(() => sharedProducts.map(toProductItem), [sharedProducts]);
 	const categories = useMemo(() => {
@@ -221,9 +221,9 @@ export function MarketplaceProductsSection({
 		setPage(1);
 	};
 
-	if (onResultCountChange) {
-		onResultCountChange(filteredProducts.length);
-	}
+	useEffect(() => {
+		onResultCountChange?.(filteredProducts.length);
+	}, [filteredProducts.length, onResultCountChange]);
 
 	return (
 		<View style={[styles.section, isMobileDown && styles.mobileSection, style]}>

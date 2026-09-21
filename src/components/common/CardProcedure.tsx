@@ -1,10 +1,9 @@
-import { ReactNode } from "react";
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
 import { AccountCircle } from "@/components/icons";
 import { BadgeColor } from "@/components/ui/Badge/BadgeColor";
-import type { BadgeColorName } from "@/components/ui/Badge/badge.types";
+import { BadgeColorName } from "@/components/ui/Badge/badge.types";
 import { colors, primitives, radius, spacing, typography } from "@/theme";
+import { ReactNode } from "react";
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 export interface CardProcedureProps {
 	badge: string;

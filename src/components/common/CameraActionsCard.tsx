@@ -1,48 +1,60 @@
-import { useState } from "react";
-import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
-
-import { CameraDisplay } from "@/components/common/CameraDisplay";
+import { CameraDisplay, CameraStatus } from "@/components/common/CameraDisplay";
 import { GaleryCardSelect } from "@/components/common/GaleryCardSelect";
 import { HeaderSections } from "@/components/common/HeaderSections";
 import { Message } from "@/components/common/Message";
 import { PhotoCamera, ShieldLock } from "@/components/icons";
+import { MediaType } from "@/schemas/product";
 import { colors, radius, responsive, spacing } from "@/theme";
+import { ImageSourcePropType, StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from "react-native";
 
 export interface CameraGalleryItem {
+	id: number;
 	label: string;
 	image?: ImageSourcePropType;
-	checked?: boolean;
-	primary?: boolean;
+	url?: string;
+	mediaType: MediaType;
+	publication: boolean;
+	evidence: boolean;
 }
 
 export interface CameraActionsCardProps {
-	galleryItems?: CameraGalleryItem[];
+	galleryItems: CameraGalleryItem[];
+	stream?: MediaStream | null;
+	cameraStatus?: CameraStatus;
+	onStartCamera?: () => void;
+	onStopCamera?: () => void;
 	onCameraPress?: () => void;
 	onVideoPress?: () => void;
-	onUploadPress?: () => void;
+	onPublicationChange?: (id: number, checked: boolean) => void;
+	onEvidenceChange?: (id: number, checked: boolean) => void;
+	onRemove?: (id: number) => void;
+	disabled?: boolean;
 	style?: StyleProp<ViewStyle>;
 }
 
-const defaultGalleryItems: CameraGalleryItem[] = [
-	{ label: "Foto de evidencia", checked: true, primary: true },
-	{ label: "Foto de evidencia", checked: true },
-	{ label: "Foto de evidencia", checked: true },
-	{ label: "Foto de evidencia" },
-];
-
 export function CameraActionsCard({
-	galleryItems = defaultGalleryItems,
+	galleryItems,
+	stream = null,
+	cameraStatus = "off",
+	onStartCamera,
+	onStopCamera,
 	onCameraPress,
 	onVideoPress,
-	onUploadPress,
+	onPublicationChange,
+	onEvidenceChange,
+	onRemove,
+	disabled = false,
 	style,
 }: CameraActionsCardProps) {
 	const { width } = useWindowDimensions();
 	const isTabletDown = responsive.isTabletDown(width);
-
-	const [selectedItems, setSelectedItems] = useState(() => galleryItems.map((item) => item.checked ?? false));
-	const [publishItems, setPublishItems] = useState(() => galleryItems.map((item) => item.primary ?? false));
-	const selectedCount = selectedItems.filter(Boolean).length;
+	const previewImage = galleryItems.find((item) => item.mediaType === "imagen")?.image;
+	const lastCapture = galleryItems[galleryItems.length - 1];
+	const captureLabel = lastCapture
+		? lastCapture.mediaType === "imagen"
+			? "Imagen capturada"
+			: "Video capturado"
+		: "Sin archivos";
 
 	return (
 		<View style={[styles.card, style]}>
@@ -60,32 +72,33 @@ export function CameraActionsCard({
 
 			<View style={[styles.content, isTabletDown && styles.mobileContent]}>
 				<CameraDisplay
-					badges={["Vista previa", "Sin archivos"]}
+					image={previewImage}
+					stream={stream}
+					cameraStatus={cameraStatus}
+					captureLabel={captureLabel}
+					disabled={disabled}
+					onStartCamera={onStartCamera}
+					onStopCamera={onStopCamera}
 					onCameraPress={onCameraPress}
 					onVideoPress={onVideoPress}
-					onUploadPress={onUploadPress}
 				/>
 
 				<View style={styles.galleryPanel}>
-					<HeaderSections size="compact" title={`Archivos Capturas (${selectedCount})`} />
+					<HeaderSections size="compact" title={`Archivos Capturas (${galleryItems.length})`} />
 					<View style={styles.galleryGrid}>
-						{galleryItems.map((item, index) => (
+						{galleryItems.map((item) => (
 							<GaleryCardSelect
-								key={`${item.label}-${index}`}
+								key={item.id}
 								image={item.image}
+								url={item.url}
+								mediaType={item.mediaType}
 								label={item.label}
-								checked={selectedItems[index] ?? false}
-								secondaryChecked={publishItems[index] ?? false}
-								onChange={(checked) =>
-									setSelectedItems((current) =>
-										current.map((value, itemIndex) => (itemIndex === index ? checked : value)),
-									)
-								}
-								onSecondaryChange={(checked) =>
-									setPublishItems((current) =>
-										current.map((value, itemIndex) => (itemIndex === index ? checked : value)),
-									)
-								}
+								publicationChecked={item.publication}
+								evidenceChecked={item.evidence}
+								disabled={disabled}
+								onPublicationChange={(checked) => onPublicationChange?.(item.id, checked)}
+								onEvidenceChange={(checked) => onEvidenceChange?.(item.id, checked)}
+								onRemove={() => onRemove?.(item.id)}
 							/>
 						))}
 					</View>

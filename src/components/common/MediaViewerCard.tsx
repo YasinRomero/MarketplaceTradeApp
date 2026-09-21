@@ -1,3 +1,5 @@
+import { ZoomIn } from "@/components/icons";
+import { colors, radius, responsive, spacing, typography } from "@/theme";
 import { Image } from "expo-image";
 import { createElement, useState } from "react";
 import {
@@ -12,9 +14,6 @@ import {
 	View,
 	ViewStyle,
 } from "react-native";
-
-import { ZoomIn } from "@/components/icons";
-import { colors, radius, responsive, spacing, typography } from "@/theme";
 
 export interface MediaViewerCardProps {
 	images: ImageSourcePropType[];
@@ -114,7 +113,8 @@ export function MediaViewerCard({
 									preload: "metadata",
 									src: videoUrl,
 									style: styles.video,
-									onError: () => setUnavailableVideos((current) => ({ ...current, [videoUrl]: true })),
+									onError: () =>
+										setUnavailableVideos((current) => ({ ...current, [videoUrl]: true })),
 								})
 							) : (
 								<Text key={videoUrl} style={styles.unavailableVideo}>

@@ -1,8 +1,7 @@
-import { StyleProp, StyleSheet, Text, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
-
 import { Input } from "@/components/ui/Input";
 import { InputLarge } from "@/components/ui/Input/InputLarge";
 import { colors, spacing, typography } from "@/theme";
+import { StyleProp, StyleSheet, Text, TextInputProps, TextStyle, View, ViewStyle } from "react-native";
 
 export type InputWithLabelSize = "normal" | "compact";
 

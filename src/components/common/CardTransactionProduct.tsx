@@ -1,11 +1,10 @@
-import { ReactNode } from "react";
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-
 import { ChangeCircle, IdCard2, Security, ShoppingBag, VerifiedUser } from "@/components/icons";
 import { Badge } from "@/components/ui/Badge/Badge";
 import { BadgeBlack } from "@/components/ui/Badge/BadgeBlack";
 import { ButtonOutline, ButtonRounded } from "@/components/ui/Button";
 import { colors, radius, spacing, typography } from "@/theme";
+import { ReactNode } from "react";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 export interface TransactionReview {
 	message: string;

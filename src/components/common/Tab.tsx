@@ -1,8 +1,7 @@
-import { cloneElement, isValidElement, ReactNode } from "react";
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-
 import { Button, ButtonGhost, ButtonIcon } from "@/components/ui/Button";
 import { colors, radius, spacing } from "@/theme";
+import { cloneElement, isValidElement, ReactNode } from "react";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 export type TabVariant = "normal" | "icon";
 

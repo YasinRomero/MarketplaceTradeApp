@@ -1,8 +1,7 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
 import { LandingParagraph } from "@/components/common/LandingParagraph";
 import { StepCard } from "@/components/common/StepCard";
 import { colors, primitives, spacing, typography } from "@/theme";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export function FunctionsSection() {
 	const { width } = useWindowDimensions();

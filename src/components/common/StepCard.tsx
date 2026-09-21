@@ -1,6 +1,5 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
 import { boxShadows, colors, primitives, radius, spacing, typography } from "@/theme";
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 export type StepCardTone = keyof typeof colors.card;
 

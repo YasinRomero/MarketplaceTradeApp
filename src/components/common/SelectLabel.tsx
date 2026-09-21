@@ -1,9 +1,8 @@
-import { ReactNode } from "react";
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-
 import { KeyboardArrowDown } from "@/components/icons";
 import { InputSelect } from "@/components/ui/InputSelect";
 import { colors, spacing, typography } from "@/theme";
+import { ReactNode } from "react";
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 export interface SelectLabelProps {
 	label: string;

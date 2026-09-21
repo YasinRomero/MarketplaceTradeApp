@@ -1,12 +1,11 @@
-import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
-
 import { CardProcedure } from "@/components/common/CardProcedure";
 import { Gavel, IdCard2, PhotoCamera } from "@/components/icons";
-import { colors, primitives, spacing, typography } from "@/theme";
+import { colors, primitives, responsive, spacing, typography } from "@/theme";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export function ProceduresSection() {
 	const { width } = useWindowDimensions();
-	const isMobile = width < 768;
+	const isMobile = responsive.isMobileDown(width);
 
 	return (
 		<View style={styles.section}>

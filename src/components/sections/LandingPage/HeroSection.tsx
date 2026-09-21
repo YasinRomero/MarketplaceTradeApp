@@ -1,4 +1,4 @@
-import { SearchBarGlobal, type SearchBarGlobalProps } from "@/components/common/SearchBarGlobal";
+import { SearchBarGlobal, SearchBarGlobalProps } from "@/components/common/SearchBarGlobal";
 import { colors, primitives, radius, responsive, spacing, typography } from "@/theme";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
